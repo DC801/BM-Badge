@@ -54,6 +54,13 @@ fn get_diff_y ($e1, $e2) {
 		return entity $e2 y - entity $e1 y;
 	}
 }
+fn get_diff ($a, $b) {
+	if ($a > $b) {
+		return $a - $b;
+	} else {
+		return $b - $a;
+	}
+}
 fn get_manhattan_distance ($e1, $e2) {
 	return get_diff_x($e1, $e2) + get_diff_y($e1, $e2);
 }

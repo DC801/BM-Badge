@@ -314,20 +314,18 @@ show_dialog_demo_end_dream_q {
 
 // --------------------------------------------------- FOLLOWING ENTITIES
 
-offset_x {
-	if (curr_follower == $nano) { return 8; }
-	if (curr_follower == $vim) { return 0; }
-	return 0;
-}
-$offset_y = 1;
 $follow_delay = 2;
 $queue_diff = 6;
 $queue_size = 10;
 
 // follow_player_stack_init { // ARRAY VERSION
-// 	step = get_diff_x("%PLAYER%", FOLLOWER) / 5; // TODO use Vim/Nano/Emacs
-// 	offset_self_x = self x - offset_x();
-// 	offset_self_y = self y + $offset_y;
+// 	offset_self_x = self x;
+// 	if (curr_follower == $nano) { offset_self_x -= 8; }
+// 	if (curr_follower == $emacs) { offset_self_x += 8; }
+// 	offset_self_y = self y + 1;
+// 	step = get_diff(player_x, offset_self_x) / 5;
+// 	player_x = player x;
+// 	player_y = player y;
 // 	if (player x > offset_self_x) {
 // 		new Array followingPlayerX = [
 // 			offset_self_x,
@@ -335,6 +333,11 @@ $queue_size = 10;
 // 			offset_self_x + step * 2,
 // 			offset_self_x + step * 3,
 // 			offset_self_x + step * 4,
+// 			player x,
+// 			player x,
+// 			player x,
+// 			player x,
+// 			player x,
 // 		]
 // 	} else {
 // 		new Array followingPlayerX = [
@@ -343,17 +346,14 @@ $queue_size = 10;
 // 			player x + step * 3,
 // 			player x + step * 2,
 // 			player x + step,
+// 			player x,
+// 			player x,
+// 			player x,
+// 			player x,
+// 			player x,
 // 		]
 // 	}
-// 	// do we like the X version or the Y version better?
-// 	followingPlayerX.push([
-// 		player x,
-// 		player x,
-// 		player x,
-// 		player x,
-// 		player x,
-// 	])
-// 	step = get_diff_y("%PLAYER%", FOLLOWER) / 5; // TODO use Vim/Nano/Emacs
+// 	step = get_diff(player_y, offset_self_y) / 5;
 // 	if (player y > offset_self_y) {
 // 		new Array followingPlayerY = [
 // 			offset_self_y,
@@ -382,46 +382,53 @@ $queue_size = 10;
 // 		]
 // 	}
 // 	curr_self_queue = 0;
-// 	curr_player_queue = $queue_diff;
+// 	curr_player_queue = 6;
 // }
 follow_player_stack_init {
-	offset_self_x = self x - offset_x();
-	offset_self_y = self y + $offset_y;
+	offset_self_x = self x;
+	if (curr_follower == $nano) { offset_self_x -= 8; }
+	if (curr_follower == $emacs) { offset_self_x += 8; }
+	offset_self_y = self y + 1;
 	// first in xy queue is follower's curr location
 	queue_x0 = offset_self_x *1;
 	queue_y0 = offset_self_y *1;
 	// next four pos in queue are equal-sized steps between follower and followee
-	if (curr_follower == $nano) {
-		step = get_diff_x("%PLAYER%", Nano) / 5;
-	} else if (curr_follower == $vim) {
-		step = get_diff_x("%PLAYER%", Vim) / 5;
-	}
+	player_x = player x;
+	player_y = player y;
+	// debug!("PLAYER ($player_x$, $player_y$), follower ($offset_self_x$, $offset_self_y$)")
+	diff = get_diff(player_x, offset_self_x);
+	step1 = diff / 5;
+	step2 = 2 * diff / 5;
+	step3 = 3 * diff / 5;
+	step4 = 4 * diff / 5;
+	// debug!("X diff: $diff$, steps: [$step1$, $step2$, $step3$, $step4$]")
 	if (player x > offset_self_x) {
-		queue_x1 = offset_self_x + step * 1;
-		queue_x2 = offset_self_x + step * 2;
-		queue_x3 = offset_self_x + step * 3;
-		queue_x4 = offset_self_x + step * 4;
+		queue_x1 = offset_self_x + step1;
+		queue_x2 = offset_self_x + step2;
+		queue_x3 = offset_self_x + step3;
+		queue_x4 = offset_self_x + step4;
 	} else {
-		queue_x1 = player x + step * 4;
-		queue_x2 = player x + step * 3;
-		queue_x3 = player x + step * 2;
-		queue_x4 = player x + step * 1;
+		queue_x1 = player x + step4;
+		queue_x2 = player x + step3;
+		queue_x3 = player x + step2;
+		queue_x4 = player x + step1;
 	}
-	if (curr_follower == $nano) {
-		step = get_diff_y("%PLAYER%", Nano) / 5;
-	} else if (curr_follower == $vim) {
-		step = get_diff_y("%PLAYER%", Vim) / 5;
-	}
+	diff = get_diff(player_y, offset_self_y);
+	step1 = diff / 5;
+	step2 = 2 * diff / 5;
+	step3 = 3 * diff / 5;
+	step4 = 4 * diff / 5;
+	// debug!("Y diff: $diff$, steps: [$step1$, $step2$, $step3$, $step4$]")
 	if (player y > offset_self_y) {
-		queue_y1 = offset_self_y + step * 1;
-		queue_y2 = offset_self_y + step * 2;
-		queue_y3 = offset_self_y + step * 3;
-		queue_y4 = offset_self_y + step * 4;
+		queue_y1 = offset_self_y + step1;
+		queue_y2 = offset_self_y + step2;
+		queue_y3 = offset_self_y + step3;
+		queue_y4 = offset_self_y + step4;
 	} else {
-		queue_y1 = player y + step * 4;
-		queue_y2 = player y + step * 3;
-		queue_y3 = player y + step * 2;
-		queue_y4 = player y + step * 1;
+		queue_y1 = player y + step4;
+		queue_y2 = player y + step3;
+		queue_y3 = player y + step2;
+		queue_y4 = player y + step1;
 	}
 	// the rest of the queue is the followee's current pos
 	// (the player will fill these in as they get to them)
@@ -436,7 +443,7 @@ follow_player_stack_init {
 	queue_y8 = player y;
 	queue_y9 = player y;
 	curr_self_queue = 0;
-	curr_player_queue = $queue_diff;
+	curr_player_queue = 6;
 }
 
 fn save_player_pos_if ($n, $xVar, $yVar) {
@@ -465,11 +472,26 @@ fn load_self_pos_if ($n, $xVar, $yVar) {
 	if (curr_self_queue == $n) {
 		self x = $xVar;
 		self y = $yVar;
+		// self_x = self x;
+		// self_y = self y;
+		// capture_entity_direction("%SELF%", dir)
+		// if (dir == 0) {
+		// 	debug!("Queue $curr_self_queue$: $self_x$, $self_y$ (<m>NORTH</>)")
+		// } else if (dir == 1) {
+		// 	debug!("Queue $curr_self_queue$: $self_x$, $self_y$ (<y>east</>)")
+		// } else if (dir == 2) {
+		// 	debug!("Queue $curr_self_queue$: $self_x$, $self_y$ (<c>SOUTH</>)")
+		// } else if (dir == 3) {
+		// 	debug!("Queue $curr_self_queue$: $self_x$, $self_y$ (<r>west</>)")
+		// }
 	}
 }
 // load_self_pos { // ARRAY VERSION
 // 	self x = followingPlayerX[curr_self_queue];
 // 	self y = followingPlayerY[curr_self_queue];
+//	if (curr_follower == $nano) { self x += 8; }
+//	if (curr_follower == $emacs) { self x -= 8; }
+//	self y -= 1;
 // }
 load_self_pos {
 	load_self_pos_if(0, queue_x0, queue_y0)
@@ -482,15 +504,18 @@ load_self_pos {
 	load_self_pos_if(7, queue_x7, queue_y7)
 	load_self_pos_if(8, queue_x8, queue_y8)
 	load_self_pos_if(9, queue_x9, queue_y9)
+	if (curr_follower == $nano) { self x += 8; }
+	if (curr_follower == $emacs) { self x -= 8; }
+	self y -= 1;
 }
 follow_player {
 	// wait 20ms;
 	if (player current_animation != 1) {
 		if (should_follow_player) {
 			should_follow_player = false;
-			tempvar2 = $follow_delay;
-		} else if (tempvar2 != 0) {
-			tempvar2 -= 1;
+			follow_delay_tick = $follow_delay;
+		} else if (follow_delay_tick != 0) {
+			follow_delay_tick -= 1;
 		} else if (am_following_player) {
 			am_following_player = false;
 			self current_animation = 0;
@@ -501,16 +526,16 @@ follow_player {
 		if (!should_follow_player) {
 			should_follow_player = true;
 			follow_player_stack_init()
-			tempvar2 = $follow_delay;
-		} else if (tempvar2 != 0) {
-			tempvar2 -= 1;
+			follow_delay_tick = $follow_delay;
+		} else if (follow_delay_tick != 0) {
+			follow_delay_tick -= 1;
 		} else if (!am_following_player) {
 			am_following_player = true;
 			self current_animation = 1;
 		}
 	}
 
-	// MOVE HAMSTER
+	// MOVE FOLLOWER
 	if (am_following_player) {
 		my_old_x = self x;
 		my_old_y = self y;
@@ -518,9 +543,6 @@ follow_player {
 		curr_self_queue = (curr_self_queue + 1) % $queue_size;
 		// set position based on the new queue value
 		load_self_pos()
-		tempvar = offset_x();
-		self x += tempvar; // TODO: can't put offset_x() into RHS?
-		self y -= $offset_y;
 		// get the absolute value of the delta
 		if (self x > my_old_x) {
 			my_diff_x = self x - my_old_x;
@@ -554,13 +576,17 @@ follow_player {
 interact_demo_nano {
 	if (curr_follower != $nano) {
 		if (curr_follower == $vim) {
-			show dialog { Vim ":wq" };
+			show dialog vim_quit { Vim ":wq" };
+			entity Vim on_tick = face_player;
+			entity Vim current_animation = 0;
+		} else if (curr_follower == $emacs) {
+			show dialog emacs_quit { Emacs "You'll be back." };
+			entity Emacs on_tick = face_player;
+			entity Emacs current_animation = 0;
 		}
 		curr_follower = $nano;
 		follow_player_stack_init()
 		entity Nano on_tick = follow_player;
-		entity Vim on_tick = face_player;
-		entity Vim current_animation = 0;
 		show dialog { SELF "I'll help now!" };
 		
 	} else {
@@ -572,16 +598,41 @@ interact_demo_nano {
 interact_demo_vim {
 	if (curr_follower != $vim) {
 		if (curr_follower == $nano) {
-			show dialog { Nano "Writing out!" };
+			show dialog nano_quit { Nano "Writing out!" };
+			entity Nano on_tick = face_player;
+			entity Nano current_animation = 0;
+		} else if (curr_follower == $emacs) {
+			show dialog emacs_quit;
+			entity Emacs on_tick = face_player;
+			entity Emacs current_animation = 0;
 		}
 		curr_follower = $vim;
 		follow_player_stack_init()
 		entity Vim on_tick = follow_player;
-		entity Nano on_tick = face_player;
-		entity Nano current_animation = 0;
 		show dialog { SELF ":e follow" };
 	} else {
 		face_player()
 		show dialog { SELF ":up" };
+	}
+}
+
+interact_demo_emacs {
+	if (curr_follower != $emacs) {
+		if (curr_follower == $nano) {
+			show dialog nano_quit;
+			entity Nano on_tick = face_player;
+			entity Nano current_animation = 0;
+		} else if (curr_follower == $vim) {
+			show dialog vim_quit;
+			entity Vim on_tick = face_player;
+			entity Vim current_animation = 0;
+		}
+		curr_follower = $emacs;
+		follow_player_stack_init()
+		entity Emacs on_tick = follow_player;
+		show dialog { SELF "About time." };
+	} else {
+		face_player()
+		show dialog { SELF "'Sup?" };
 	}
 }

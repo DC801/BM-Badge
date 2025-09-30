@@ -935,6 +935,24 @@
                  "width":32,
                  "x":613,
                  "y":388
+                }, 
+                {
+                 "class":"",
+                 "gid":981,
+                 "height":48,
+                 "id":88,
+                 "name":"Emacs",
+                 "properties":[
+                        {
+                         "name":"on_interact",
+                         "type":"string",
+                         "value":"interact_demo_emacs"
+                        }],
+                 "rotation":0,
+                 "visible":true,
+                 "width":48,
+                 "x":563,
+                 "y":390
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -1105,7 +1123,7 @@
          "y":0
         }],
  "nextlayerid":8,
- "nextobjectid":88,
+ "nextobjectid":89,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.9.2",
@@ -1198,6 +1216,10 @@
         {
          "firstgid":869,
          "source":"..\/entities\/entity-vim.json"
+        }, 
+        {
+         "firstgid":965,
+         "source":"..\/entities\/entity-emacs.json"
         }],
  "tilewidth":32,
  "type":"map",

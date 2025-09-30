@@ -154,7 +154,6 @@ var handleScenarioData = function (fileNameMap) {
 			// 	const error = new Error (parserResult.printErrors)
 			// 	throw error;
 			// }
-			debugger;
 			return parserResult;
 		});
 

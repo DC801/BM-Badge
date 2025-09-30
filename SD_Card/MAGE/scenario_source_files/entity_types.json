@@ -5173,5 +5173,69 @@
 		},
 		"scenarioIndex": 69,
 		"serialized": {}
+	},
+	"emacs": {
+		"type": "emacs",
+		"tileset": "entity-emacs.json",
+		"animations": {
+			"idle": [
+				{
+					"tileid": 17,
+					"flip_x": false,
+					"flip_y": false
+				},
+				{
+					"tileid": 15,
+					"flip_x": true,
+					"flip_y": false
+				},
+				{
+					"tileid": 16,
+					"flip_x": false,
+					"flip_y": false
+				},
+				{
+					"tileid": 15,
+					"flip_x": false,
+					"flip_y": false
+				}
+			],
+			"walk": [
+				{
+					"tileid": 19,
+					"flip_x": false
+				},
+				{
+					"tileid": 18,
+					"flip_x": true
+				},
+				{
+					"tileid": 19,
+					"flip_x": false
+				},
+				{
+					"tileid": 18,
+					"flip_x": false
+				}
+			],
+			"action": [
+				{
+					"tileid": 2,
+					"flip_x": false
+				},
+				{
+					"tileid": 0,
+					"flip_x": true
+				},
+				{
+					"tileid": 1,
+					"flip_x": false
+				},
+				{
+					"tileid": 0,
+					"flip_x": false
+				}
+			]
+		}
 	}
 }
