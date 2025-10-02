@@ -222,12 +222,14 @@ export class FunctionDefinition extends MathlangNode {
 	params: string[];
 	paramNodes: TreeSitterNode[];
 	bodyNode: TreeSitterNode;
+	callCount: 0;
 	constructor(debug: MathlangLocation, args: GenericObj) {
 		super(debug, args);
 		this.name = ACTION.breakIfNotString(args.name);
 		this.params = ACTION.breakIfNotStringArray(args.params);
 		this.paramNodes = ACTION.breakIfNotTSNodeArray(args.paramNodes);
 		this.bodyNode = ACTION.breakIfNotTSNode(args.bodyNode);
+		this.callCount = 0;
 	}
 	isIdenticalTo(that: unknown) {
 		if (!(that instanceof FunctionDefinition)) return false;

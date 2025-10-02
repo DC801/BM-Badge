@@ -179,6 +179,7 @@ const nodeFns: Record<string, (debug: MathlangLocation) => AnyNode[]> = {
 			debug.using(nameNode).quickError('undefined fn', `function ${name} is undefined`);
 			return [];
 		}
+		definition.callCount += 1;
 
 		const callParamNodes = childrenForField(debug, 'arg');
 		const definitionParamNodes = definition.paramNodes;
@@ -241,7 +242,7 @@ const nodeFns: Record<string, (debug: MathlangLocation) => AnyNode[]> = {
 		fnSteps.forEach((v, i, arr) => {
 			if (v instanceof ScriptDefinition) {
 				const oldName = v.scriptName;
-				const newName = v.scriptName + `-fn${debug.f.p.advanceGotoSuffix()}`;
+				const newName = v.scriptName + `-call${definition.callCount}`;
 				v.scriptName = newName;
 				v.actions.forEach((action) => updateScriptName(action, oldName, newName));
 				for (let j = i + 1; j < arr.length; j++) {

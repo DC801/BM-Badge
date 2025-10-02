@@ -5187,6 +5187,7 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
         debug.using(nameNode).quickError("undefined fn", `function ${name2} is undefined`);
         return [];
       }
+      definition.callCount += 1;
       const callParamNodes = childrenForField(debug, "arg");
       const definitionParamNodes = definition.paramNodes;
       if (callParamNodes.length < definitionParamNodes.length) {
@@ -5227,7 +5228,7 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       fnSteps.forEach((v, i2, arr) => {
         if (v instanceof ScriptDefinition) {
           const oldName = v.scriptName;
-          const newName = v.scriptName + `-fn${debug.f.p.advanceGotoSuffix()}`;
+          const newName = v.scriptName + `-call${definition.callCount}`;
           v.scriptName = newName;
           v.actions.forEach((action) => updateScriptName(action, oldName, newName));
           for (let j = i2 + 1; j < arr.length; j++) {
@@ -6601,10 +6602,12 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       __publicField(this, "params");
       __publicField(this, "paramNodes");
       __publicField(this, "bodyNode");
+      __publicField(this, "callCount");
       this.name = breakIfNotString(args2.name);
       this.params = breakIfNotStringArray(args2.params);
       this.paramNodes = breakIfNotTSNodeArray(args2.paramNodes);
       this.bodyNode = breakIfNotTSNode(args2.bodyNode);
+      this.callCount = 0;
     }
     isIdenticalTo(that) {
       if (!(that instanceof FunctionDefinition)) return false;

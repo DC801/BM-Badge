@@ -43,13 +43,13 @@ export const fileTests: Record<string, TestFileMapEntry> = {
 		expected: {
 			scripts: {
 				script_def_in_fn_call: `"script_def_in_fn_call" {
-					command "wait_one" = "script_def_in_fn_call.mgs-2:27-fn5";
-					command "wait_two" = "script_def_in_fn_call.mgs-2:27-fn8";
+					command "wait_one" = "script_def_in_fn_call.mgs-2:27-call1";
+					command "wait_two" = "script_def_in_fn_call.mgs-2:27-call2";
 				}`,
-				'script_def_in_fn_call.mgs-2:27-fn5': `"script_def_in_fn_call.mgs-2:27-fn5" {
+				'script_def_in_fn_call.mgs-2:27-call1': `"script_def_in_fn_call.mgs-2:27-call1" {
 					wait 1ms;
 				}`,
-				'script_def_in_fn_call.mgs-2:27-fn8': `"script_def_in_fn_call.mgs-2:27-fn8" {
+				'script_def_in_fn_call.mgs-2:27-call2': `"script_def_in_fn_call.mgs-2:27-call2" {
 					wait 2ms;
 				}`,
 			},
