@@ -16,44 +16,20 @@ fn set_hint_none_if_not_series ($n) {
 	}
 }
 
-fn capture_entity_direction ($name, $captureVar) {
-	if (entity $name direction == north) {
-		$captureVar = 0;
-	} else if (entity$name direction == east) {
-		$captureVar = 1;
-	} else if (entity $name direction == south) {
-		$captureVar = 2;
-	} else if (entity $name direction == west) {
-		$captureVar = 3;
-	}
+fn capture_entity_direction ($name) {
+	if (entity $name direction == north) { return 0; }
+	else if (entity$name direction == east) { return 1; }
+	else if (entity $name direction == south) { return 2; }
+	else if (entity $name direction == west) { return 3; }
 }
 
 fn restore_entity_direction ($name, $captureVar) {
-if ($captureVar == 0) {
-		entity $name direction = north;
-	} else if ($captureVar == 1) {
-		entity $name direction = east;
-	} else if ($captureVar == 2) {
-		entity $name direction = south;
-	} else if ($captureVar == 3) {
-		entity $name direction = west;
-	}
+	if ($captureVar == 0) { entity $name direction = north; }
+	else if ($captureVar == 1) { entity $name direction = east; }
+	else if ($captureVar == 2) { entity $name direction = south; }
+	else if ($captureVar == 3) { entity $name direction = west; }
 }
 
-fn get_diff_x ($e1, $e2) {
-	if (entity $e1 x > entity $e2 x) {
-		return entity $e1 x - entity $e2 x;
-	} else {
-		return entity $e2 x - entity $e1 x;
-	}
-}
-fn get_diff_y ($e1, $e2) {
-	if (entity $e1 y > entity $e2 y) {
-		return entity $e1 y - entity $e2 y;
-	} else {
-		return entity $e2 y - entity $e1 y;
-	}
-}
 fn get_diff ($a, $b) {
 	if ($a > $b) {
 		return $a - $b;
@@ -62,5 +38,5 @@ fn get_diff ($a, $b) {
 	}
 }
 fn get_manhattan_distance ($e1, $e2) {
-	return get_diff_x($e1, $e2) + get_diff_y($e1, $e2);
+	return get_diff(entity $e1 x, entity $e2 x) + get_diff(entity $e1 y, entity $e2 y);
 }

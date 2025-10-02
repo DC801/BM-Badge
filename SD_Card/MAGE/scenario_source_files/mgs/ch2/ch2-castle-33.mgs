@@ -95,7 +95,7 @@ on_tick_ch2_castle_33 {
 		}
 	}
 	if (ch2_mousegame) {
-		goto ch2_mousegame_tick; // this script also resets to this script
+		ch2_mousegame_tick()
 	}
 }
 
@@ -567,5 +567,4 @@ ch2_mousegame_tick {
 		light LED_BIT2 = on;
 		light LED_BIT1 = on;
 	}
-	map on_tick = on_tick_ch2_castle_33; // reset (NOTE: not an infinite loop, because it's not a `goto` here)
 }

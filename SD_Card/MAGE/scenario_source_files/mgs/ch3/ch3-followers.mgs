@@ -4,7 +4,7 @@ $nano = 0;
 $vim = 1;
 $emacs = 2;
 
-set_follower {
+set_follower_scripts {
 	entity Nano on_tick = face_player;
 	entity Vim on_tick = face_player;
 	entity Emacs on_tick = face_player;
@@ -218,16 +218,8 @@ follow_player {
 		// set position based on the new queue value
 		load_self_pos()
 		// get the absolute value of the delta
-		if (self x > my_old_x) {
-			my_diff_x = self x - my_old_x;
-		} else {
-			my_diff_x = my_old_x - self x;
-		}
-		if (self y > my_old_y) {
-			my_diff_y = self y - my_old_y;
-		} else {
-			my_diff_y = my_old_y - self y;
-		}
+		my_diff_x = get_diff(self x, my_old_x);
+		my_diff_y = get_diff(self y, my_old_y);
 		// turn the entity NSEW - check which axis changed more
 		if (my_diff_x > my_diff_y) {
 			if (self x > my_old_x) {
