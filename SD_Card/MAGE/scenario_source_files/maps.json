@@ -408,7 +408,7 @@
 	},
 	"demo": {
 		"path": "maps/map-demo.json",
-		"on_load": "show_dialog_timewarp"
+		"on_load": "on_load_demo"
 	},
 	"main": {
 		"path": "maps/map-main.json",

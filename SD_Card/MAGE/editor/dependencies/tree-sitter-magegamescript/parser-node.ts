@@ -71,22 +71,14 @@ import {
 	BoolExpression,
 	FunctionDefinition,
 	forLoopMaker,
+	IntExpression,
 } from './parser-types.ts';
 import {
 	Action,
-	CheckAction,
 	COPY_SCRIPT,
 	GOTO_ACTION_INDEX,
 	MUTATE_VARIABLE,
-	REGISTER_SERIAL_DIALOG_COMMAND,
-	REGISTER_SERIAL_DIALOG_COMMAND_ARGUMENT,
 	RUN_SCRIPT,
-	SET_ENTITY_INTERACT_SCRIPT,
-	SET_ENTITY_LOOK_SCRIPT,
-	SET_ENTITY_TICK_SCRIPT,
-	SET_MAP_LOOK_SCRIPT,
-	SET_MAP_TICK_SCRIPT,
-	SET_SCRIPT_PAUSE,
 	SHOW_SERIAL_DIALOG,
 } from './parser-bytecode-info.ts';
 
@@ -202,15 +194,23 @@ const nodeFns: Record<string, (debug: MathlangLocation) => AnyNode[]> = {
 			return [];
 		}
 
-		// sanitize passed params
-		// todo: should expressions be allowed?
-		const callParams = callParamNodes.map((v) => {
-			let capture = handleCapture(debug.using(v));
-			if (!isMGSPrimitive(capture)) {
-				debug.using(v).quickError('invalid fn arg', 'function arg not an MGS primitive');
-				capture = coerceToString(debug.using(v), capture, 'fucntion param');
+		const argSteps: AnyNode[] = [];
+		let temporaryCount = 0;
+		const callParams = callParamNodes.map((callParamNode) => {
+			const capture = handleCapture(debug.using(callParamNode));
+			if (typeof capture === 'string' || typeof capture === 'number') {
+				return capture;
 			}
-			return capture;
+			if (capture instanceof IntExpression) {
+				temporaryCount += 1;
+				const temp = newTemporary();
+				argSteps.push(...capture.toSteps(temp));
+				return temp;
+			}
+			debug
+				.using(callParamNode)
+				.quickError('invalid fn arg', 'function arg not an int epxression');
+			return coerceToString(debug.using(callParamNode), capture, 'fucntion param');
 		});
 
 		// make local const registry based on what we were passed for this call
@@ -231,13 +231,14 @@ const nodeFns: Record<string, (debug: MathlangLocation) => AnyNode[]> = {
 		stack.unshift(localConstants);
 
 		// and NOW we handle the fn body (with our newly-registered consts poised to be inserted)
-		let steps = handleNamedChildren(debug.using(definition.bodyNode));
+		let fnSteps = handleNamedChildren(debug.using(definition.bodyNode));
 
 		// bake it like a script body
-		steps = flattenAndDoAutoReturn(debug, steps);
+		fnSteps = flattenAndDoAutoReturn(debug, fnSteps);
 
 		// if there's any scripts-in-place, add a suffix to them
-		steps.forEach((v, i, arr) => {
+		// (we don't know if the fn args changed what the definition is)
+		fnSteps.forEach((v, i, arr) => {
 			if (v instanceof ScriptDefinition) {
 				const oldName = v.scriptName;
 				const newName = v.scriptName + `-fn${debug.f.p.advanceGotoSuffix()}`;
@@ -251,7 +252,12 @@ const nodeFns: Record<string, (debug: MathlangLocation) => AnyNode[]> = {
 
 		// we're done with the args for this call; remove them from the fn stack
 		stack.shift();
-		return steps;
+
+		// clean up temporaries
+		for (let i = 0; i < temporaryCount; i++) {
+			dropTemporary();
+		}
+		return argSteps.concat(fnSteps);
 	},
 	script_block: (debug) => {
 		return handleNamedChildren(debug);

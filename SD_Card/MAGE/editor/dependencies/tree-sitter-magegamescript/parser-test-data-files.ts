@@ -15,26 +15,41 @@ type TestFileMapEntry = {
 	expected: TestExpected;
 };
 export const fileTests: Record<string, TestFileMapEntry> = {
+	'int_exp_in_fn_call.mgs': {
+		fileText: `
+			fn store_n ($a) { stored = $a*1; }
+			int_exp_in_fn_call { store_n(player x + 7) }
+		`,
+		expected: {
+			scripts: {
+				int_exp_in_fn_call: `"int_exp_in_fn_call" {
+					__TEMP_0 = player x;
+					__TEMP_0 += 7;
+					stored = __TEMP_0;
+				}`,
+			},
+		},
+	},
 	'script_def_in_fn_call.mgs': {
 		fileText: `
 			fn make_command ($commandName, $arg) {
 				command $commandName = { wait $arg; };
 			}
-			_ {
+			script_def_in_fn_call {
 				make_command(wait_one, 1)
 				make_command(wait_two, 2)
 			}
 		`,
 		expected: {
 			scripts: {
-				_: `"_" {
-					command "wait_one" = "script_def_in_fn_call.mgs-2:27-fn3";
-					command "wait_two" = "script_def_in_fn_call.mgs-2:27-fn6";
+				script_def_in_fn_call: `"script_def_in_fn_call" {
+					command "wait_one" = "script_def_in_fn_call.mgs-2:27-fn5";
+					command "wait_two" = "script_def_in_fn_call.mgs-2:27-fn8";
 				}`,
-				'script_def_in_fn_call.mgs-2:27-fn3': `"script_def_in_fn_call.mgs-2:27-fn3" {
+				'script_def_in_fn_call.mgs-2:27-fn5': `"script_def_in_fn_call.mgs-2:27-fn5" {
 					wait 1ms;
 				}`,
-				'script_def_in_fn_call.mgs-2:27-fn6': `"script_def_in_fn_call.mgs-2:27-fn6" {
+				'script_def_in_fn_call.mgs-2:27-fn8': `"script_def_in_fn_call.mgs-2:27-fn8" {
 					wait 2ms;
 				}`,
 			},

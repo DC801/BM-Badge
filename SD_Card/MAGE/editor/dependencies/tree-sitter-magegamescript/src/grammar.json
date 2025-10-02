@@ -1271,19 +1271,7 @@
             "members": [
               {
                 "type": "SYMBOL",
-                "name": "STRING"
-              },
-              {
-                "type": "SYMBOL",
-                "name": "NUMBER"
-              },
-              {
-                "type": "SYMBOL",
-                "name": "BOOL"
-              },
-              {
-                "type": "SYMBOL",
-                "name": "CONSTANT"
+                "name": "_int_expression"
               }
             ]
           }
@@ -1308,19 +1296,7 @@
                       "members": [
                         {
                           "type": "SYMBOL",
-                          "name": "STRING"
-                        },
-                        {
-                          "type": "SYMBOL",
-                          "name": "NUMBER"
-                        },
-                        {
-                          "type": "SYMBOL",
-                          "name": "BOOL"
-                        },
-                        {
-                          "type": "SYMBOL",
-                          "name": "CONSTANT"
+                          "name": "_int_expression"
                         }
                       ]
                     }
