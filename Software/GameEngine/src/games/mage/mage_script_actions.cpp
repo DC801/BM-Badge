@@ -1,3 +1,4 @@
+#include <algorithm>
 #include "mage_script_actions.h"
 #include "EngineInput.h"
 #include "mage_script_control.h"
@@ -2732,6 +2733,40 @@ void array_new(uint8_t * args, MageScriptState * resumeStateStruct)
 	};
 	MageGame->scriptArrays.push_back(arrays);
 }
+void array_delete(uint8_t * args, MageScriptState * resumeStateStruct)
+{
+	typedef struct {
+		uint8_t arrayId;
+		uint8_t paddingB;
+		uint8_t paddingC;
+		uint8_t paddingD;
+		uint8_t paddingE;
+		uint8_t paddingF;
+		uint8_t paddingG;
+	} ActionArrayDelete;
+	const auto *argStruct = (ActionArrayDelete*)args;
+	const uint8_t arrayId = argStruct->arrayId;
+	const auto scriptArrays = &MageGame->scriptArrays;
+	const size_t sizeBeforeFilter = scriptArrays->size();
+	scriptArrays->erase(
+		std::remove_if(
+			scriptArrays->begin(),
+			scriptArrays->end(),
+			[arrayId](const MageScriptArray& array) { return array.arrayId == arrayId; }
+		),
+		scriptArrays->end()
+	);
+	const std::string message = "array_delete: arrayId " + std::to_string(arrayId);
+	if (sizeBeforeFilter != scriptArrays->size()) {
+		MageCommand->debugScriptsPrintln(
+			 message + " successfully deleted"
+		);
+		return;
+	}
+	MageCommand->debugScriptsPrintln(
+		message + " is invalid and was not deleted"
+	);
+}
 void array_log(uint8_t * args, MageScriptState * resumeStateStruct)
 {
 	typedef struct {
@@ -2746,7 +2781,7 @@ void array_log(uint8_t * args, MageScriptState * resumeStateStruct)
 	auto *argStruct = (ActionArrayLog*)args;
 	for (auto&[arrayId, values]: MageGame->scriptArrays){
 		if (arrayId == argStruct->arrayId) {
-			std::string message = "array " + std::to_string(argStruct->arrayId) + " = [";
+			std::string message = "array_log: array " + std::to_string(argStruct->arrayId) + " = [";
 			uint8_t index = 0;
 			for (auto& value: values) {
 				if (index > 0) {
@@ -2756,12 +2791,12 @@ void array_log(uint8_t * args, MageScriptState * resumeStateStruct)
 				index += 1;
 			}
 			message += "]";
-			MageCommand->debugPrintln(message);
+			MageCommand->debugScriptsPrintln(message);
 			return;
 		}
 	}
-	MageCommand->debugPrintln(
-		"array_log: Invalid arrayId:" + std::to_string(argStruct->arrayId)
+	MageCommand->debugScriptsPrintln(
+		"array_log: Invalid arrayId: " + std::to_string(argStruct->arrayId)
 	);
 }
 void array_push_from_value(uint8_t * args, MageScriptState * resumeStateStruct)
@@ -2778,8 +2813,8 @@ void array_push_from_value(uint8_t * args, MageScriptState * resumeStateStruct)
 	ROM_ENDIAN_U2_BUFFER(&argStruct->value, 1);
 	for (MageScriptArray& array: MageGame->scriptArrays){
 		if (array.arrayId == argStruct->arrayId) {
-			MageCommand->debugPrintln(
-				"array " + std::to_string(argStruct->arrayId) +
+			MageCommand->debugScriptsPrintln(
+				"array_push_from_value: array " + std::to_string(argStruct->arrayId) +
 				": Pushing in value " + std::to_string(argStruct->value) +
 				" at index " + std::to_string(array.values.size())
 			);
@@ -2787,8 +2822,8 @@ void array_push_from_value(uint8_t * args, MageScriptState * resumeStateStruct)
 			return;
 		}
 	}
-	MageCommand->debugPrintln(
-		"array_push_from_value: Invalid arrayId:" + std::to_string(argStruct->arrayId)
+	MageCommand->debugScriptsPrintln(
+		"array_push_from_value: Invalid arrayId: " + std::to_string(argStruct->arrayId)
 	);
 }
 
@@ -2895,7 +2930,7 @@ ActionFunctionPointer actionFunctions[MageScriptActionTypeId::NUM_ACTIONS] = {
 	&action_unregister_serial_dialog_command_alias,
 	&action_set_serial_dialog_command_visibility,
 	&array_new,
-	NULL, //&array_delete
+	&array_delete,
 	&array_log,
 	NULL, //&array_sort
 	NULL, //&array_reverse

@@ -106,6 +106,7 @@ class MageCommandControl {
 		uint32_t size();
 		void reset();
 		void debugPrintln(const std::string &message);
+		void debugScriptsPrintln(const std::string &message);
 		void sendBufferedOutput();
 
 		int32_t getCommandIndex(const std::string &combinedString, bool isFail, bool useFail);

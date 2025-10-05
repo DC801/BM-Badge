@@ -148,6 +148,7 @@ debug_commands {
 	command array + gamut = array_json_test {
 		json[
 			{"action":"ARRAY_NEW","array_name":"arr"},
+			{"action":"ARRAY_NEW","array_name":"asdf"},
 			{"action":"ARRAY_DELETE","array_name":"arr"},
 			{"action":"ARRAY_LOG","array_name":"arr"},
 			{"action":"ARRAY_SORT","array_name":"arr"},
@@ -163,16 +164,17 @@ debug_commands {
 			{"action":"ARRAY_PUSH_FROM_VARIABLE","array_name":"arr","variable":"varr"},
 			{"action":"ARRAY_PUSH_LEFT_FROM_VALUE","value":0,"array_name":"arr"},
 			{"action":"ARRAY_PUSH_LEFT_FROM_VARIABLE","array_name":"arr","variable":"varr"},
-			{"action":"ARRAY_SLICE","array_source":"arrrrrrrr","array_destination":"ar","index_start":0},
-			{"action":"ARRAY_SLICE_BY_VARIABLE","variable_start":"vstart","array_source":"arrrrrrrr","array_destination":"ar"},
-			{"action":"ARRAY_SLICE_TWICE","array_source":"arrrrrrrr","array_destination":"ar","index_start":0,"index_end":0},
-			{"action":"ARRAY_SLICE_TWICE_BY_VARIABLE","variable_start":"vstart","variable_end":"vend","array_source":"arrrrrrrr","array_destination":"ar"},
+			{"action":"ARRAY_SLICE","array_source":"source","array_destination":"dest","index_start":0},
+			{"action":"ARRAY_SLICE_BY_VARIABLE","variable_start":"vstart","array_source":"source","array_destination":"dest"},
+			{"action":"ARRAY_SLICE_TWICE","array_source":"source","array_destination":"dest","index_start":0,"index_end":0},
+			{"action":"ARRAY_SLICE_TWICE_BY_VARIABLE","variable_start":"vstart","variable_end":"vend","array_source":"source","array_destination":"dest"},
 			{"action":"ARRAY_POP_INTO_VARIABLE","variable":"varr","array_name":"arr"},
 			{"action":"ARRAY_POP_LEFT_INTO_VARIABLE","variable":"varr","array_name":"arr"}
 		]
 	};
 
 	command array + basics = array_basics {
+		show serial_dialog { "---- Creating an array named 'arr'" };
 		json[
 			{"action":"ARRAY_NEW","array_name":"arr"},
 			{"action":"ARRAY_LOG","array_name":"arr"},
@@ -180,6 +182,33 @@ debug_commands {
 			{"action":"ARRAY_LOG","array_name":"arr"},
 			{"action":"ARRAY_PUSH_FROM_VALUE","value":99,"array_name":"arr"},
 			{"action":"ARRAY_LOG","array_name":"arr"}
+		]
+		show serial_dialog { "---- Creating another array named 'asdf'" };
+		json[
+			{"action":"ARRAY_NEW","array_name":"asdf"},
+			{"action":"ARRAY_LOG","array_name":"asdf"},
+			{"action":"ARRAY_PUSH_FROM_VALUE","value":1234,"array_name":"asdf"},
+			{"action":"ARRAY_LOG","array_name":"asdf"},
+			{"action":"ARRAY_PUSH_FROM_VALUE","value":72,"array_name":"asdf"},
+			{"action":"ARRAY_LOG","array_name":"asdf"}
+		]
+		show serial_dialog { "---- Can both arrays be read afterward?" };
+		json[
+			{"action":"ARRAY_LOG","array_name":"arr"},
+			{"action":"ARRAY_LOG","array_name":"asdf"}
+		]
+		show serial_dialog { "---- Deleting array 'arr' and then trying to use it" };
+		json[
+			{"action":"ARRAY_DELETE","array_name":"arr"},
+			{"action":"ARRAY_LOG","array_name":"arr"},
+			{"action":"ARRAY_PUSH_FROM_VALUE","value":5,"array_name":"arr"}
+		]
+		show serial_dialog { "---- Deleting array 'arr' twice and then trying to use it" };
+		json[
+			{"action":"ARRAY_DELETE","array_name":"arr"},
+			{"action":"ARRAY_DELETE","array_name":"arr"},
+			{"action":"ARRAY_LOG","array_name":"arr"},
+			{"action":"ARRAY_PUSH_FROM_VALUE","value":5,"array_name":"arr"}
 		]
 	};
 }

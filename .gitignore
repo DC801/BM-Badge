@@ -35,6 +35,7 @@ _build/
 *.code-workspace
 .DS_Store
 Thumbs.db
+cmake*
 
 # Ignore Cortex-Debug files
 .cortex-debug.peripherals.state.json

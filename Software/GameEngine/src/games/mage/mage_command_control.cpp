@@ -699,6 +699,11 @@ void MageCommandControl::debugPrintln(const std::string &message) {
 		commandResponseBuffer += message + "\n";
 	}
 }
+void MageCommandControl::debugScriptsPrintln(const std::string &message) {
+	if(MageGame->isEntityDebugOn) {
+		serialDialogBuffer += message + "\n";
+	}
+}
 
 void MageCommandControl::sendBufferedOutput() {
 	std::vector<std::string*> bufferedStrings {
