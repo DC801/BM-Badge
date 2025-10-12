@@ -8,9 +8,11 @@ import {
 	LabelDefinition,
 	CopyMacro,
 	MathlangSequence,
+	MathlangMessage,
 } from './parser-types.ts';
 import { type GenericObj } from './parser-actions.ts';
 import { inverseOpMap, realignTemp, simpleBranchMaker } from './parser-utilities.ts';
+import { coerceToBool, coerceToNumber, coerceToString } from './parser-capture.ts';
 
 const opIntoStringMap: Record<string, string> = {
 	'=': 'SET',
@@ -55,19 +57,37 @@ export class Action extends AnyNode {
 	print() {
 		return `json[${JSON.stringify(this, null, '\t')}];`;
 	}
-	static fromArgs(args: unknown) {
+	static fromArgs(args: unknown, debug?: MathlangLocation) {
 		if (args instanceof CopyMacro) {
 			return COPY_SCRIPT.quick(args.script, args.search_and_replace);
 		}
 		if (typeof args !== 'object' || args === null) {
-			throw new Error('cannot make Action from non-object');
+			if (debug) {
+				debug.quickError('invalid action', 'cannot make Action from non-object');
+			} else {
+				throw new Error('cannot make Action from non-object');
+			}
 		}
-		const actionName = breakIfNotString((args as Action).action);
-		if (!actionName) {
-			throw new Error('Action sans action?');
+		const actionName = (args as Action).action;
+		if (!actionName === undefined || typeof actionName !== 'string') {
+			if (debug) {
+				debug.quickError('invalid action', 'action missing "action" property');
+			} else {
+				throw new Error(`Action sans action param (${actionName})`);
+			}
 		}
 		if (actionConstructorLookup[actionName]) {
-			return actionConstructorLookup[actionName](args);
+			try {
+				const newAction = actionConstructorLookup[actionName](args, debug);
+				return newAction;
+			} catch (e) {
+				if (debug) {
+					const message = e.message;
+					debug.quickError('invalid action params', message);
+				} else {
+					throw new Error(`invalid action params for "${actionName}"`);
+				}
+			}
 		}
 		return new UnknownAction(args);
 	}
@@ -252,10 +272,10 @@ export class NULL_ACTION extends Action {
 export class LABEL extends Action {
 	action: 'LABEL';
 	value: string;
-	constructor(args: GenericObj) {
+	constructor(args: GenericObj, debug?: MathlangLocation) {
 		super();
 		this.action = 'LABEL';
-		this.value = breakIfNotString(args.value);
+		this.value = tryString(args.value, 'LABEL param "value"', debug);
 	}
 	ifLabelAddSuffix(suffix: string) {
 		this.value += suffix;
@@ -268,10 +288,10 @@ export class LABEL extends Action {
 export class RUN_SCRIPT extends Action {
 	action: 'RUN_SCRIPT';
 	script: string;
-	constructor(args: GenericObj) {
+	constructor(args: GenericObj, debug?: MathlangLocation) {
 		super();
 		this.action = 'RUN_SCRIPT';
-		this.script = breakIfNotString(args.script);
+		this.script = tryString(args.script, 'RUN_SCRIPT param "script"', debug);
 	}
 	getScript() {
 		return this.script;
@@ -289,10 +309,10 @@ export class RUN_SCRIPT extends Action {
 export class BLOCKING_DELAY extends Action {
 	action: 'BLOCKING_DELAY';
 	duration: number;
-	constructor(args: GenericObj) {
+	constructor(args: GenericObj, debug?: MathlangLocation) {
 		super();
 		this.action = 'BLOCKING_DELAY';
-		this.duration = typeof args.duration === 'number' ? args.duration : 0;
+		this.duration = tryNumber(args.duration, `${this.action} param "duration"`, debug);
 	}
 	print() {
 		return `block ${printDuration(this.duration)};`;
@@ -301,10 +321,10 @@ export class BLOCKING_DELAY extends Action {
 export class NON_BLOCKING_DELAY extends Action {
 	action: 'NON_BLOCKING_DELAY';
 	duration: number;
-	constructor(args: GenericObj) {
+	constructor(args: GenericObj, debug?: MathlangLocation) {
 		super();
 		this.action = 'NON_BLOCKING_DELAY';
-		this.duration = typeof args.duration === 'number' ? args.duration : 0;
+		this.duration = tryNumber(args.duration, `${this.action} param "duration"`, debug);
 	}
 	print() {
 		return `wait ${printDuration(this.duration)};`;
@@ -314,11 +334,11 @@ export class SET_ENTITY_NAME extends Action {
 	action: 'SET_ENTITY_NAME';
 	entity: string;
 	string: string;
-	constructor(args: GenericObj) {
+	constructor(args: GenericObj, debug?: MathlangLocation) {
 		super();
 		this.action = 'SET_ENTITY_NAME';
-		this.entity = breakIfNotString(args.entity);
-		this.string = breakIfNotString(args.string);
+		this.entity = tryString(args.entity, `${this.action} param "duration"`, debug);
+		this.string = tryString(args.string, `${this.action} param "duration"`, debug);
 	}
 	static quick(entity: string, string: string) {
 		return new SET_ENTITY_NAME({ entity, string });
@@ -331,11 +351,11 @@ export class SET_ENTITY_X extends Action {
 	action: 'SET_ENTITY_X';
 	entity: string;
 	u2_value: number;
-	constructor(args: GenericObj) {
+	constructor(args: GenericObj, debug?: MathlangLocation) {
 		super();
 		this.action = 'SET_ENTITY_X';
-		this.entity = breakIfNotString(args.entity);
-		this.u2_value = breakIfNotNumber(args.u2_value);
+		this.entity = tryString(args.entity, `${this.action} param "entity"`, debug);
+		this.u2_value = tryNumber(args.u2_value, `${this.action} param "u2_value"`, debug);
 	}
 	static quick(entity: string, u2_value: number) {
 		return new SET_ENTITY_X({ entity, u2_value });
@@ -348,11 +368,11 @@ export class SET_ENTITY_Y extends Action {
 	action: 'SET_ENTITY_Y';
 	entity: string;
 	u2_value: number;
-	constructor(args: GenericObj) {
+	constructor(args: GenericObj, debug?: MathlangLocation) {
 		super();
 		this.action = 'SET_ENTITY_Y';
-		this.entity = breakIfNotString(args.entity);
-		this.u2_value = breakIfNotNumber(args.u2_value);
+		this.entity = tryString(args.entity, `${this.action} param "entity"`, debug);
+		this.u2_value = tryNumber(args.u2_value, `${this.action} param "u2_value"`, debug);
 	}
 	static quick(entity: string, u2_value: number) {
 		return new SET_ENTITY_Y({ entity, u2_value });
@@ -363,9 +383,9 @@ export class SET_ENTITY_Y extends Action {
 }
 export class ActionSetScript extends Action {
 	script: string;
-	constructor(args: GenericObj) {
+	constructor(args: GenericObj, debug?: MathlangLocation) {
 		super();
-		this.script = breakIfNotString(args.script);
+		this.script = tryString(args.script, `ActionSetScript param "script"`, debug);
 	}
 	getScript() {
 		return this.script;
@@ -377,10 +397,10 @@ export class ActionSetScript extends Action {
 export class SET_ENTITY_INTERACT_SCRIPT extends ActionSetScript {
 	action: 'SET_ENTITY_INTERACT_SCRIPT';
 	entity: string;
-	constructor(args: GenericObj) {
-		super(args);
+	constructor(args: GenericObj, debug?: MathlangLocation) {
+		super(args, debug);
 		this.action = 'SET_ENTITY_INTERACT_SCRIPT';
-		this.entity = breakIfNotString(args.entity);
+		this.entity = tryString(args.entity, `${this.action} param "entity"`, debug);
 	}
 	static quick(entity: string, script: string) {
 		return new SET_ENTITY_INTERACT_SCRIPT({ entity, script });
@@ -392,10 +412,10 @@ export class SET_ENTITY_INTERACT_SCRIPT extends ActionSetScript {
 export class SET_ENTITY_TICK_SCRIPT extends ActionSetScript {
 	action: 'SET_ENTITY_TICK_SCRIPT';
 	entity: string;
-	constructor(args: GenericObj) {
-		super(args);
+	constructor(args: GenericObj, debug?: MathlangLocation) {
+		super(args, debug);
 		this.action = 'SET_ENTITY_TICK_SCRIPT';
-		this.entity = breakIfNotString(args.entity);
+		this.entity = tryString(args.entity, `${this.action} param "entity"`, debug);
 	}
 	static quick(entity: string, script: string) {
 		return new SET_ENTITY_TICK_SCRIPT({ entity, script });
@@ -408,11 +428,11 @@ export class SET_ENTITY_TYPE extends Action {
 	action: 'SET_ENTITY_TYPE';
 	entity: string;
 	entity_type: string;
-	constructor(args: GenericObj) {
+	constructor(args: GenericObj, debug?: MathlangLocation) {
 		super();
 		this.action = 'SET_ENTITY_TYPE';
-		this.entity = breakIfNotString(args.entity);
-		this.entity_type = breakIfNotString(args.entity_type);
+		this.entity = tryString(args.entity, `${this.action} param "entity"`, debug);
+		this.entity_type = tryString(args.entity_type, `${this.action} param "entity_type"`, debug);
 	}
 	static quick(entity: string, entity_type: string) {
 		return new SET_ENTITY_TYPE({ entity, entity_type });
@@ -425,11 +445,11 @@ export class SET_ENTITY_PRIMARY_ID extends Action {
 	action: 'SET_ENTITY_PRIMARY_ID';
 	entity: string;
 	u2_value: number;
-	constructor(args: GenericObj) {
+	constructor(args: GenericObj, debug?: MathlangLocation) {
 		super();
 		this.action = 'SET_ENTITY_PRIMARY_ID';
-		this.entity = breakIfNotString(args.entity);
-		this.u2_value = breakIfNotNumber(args.u2_value);
+		this.entity = tryString(args.entity, `${this.action} param "entity"`, debug);
+		this.u2_value = tryNumber(args.u2_value, `${this.action} param "u2_value"`, debug);
 	}
 	static quick(entity: string, u2_value: number) {
 		return new SET_ENTITY_PRIMARY_ID({ entity, u2_value });
@@ -442,11 +462,11 @@ export class SET_ENTITY_SECONDARY_ID extends Action {
 	action: 'SET_ENTITY_SECONDARY_ID';
 	entity: string;
 	u2_value: number;
-	constructor(args: GenericObj) {
+	constructor(args: GenericObj, debug?: MathlangLocation) {
 		super();
 		this.action = 'SET_ENTITY_SECONDARY_ID';
-		this.entity = breakIfNotString(args.entity);
-		this.u2_value = breakIfNotNumber(args.u2_value);
+		this.entity = tryString(args.entity, `${this.action} param "entity"`, debug);
+		this.u2_value = tryNumber(args.u2_value, `${this.action} param "u2_value"`, debug);
 	}
 	static quick(entity: string, u2_value: number) {
 		return new SET_ENTITY_SECONDARY_ID({ entity, u2_value });
@@ -459,11 +479,11 @@ export class SET_ENTITY_PRIMARY_ID_TYPE extends Action {
 	action: 'SET_ENTITY_PRIMARY_ID_TYPE';
 	entity: string;
 	byte_value: number;
-	constructor(args: GenericObj) {
+	constructor(args: GenericObj, debug?: MathlangLocation) {
 		super();
 		this.action = 'SET_ENTITY_PRIMARY_ID_TYPE';
-		this.entity = breakIfNotString(args.entity);
-		this.byte_value = breakIfNotNumber(args.byte_value);
+		this.entity = tryString(args.entity, `${this.action} param "entity"`, debug);
+		this.byte_value = tryNumber(args.byte_value, `${this.action} param "byte_value"`, debug);
 	}
 	static quick(entity: string, byte_value: number) {
 		return new SET_ENTITY_PRIMARY_ID_TYPE({ entity, byte_value });
@@ -476,11 +496,11 @@ export class SET_ENTITY_CURRENT_ANIMATION extends Action {
 	action: 'SET_ENTITY_CURRENT_ANIMATION';
 	entity: string;
 	byte_value: number;
-	constructor(args: GenericObj) {
+	constructor(args: GenericObj, debug?: MathlangLocation) {
 		super();
 		this.action = 'SET_ENTITY_CURRENT_ANIMATION';
-		this.entity = breakIfNotString(args.entity);
-		this.byte_value = breakIfNotNumber(args.byte_value);
+		this.entity = tryString(args.entity, `${this.action} param "entity"`, debug);
+		this.byte_value = tryNumber(args.byte_value, `${this.action} param "byte_value"`, debug);
 	}
 	static quick(entity: string, byte_value: number) {
 		return new SET_ENTITY_CURRENT_ANIMATION({ entity, byte_value });
@@ -493,11 +513,11 @@ export class SET_ENTITY_CURRENT_FRAME extends Action {
 	action: 'SET_ENTITY_CURRENT_FRAME';
 	entity: string;
 	byte_value: number;
-	constructor(args: GenericObj) {
+	constructor(args: GenericObj, debug?: MathlangLocation) {
 		super();
 		this.action = 'SET_ENTITY_CURRENT_FRAME';
-		this.entity = breakIfNotString(args.entity);
-		this.byte_value = breakIfNotNumber(args.byte_value);
+		this.entity = tryString(args.entity, `${this.action} param "entity"`, debug);
+		this.byte_value = tryNumber(args.byte_value, `${this.action} param "byte_value"`, debug);
 	}
 	static quick(entity: string, byte_value: number) {
 		return new SET_ENTITY_CURRENT_FRAME({ entity, byte_value });
@@ -510,11 +530,15 @@ export class SET_ENTITY_DIRECTION_RELATIVE extends Action {
 	action: 'SET_ENTITY_DIRECTION_RELATIVE';
 	entity: string;
 	relative_direction: number;
-	constructor(args: GenericObj) {
+	constructor(args: GenericObj, debug?: MathlangLocation) {
 		super();
 		this.action = 'SET_ENTITY_DIRECTION_RELATIVE';
-		this.entity = breakIfNotString(args.entity);
-		this.relative_direction = breakIfNotNumber(args.relative_direction);
+		this.entity = tryString(args.entity, `${this.action} param "entity"`, debug);
+		this.relative_direction = tryNumber(
+			args.relative_direction,
+			`${this.action} param "relative_direction"`,
+			debug,
+		);
 	}
 	static quick(entity: string, relative_direction: number) {
 		return new SET_ENTITY_DIRECTION_RELATIVE({ entity, relative_direction });
@@ -531,11 +555,11 @@ export class SET_ENTITY_DIRECTION extends Action {
 	action: 'SET_ENTITY_DIRECTION';
 	entity: string;
 	direction: string;
-	constructor(args: GenericObj) {
+	constructor(args: GenericObj, debug?: MathlangLocation) {
 		super();
 		this.action = 'SET_ENTITY_DIRECTION';
-		this.entity = breakIfNotString(args.entity);
-		this.direction = breakIfNotString(args.direction);
+		this.entity = tryString(args.entity, `${this.action} param "entity"`, debug);
+		this.direction = tryString(args.direction, `${this.action} param "direction"`, debug);
 	}
 	static quick(entity: string, direction: string) {
 		return new SET_ENTITY_DIRECTION({ entity, direction });
@@ -548,11 +572,15 @@ export class SET_ENTITY_DIRECTION_TARGET_ENTITY extends Action {
 	action: 'SET_ENTITY_DIRECTION_TARGET_ENTITY';
 	entity: string;
 	target_entity: string;
-	constructor(args: GenericObj) {
+	constructor(args: GenericObj, debug?: MathlangLocation) {
 		super();
 		this.action = 'SET_ENTITY_DIRECTION_TARGET_ENTITY';
-		this.entity = breakIfNotString(args.entity);
-		this.target_entity = breakIfNotString(args.target_entity);
+		this.entity = tryString(args.entity, `${this.action} param "entity"`, debug);
+		this.target_entity = tryString(
+			args.target_entity,
+			`${this.action} param "target_entity"`,
+			debug,
+		);
 	}
 	static quick(entity: string, target_entity: string) {
 		return new SET_ENTITY_DIRECTION_TARGET_ENTITY({ entity, target_entity });
@@ -565,11 +593,15 @@ export class SET_ENTITY_DIRECTION_TARGET_GEOMETRY extends Action {
 	action: 'SET_ENTITY_DIRECTION_TARGET_GEOMETRY';
 	entity: string;
 	target_geometry: string;
-	constructor(args: GenericObj) {
+	constructor(args: GenericObj, debug?: MathlangLocation) {
 		super();
 		this.action = 'SET_ENTITY_DIRECTION_TARGET_GEOMETRY';
-		this.entity = breakIfNotString(args.entity);
-		this.target_geometry = breakIfNotString(args.target_geometry);
+		this.entity = tryString(args.entity, `${this.action} param "entity"`, debug);
+		this.target_geometry = tryString(
+			args.target_geometry,
+			`${this.action} param "target_geometry"`,
+			debug,
+		);
 	}
 	static quick(entity: string, target_geometry: string) {
 		return new SET_ENTITY_DIRECTION_TARGET_GEOMETRY({ entity, target_geometry });
@@ -582,11 +614,11 @@ export class SET_ENTITY_GLITCHED extends ActionSetBool {
 	action: 'SET_ENTITY_GLITCHED';
 	entity: string;
 	bool_value: boolean;
-	constructor(args: GenericObj) {
+	constructor(args: GenericObj, debug?: MathlangLocation) {
 		super();
 		this.action = 'SET_ENTITY_GLITCHED';
-		this.entity = breakIfNotString(args.entity);
-		this.bool_value = breakIfNotBool(args.bool_value);
+		this.entity = tryString(args.entity, `${this.action} param "entity"`, debug);
+		this.bool_value = tryBool(args.bool_value, `${this.action} param "bool_value"`, debug);
 	}
 	updateProp(v: boolean) {
 		this.bool_value = v;
@@ -609,11 +641,11 @@ export class SET_ENTITY_PATH extends Action {
 	action: 'SET_ENTITY_PATH';
 	entity: string;
 	geometry: string;
-	constructor(args: GenericObj) {
+	constructor(args: GenericObj, debug?: MathlangLocation) {
 		super();
 		this.action = 'SET_ENTITY_PATH';
-		this.entity = breakIfNotString(args.entity);
-		this.geometry = breakIfNotString(args.geometry);
+		this.entity = tryString(args.entity, `${this.action} param "entity"`, debug);
+		this.geometry = tryString(args.geometry, `${this.action} param "geometry"`, debug);
 	}
 	static quick(entity: string, geometry: string) {
 		return new SET_ENTITY_PATH({ entity, geometry });
@@ -626,10 +658,10 @@ export class COPY_SCRIPT extends Action {
 	action: 'COPY_SCRIPT';
 	script: string;
 	search_and_replace?: Record<string, string>;
-	constructor(args: GenericObj) {
+	constructor(args: GenericObj, debug?: MathlangLocation) {
 		super();
 		this.action = 'COPY_SCRIPT';
-		this.script = breakIfNotString(args.script);
+		this.script = tryString(args.script, `${this.action} param "script"`, debug);
 		if (args.search_and_replace) {
 			const search_and_replace = {};
 			Object.entries(args.search_and_replace).forEach(([k, v]) => {
@@ -667,11 +699,11 @@ export class SET_SAVE_FLAG extends ActionSetBool {
 	action: 'SET_SAVE_FLAG';
 	save_flag: string;
 	bool_value: boolean;
-	constructor(args: GenericObj) {
+	constructor(args: GenericObj, debug?: MathlangLocation) {
 		super();
 		this.action = 'SET_SAVE_FLAG';
-		this.save_flag = breakIfNotString(args.save_flag);
-		this.bool_value = breakIfNotBool(args.bool_value);
+		this.save_flag = tryString(args.save_flag, `${this.action} param "save_flag"`, debug);
+		this.bool_value = tryBool(args.bool_value, `${this.action} param "bool_value"`, debug);
 	}
 	updateProp(v: boolean) {
 		this.bool_value = v;
@@ -704,10 +736,10 @@ export class SET_SAVE_FLAG extends ActionSetBool {
 export class SET_PLAYER_CONTROL extends ActionSetBool {
 	action: 'SET_PLAYER_CONTROL';
 	bool_value: boolean;
-	constructor(args: GenericObj) {
+	constructor(args: GenericObj, debug?: MathlangLocation) {
 		super();
 		this.action = 'SET_PLAYER_CONTROL';
-		this.bool_value = breakIfNotBool(args.bool_value);
+		this.bool_value = tryBool(args.bool_value, `${this.action} param "bool_value"`, debug);
 	}
 	updateProp(v: boolean) {
 		this.bool_value = v;
@@ -728,8 +760,8 @@ export class SET_PLAYER_CONTROL extends ActionSetBool {
 }
 export class SET_MAP_TICK_SCRIPT extends ActionSetScript {
 	action: 'SET_MAP_TICK_SCRIPT';
-	constructor(args: GenericObj) {
-		super(args);
+	constructor(args: GenericObj, debug?: MathlangLocation) {
+		super(args, debug);
 		this.action = 'SET_MAP_TICK_SCRIPT';
 	}
 	static quick(script: string) {
@@ -742,20 +774,20 @@ export class SET_MAP_TICK_SCRIPT extends ActionSetScript {
 export class SET_HEX_CURSOR_LOCATION extends Action {
 	action: 'SET_HEX_CURSOR_LOCATION';
 	address: number;
-	constructor(args: GenericObj) {
+	constructor(args: GenericObj, debug?: MathlangLocation) {
 		super();
 		this.action = 'SET_HEX_CURSOR_LOCATION';
-		this.address = breakIfNotNumber(args.address);
+		this.address = tryNumber(args.address, `${this.action} param "address"`, debug);
 	}
 	// todo print?
 }
 export class SET_WARP_STATE extends Action {
 	action: 'SET_WARP_STATE';
 	string: string;
-	constructor(args: GenericObj) {
+	constructor(args: GenericObj, debug?: MathlangLocation) {
 		super();
 		this.action = 'SET_WARP_STATE';
-		this.string = breakIfNotString(args.string);
+		this.string = tryString(args.string, `${this.action} param "string"`, debug);
 	}
 	print() {
 		return `warp_state = "${this.string}";`;
@@ -764,10 +796,10 @@ export class SET_WARP_STATE extends Action {
 export class SET_HEX_EDITOR_STATE extends ActionSetBool {
 	action: 'SET_HEX_EDITOR_STATE';
 	bool_value: boolean;
-	constructor(args: GenericObj) {
+	constructor(args: GenericObj, debug?: MathlangLocation) {
 		super();
 		this.action = 'SET_HEX_EDITOR_STATE';
-		this.bool_value = breakIfNotBool(args.bool_value);
+		this.bool_value = tryBool(args.bool_value, `${this.action} param "bool_value"`, debug);
 	}
 	updateProp(v: boolean) {
 		this.bool_value = v;
@@ -789,10 +821,10 @@ export class SET_HEX_EDITOR_STATE extends ActionSetBool {
 export class SET_HEX_EDITOR_DIALOG_MODE extends ActionSetBool {
 	action: 'SET_HEX_EDITOR_DIALOG_MODE';
 	bool_value: boolean;
-	constructor(args: GenericObj) {
+	constructor(args: GenericObj, debug?: MathlangLocation) {
 		super();
 		this.action = 'SET_HEX_EDITOR_DIALOG_MODE';
-		this.bool_value = breakIfNotBool(args.bool_value);
+		this.bool_value = tryBool(args.bool_value, `${this.action} param "bool_value"`, debug);
 	}
 	updateProp(v: boolean) {
 		this.bool_value = v;
@@ -814,10 +846,10 @@ export class SET_HEX_EDITOR_DIALOG_MODE extends ActionSetBool {
 export class SET_HEX_EDITOR_CONTROL extends ActionSetBool {
 	action: 'SET_HEX_EDITOR_CONTROL';
 	bool_value: boolean;
-	constructor(args: GenericObj) {
+	constructor(args: GenericObj, debug?: MathlangLocation) {
 		super();
 		this.action = 'SET_HEX_EDITOR_CONTROL';
-		this.bool_value = breakIfNotBool(args.bool_value);
+		this.bool_value = tryBool(args.bool_value, `${this.action} param "bool_value"`, debug);
 	}
 	updateProp(v: boolean) {
 		this.bool_value = v;
@@ -839,10 +871,10 @@ export class SET_HEX_EDITOR_CONTROL extends ActionSetBool {
 export class SET_HEX_EDITOR_CONTROL_CLIPBOARD extends ActionSetBool {
 	action: 'SET_HEX_EDITOR_CONTROL_CLIPBOARD';
 	bool_value: boolean;
-	constructor(args: GenericObj) {
+	constructor(args: GenericObj, debug?: MathlangLocation) {
 		super();
 		this.action = 'SET_HEX_EDITOR_CONTROL_CLIPBOARD';
-		this.bool_value = breakIfNotBool(args.bool_value);
+		this.bool_value = tryBool(args.bool_value, `${this.action} param "bool_value"`, debug);
 	}
 	updateProp(v: boolean) {
 		this.bool_value = v;
@@ -864,10 +896,10 @@ export class SET_HEX_EDITOR_CONTROL_CLIPBOARD extends ActionSetBool {
 export class LOAD_MAP extends Action {
 	action: 'LOAD_MAP';
 	map: string;
-	constructor(args: GenericObj) {
+	constructor(args: GenericObj, debug?: MathlangLocation) {
 		super();
 		this.action = 'LOAD_MAP';
-		this.map = breakIfNotString(args.map);
+		this.map = tryString(args.map, `${this.action} param "map"`, debug);
 	}
 	static quick(map: string) {
 		return new LOAD_MAP({ map });
@@ -879,10 +911,10 @@ export class LOAD_MAP extends Action {
 export class SHOW_DIALOG extends Action {
 	action: 'SHOW_DIALOG';
 	dialog: string;
-	constructor(args: GenericObj) {
+	constructor(args: GenericObj, debug?: MathlangLocation) {
 		super();
 		this.action = 'SHOW_DIALOG';
-		this.dialog = breakIfNotString(args.dialog);
+		this.dialog = tryString(args.dialog, `${this.action} param "dialog"`, debug);
 	}
 	static quick(dialog: string) {
 		return new SHOW_DIALOG({ dialog });
@@ -896,12 +928,12 @@ export class PLAY_ENTITY_ANIMATION extends Action {
 	entity: string;
 	animation: number;
 	play_count: number;
-	constructor(args: GenericObj) {
+	constructor(args: GenericObj, debug?: MathlangLocation) {
 		super();
 		this.action = 'PLAY_ENTITY_ANIMATION';
-		this.entity = breakIfNotString(args.entity);
-		this.animation = breakIfNotNumber(args.animation);
-		this.play_count = breakIfNotNumber(args.play_count);
+		this.entity = tryString(args.entity, `${this.action} param "entity"`, debug);
+		this.animation = tryNumber(args.animation, `${this.action} param "animation"`, debug);
+		this.play_count = tryNumber(args.play_count, `${this.action} param "play_count"`, debug);
 	}
 	print() {
 		return `${printEntityIdentifier(this.entity)} animation -> ${this.animation} ${this.play_count}x;`;
@@ -911,11 +943,11 @@ export class TELEPORT_ENTITY_TO_GEOMETRY extends Action {
 	action: 'TELEPORT_ENTITY_TO_GEOMETRY';
 	geometry: string;
 	entity: string;
-	constructor(args: GenericObj) {
+	constructor(args: GenericObj, debug?: MathlangLocation) {
 		super();
 		this.action = 'TELEPORT_ENTITY_TO_GEOMETRY';
-		this.entity = breakIfNotString(args.entity);
-		this.geometry = breakIfNotString(args.geometry);
+		this.entity = tryString(args.entity, `${this.action} param "entity"`, debug);
+		this.geometry = tryString(args.geometry, `${this.action} param "geometry"`, debug);
 	}
 	static quick(entity: string, geometry: string) {
 		return new TELEPORT_ENTITY_TO_GEOMETRY({ entity, geometry });
@@ -929,12 +961,12 @@ export class WALK_ENTITY_TO_GEOMETRY extends Action {
 	geometry: string;
 	entity: string;
 	duration: number;
-	constructor(args: GenericObj) {
+	constructor(args: GenericObj, debug?: MathlangLocation) {
 		super();
 		this.action = 'WALK_ENTITY_TO_GEOMETRY';
-		this.geometry = breakIfNotString(args.geometry);
-		this.entity = breakIfNotString(args.entity);
-		this.duration = breakIfNotNumber(args.duration);
+		this.geometry = tryString(args.geometry, `${this.action} param "geometry"`, debug);
+		this.entity = tryString(args.entity, `${this.action} param "entity"`, debug);
+		this.duration = tryNumber(args.duration, `${this.action} param "duration"`, debug);
 	}
 	static quick(entity: string, geometry: string, duration: number) {
 		return new WALK_ENTITY_TO_GEOMETRY({ entity, geometry, duration });
@@ -948,12 +980,12 @@ export class WALK_ENTITY_ALONG_GEOMETRY extends Action {
 	geometry: string;
 	entity: string;
 	duration: number;
-	constructor(args: GenericObj) {
+	constructor(args: GenericObj, debug?: MathlangLocation) {
 		super();
 		this.action = 'WALK_ENTITY_ALONG_GEOMETRY';
-		this.geometry = breakIfNotString(args.geometry);
-		this.entity = breakIfNotString(args.entity);
-		this.duration = breakIfNotNumber(args.duration);
+		this.geometry = tryString(args.geometry, `${this.action} param "geometry"`, debug);
+		this.entity = tryString(args.entity, `${this.action} param "entity"`, debug);
+		this.duration = tryNumber(args.duration, `${this.action} param "duration"`, debug);
 	}
 	static quick(entity: string, geometry: string, duration: number) {
 		return new WALK_ENTITY_ALONG_GEOMETRY({ entity, geometry, duration });
@@ -967,12 +999,12 @@ export class LOOP_ENTITY_ALONG_GEOMETRY extends Action {
 	geometry: string;
 	entity: string;
 	duration: number;
-	constructor(args: GenericObj) {
+	constructor(args: GenericObj, debug?: MathlangLocation) {
 		super();
 		this.action = 'LOOP_ENTITY_ALONG_GEOMETRY';
-		this.geometry = breakIfNotString(args.geometry);
-		this.entity = breakIfNotString(args.entity);
-		this.duration = breakIfNotNumber(args.duration);
+		this.geometry = tryString(args.geometry, `${this.action} param "geometry"`, debug);
+		this.entity = tryString(args.entity, `${this.action} param "entity"`, debug);
+		this.duration = tryNumber(args.duration, `${this.action} param "duration"`, debug);
 	}
 	static quick(entity: string, geometry: string, duration: number) {
 		return new LOOP_ENTITY_ALONG_GEOMETRY({ entity, geometry, duration });
@@ -984,10 +1016,10 @@ export class LOOP_ENTITY_ALONG_GEOMETRY extends Action {
 export class SET_CAMERA_TO_FOLLOW_ENTITY extends Action {
 	action: 'SET_CAMERA_TO_FOLLOW_ENTITY';
 	entity: string;
-	constructor(args: GenericObj) {
+	constructor(args: GenericObj, debug?: MathlangLocation) {
 		super();
 		this.action = 'SET_CAMERA_TO_FOLLOW_ENTITY';
-		this.entity = breakIfNotString(args.entity);
+		this.entity = tryString(args.entity, `${this.action} param "entity"`, debug);
 	}
 	static quick(entity: string) {
 		return new SET_CAMERA_TO_FOLLOW_ENTITY({ entity });
@@ -999,10 +1031,10 @@ export class SET_CAMERA_TO_FOLLOW_ENTITY extends Action {
 export class TELEPORT_CAMERA_TO_GEOMETRY extends Action {
 	action: 'TELEPORT_CAMERA_TO_GEOMETRY';
 	geometry: string;
-	constructor(args: GenericObj) {
+	constructor(args: GenericObj, debug?: MathlangLocation) {
 		super();
 		this.action = 'TELEPORT_CAMERA_TO_GEOMETRY';
-		this.geometry = breakIfNotString(args.geometry);
+		this.geometry = tryString(args.geometry, `${this.action} param "geometry"`, debug);
 	}
 	static quick(geometry: string) {
 		return new TELEPORT_CAMERA_TO_GEOMETRY({ geometry });
@@ -1015,11 +1047,11 @@ export class PAN_CAMERA_TO_ENTITY extends Action {
 	action: 'PAN_CAMERA_TO_ENTITY';
 	entity: string;
 	duration: number;
-	constructor(args: GenericObj) {
+	constructor(args: GenericObj, debug?: MathlangLocation) {
 		super();
 		this.action = 'PAN_CAMERA_TO_ENTITY';
-		this.entity = breakIfNotString(args.entity);
-		this.duration = breakIfNotNumber(args.duration);
+		this.entity = tryString(args.entity, `${this.action} param "entity"`, debug);
+		this.duration = tryNumber(args.duration, `${this.action} param "duration"`, debug);
 	}
 	static quick(entity: string, duration: number) {
 		return new PAN_CAMERA_TO_ENTITY({ duration, entity });
@@ -1032,11 +1064,11 @@ export class PAN_CAMERA_TO_GEOMETRY extends Action {
 	action: 'PAN_CAMERA_TO_GEOMETRY';
 	geometry: string;
 	duration: number;
-	constructor(args: GenericObj) {
+	constructor(args: GenericObj, debug?: MathlangLocation) {
 		super();
 		this.action = 'PAN_CAMERA_TO_GEOMETRY';
-		this.geometry = breakIfNotString(args.geometry);
-		this.duration = breakIfNotNumber(args.duration);
+		this.geometry = tryString(args.geometry, `${this.action} param "geometry"`, debug);
+		this.duration = tryNumber(args.duration, `${this.action} param "duration"`, debug);
 	}
 	static quick(geometry: string, duration: number) {
 		return new PAN_CAMERA_TO_GEOMETRY({ geometry, duration });
@@ -1049,11 +1081,11 @@ export class PAN_CAMERA_ALONG_GEOMETRY extends Action {
 	action: 'PAN_CAMERA_ALONG_GEOMETRY';
 	geometry: string;
 	duration: number;
-	constructor(args: GenericObj) {
+	constructor(args: GenericObj, debug?: MathlangLocation) {
 		super();
 		this.action = 'PAN_CAMERA_ALONG_GEOMETRY';
-		this.geometry = breakIfNotString(args.geometry);
-		this.duration = breakIfNotNumber(args.duration);
+		this.geometry = tryString(args.geometry, `${this.action} param "geometry"`, debug);
+		this.duration = tryNumber(args.duration, `${this.action} param "duration"`, debug);
 	}
 	static quick(geometry: string, duration: number) {
 		return new PAN_CAMERA_ALONG_GEOMETRY({ geometry, duration });
@@ -1066,11 +1098,11 @@ export class LOOP_CAMERA_ALONG_GEOMETRY extends Action {
 	action: 'LOOP_CAMERA_ALONG_GEOMETRY';
 	geometry: string;
 	duration: number;
-	constructor(args: GenericObj) {
+	constructor(args: GenericObj, debug?: MathlangLocation) {
 		super();
 		this.action = 'LOOP_CAMERA_ALONG_GEOMETRY';
-		this.geometry = breakIfNotString(args.geometry);
-		this.duration = breakIfNotNumber(args.duration);
+		this.geometry = tryString(args.geometry, `${this.action} param "geometry"`, debug);
+		this.duration = tryNumber(args.duration, `${this.action} param "duration"`, debug);
 	}
 	static quick(geometry: string, duration: number) {
 		return new LOOP_CAMERA_ALONG_GEOMETRY({ geometry, duration });
@@ -1084,12 +1116,12 @@ export class SET_SCREEN_SHAKE extends Action {
 	duration: number;
 	frequency: number;
 	amplitude: number;
-	constructor(args: GenericObj) {
+	constructor(args: GenericObj, debug?: MathlangLocation) {
 		super();
 		this.action = 'SET_SCREEN_SHAKE';
-		this.duration = breakIfNotNumber(args.duration);
-		this.frequency = breakIfNotNumber(args.frequency);
-		this.amplitude = breakIfNotNumber(args.amplitude);
+		this.duration = tryNumber(args.duration, `${this.action} param "duration"`, debug);
+		this.frequency = tryNumber(args.frequency, `${this.action} param "frequency"`, debug);
+		this.amplitude = tryNumber(args.amplitude, `${this.action} param "amplitude"`, debug);
 	}
 	print() {
 		return `camera shake -> ${this.frequency}ms ${this.amplitude}px over ${printDuration(this.duration)};`;
@@ -1099,11 +1131,11 @@ export class SCREEN_FADE_OUT extends Action {
 	action: 'SCREEN_FADE_OUT';
 	duration: number;
 	color: string;
-	constructor(args: GenericObj) {
+	constructor(args: GenericObj, debug?: MathlangLocation) {
 		super();
 		this.action = 'SCREEN_FADE_OUT';
-		this.duration = breakIfNotNumber(args.duration);
-		this.color = breakIfNotString(args.color);
+		this.duration = tryNumber(args.duration, `${this.action} param "duration"`, debug);
+		this.color = tryString(args.color, `${this.action} param "color"`, debug);
 	}
 	print() {
 		return `camera fade out -> ${this.color} over ${printDuration(this.duration)};`;
@@ -1113,11 +1145,11 @@ export class SCREEN_FADE_IN extends Action {
 	action: 'SCREEN_FADE_IN';
 	duration: number;
 	color: string;
-	constructor(args: GenericObj) {
+	constructor(args: GenericObj, debug?: MathlangLocation) {
 		super();
 		this.action = 'SCREEN_FADE_IN';
-		this.duration = breakIfNotNumber(args.duration);
-		this.color = breakIfNotString(args.color);
+		this.duration = tryNumber(args.duration, `${this.action} param "duration"`, debug);
+		this.color = tryString(args.color, `${this.action} param "color"`, debug);
 	}
 	print() {
 		return `camera fade in -> ${this.color} over ${printDuration(this.duration)};`;
@@ -1128,12 +1160,12 @@ export class MUTATE_VARIABLE extends Action {
 	variable: string;
 	operation: string;
 	value: number;
-	constructor(args: GenericObj) {
+	constructor(args: GenericObj, debug?: MathlangLocation) {
 		super();
 		this.action = 'MUTATE_VARIABLE';
-		this.variable = breakIfNotString(args.variable);
-		this.operation = breakIfNotString(args.operation);
-		this.value = breakIfNotNumber(args.value);
+		this.variable = tryString(args.variable, `${this.action} param "variable"`, debug);
+		this.operation = tryString(args.operation, `${this.action} param "operation"`, debug);
+		this.value = tryNumber(args.value, `${this.action} param "value"`, debug);
 	}
 	static set(variable: string, value: number) {
 		return new MUTATE_VARIABLE({ operation: 'SET', value, variable });
@@ -1169,12 +1201,12 @@ export class MUTATE_VARIABLES extends Action {
 	variable: string;
 	operation: string;
 	source: string;
-	constructor(args: GenericObj) {
+	constructor(args: GenericObj, debug?: MathlangLocation) {
 		super();
 		this.action = 'MUTATE_VARIABLES';
-		this.variable = breakIfNotString(args.variable);
-		this.operation = breakIfNotString(args.operation);
-		this.source = breakIfNotString(args.source);
+		this.variable = tryString(args.variable, `${this.action} param "variable"`, debug);
+		this.operation = tryString(args.operation, `${this.action} param "operation"`, debug);
+		this.source = tryString(args.source, `${this.action} param "source"`, debug);
 	}
 	static set(debug: MathlangLocation, variable: string, source: string) {
 		if (variable === source) {
@@ -1211,13 +1243,13 @@ export class COPY_VARIABLE extends Action {
 	entity: string;
 	field: string;
 	inbound: boolean;
-	constructor(args: GenericObj) {
+	constructor(args: GenericObj, debug?: MathlangLocation) {
 		super();
 		this.action = 'COPY_VARIABLE';
-		this.variable = breakIfNotString(args.variable);
-		this.entity = breakIfNotString(args.entity);
-		this.field = breakIfNotString(args.field);
-		this.inbound = breakIfNotBool(args.inbound);
+		this.variable = tryString(args.variable, `${this.action} param "variable"`, debug);
+		this.entity = tryString(args.entity, `${this.action} param "entity"`, debug);
+		this.field = tryString(args.field, `${this.action} param "field"`, debug);
+		this.inbound = tryBool(args.inbound, `${this.action} param "inbound"`, debug);
 	}
 	static intoField(variable: string, entity: string, field: string) {
 		return new COPY_VARIABLE({ entity, field, inbound: false, variable });
@@ -1251,10 +1283,10 @@ export class SLOT_SAVE extends Action {
 export class SLOT_LOAD extends Action {
 	action: 'SLOT_LOAD';
 	slot: number;
-	constructor(args: GenericObj) {
+	constructor(args: GenericObj, debug?: MathlangLocation) {
 		super();
 		this.action = 'SLOT_LOAD';
-		this.slot = breakIfNotNumber(args.slot);
+		this.slot = tryNumber(args.slot, `${this.action} param "slot"`, debug);
 	}
 	print() {
 		return `load slot ${this.slot};`;
@@ -1263,10 +1295,10 @@ export class SLOT_LOAD extends Action {
 export class SLOT_ERASE extends Action {
 	action: 'SLOT_ERASE';
 	slot: number;
-	constructor(args: GenericObj) {
+	constructor(args: GenericObj, debug?: MathlangLocation) {
 		super();
 		this.action = 'SLOT_ERASE';
-		this.slot = breakIfNotNumber(args.slot);
+		this.slot = tryNumber(args.slot, `${this.action} param "slot"`, debug);
 	}
 	print() {
 		return `erase slot ${this.slot};`;
@@ -1275,10 +1307,14 @@ export class SLOT_ERASE extends Action {
 export class SET_CONNECT_SERIAL_DIALOG extends Action {
 	action: 'SET_CONNECT_SERIAL_DIALOG';
 	serial_dialog: string;
-	constructor(args: GenericObj) {
+	constructor(args: GenericObj, debug?: MathlangLocation) {
 		super();
 		this.action = 'SET_CONNECT_SERIAL_DIALOG';
-		this.serial_dialog = breakIfNotString(args.serial_dialog);
+		this.serial_dialog = tryString(
+			args.serial_dialog,
+			`${this.action} param "serial_dialog"`,
+			debug,
+		);
 	}
 	print() {
 		return `serial_connect = "${this.serial_dialog}";`;
@@ -1288,10 +1324,14 @@ export class SHOW_SERIAL_DIALOG extends Action {
 	action: 'SHOW_SERIAL_DIALOG';
 	serial_dialog: string;
 	disable_newline?: boolean; // might be absent on old stuff
-	constructor(args: GenericObj) {
+	constructor(args: GenericObj, debug?: MathlangLocation) {
 		super();
 		this.action = 'SHOW_SERIAL_DIALOG';
-		this.serial_dialog = breakIfNotString(args.serial_dialog);
+		this.serial_dialog = tryString(
+			args.serial_dialog,
+			`${this.action} param "serial_dialog"`,
+			debug,
+		);
 		if (args.disable_newline) {
 			this.disable_newline = true;
 		}
@@ -1306,8 +1346,8 @@ export class SHOW_SERIAL_DIALOG extends Action {
 }
 export class SET_MAP_LOOK_SCRIPT extends ActionSetScript {
 	action: 'SET_MAP_LOOK_SCRIPT';
-	constructor(args: GenericObj) {
-		super(args);
+	constructor(args: GenericObj, debug?: MathlangLocation) {
+		super(args, debug);
 		this.action = 'SET_MAP_LOOK_SCRIPT';
 	}
 	static quick(script: string) {
@@ -1320,10 +1360,10 @@ export class SET_MAP_LOOK_SCRIPT extends ActionSetScript {
 export class SET_ENTITY_LOOK_SCRIPT extends ActionSetScript {
 	action: 'SET_ENTITY_LOOK_SCRIPT';
 	entity: string;
-	constructor(args: GenericObj) {
-		super(args);
+	constructor(args: GenericObj, debug?: MathlangLocation) {
+		super(args, debug);
 		this.action = 'SET_ENTITY_LOOK_SCRIPT';
-		this.entity = breakIfNotString(args.entity);
+		this.entity = tryString(args.entity, `${this.action} param "entity"`, debug);
 	}
 	static quick(entity: string, script: string) {
 		return new SET_ENTITY_LOOK_SCRIPT({ entity, script });
@@ -1335,10 +1375,10 @@ export class SET_ENTITY_LOOK_SCRIPT extends ActionSetScript {
 export class SET_TELEPORT_ENABLED extends Action {
 	action: 'SET_TELEPORT_ENABLED';
 	bool_value: boolean;
-	constructor(args: GenericObj) {
+	constructor(args: GenericObj, debug?: MathlangLocation) {
 		super();
 		this.action = 'SET_TELEPORT_ENABLED';
-		this.bool_value = breakIfNotBool(args.bool_value);
+		this.bool_value = tryBool(args.bool_value, `${this.action} param "bool_value"`, debug);
 	}
 	updateProp(v: boolean) {
 		this.bool_value = v;
@@ -1356,11 +1396,11 @@ export class SET_BLE_FLAG extends Action {
 	action: 'SET_BLE_FLAG';
 	ble_flag: string;
 	bool_value: boolean;
-	constructor(args: GenericObj) {
+	constructor(args: GenericObj, debug?: MathlangLocation) {
 		super();
 		this.action = 'SET_BLE_FLAG';
-		this.ble_flag = breakIfNotString(args.ble_flag);
-		this.bool_value = breakIfNotBool(args.bool_value);
+		this.ble_flag = tryString(args.ble_flag, `${this.action} param "ble_flag"`, debug);
+		this.bool_value = tryBool(args.bool_value, `${this.action} param "bool_value"`, debug);
 	}
 	updateProp(v: boolean) {
 		this.bool_value = v;
@@ -1376,10 +1416,10 @@ export class SET_BLE_FLAG extends Action {
 export class SET_SERIAL_DIALOG_CONTROL extends ActionSetBool {
 	action: 'SET_SERIAL_DIALOG_CONTROL';
 	bool_value: boolean;
-	constructor(args: GenericObj) {
+	constructor(args: GenericObj, debug?: MathlangLocation) {
 		super();
 		this.action = 'SET_SERIAL_DIALOG_CONTROL';
-		this.bool_value = breakIfNotBool(args.bool_value);
+		this.bool_value = tryBool(args.bool_value, `${this.action} param "bool_value"`, debug);
 	}
 	updateProp(v: boolean) {
 		this.bool_value = v;
@@ -1403,11 +1443,11 @@ export class REGISTER_SERIAL_DIALOG_COMMAND extends Action {
 	command: string;
 	script: string;
 	is_fail?: boolean;
-	constructor(args: GenericObj) {
+	constructor(args: GenericObj, debug?: MathlangLocation) {
 		super();
 		this.action = 'REGISTER_SERIAL_DIALOG_COMMAND';
-		this.command = breakIfNotString(args.command);
-		this.script = breakIfNotString(args.script);
+		this.command = tryString(args.command, `${this.action} param "command"`, debug);
+		this.script = tryString(args.script, `${this.action} param "script"`, debug);
 		if (args.is_fail) this.is_fail = true;
 	}
 	getScript() {
@@ -1427,12 +1467,12 @@ export class REGISTER_SERIAL_DIALOG_COMMAND_ARGUMENT extends Action {
 	command: string;
 	script: string;
 	argument: string;
-	constructor(args: GenericObj) {
+	constructor(args: GenericObj, debug?: MathlangLocation) {
 		super();
 		this.action = 'REGISTER_SERIAL_DIALOG_COMMAND_ARGUMENT';
-		this.command = breakIfNotString(args.command);
-		this.script = breakIfNotString(args.script);
-		this.argument = breakIfNotString(args.argument);
+		this.command = tryString(args.command, `${this.action} param "command"`, debug);
+		this.script = tryString(args.script, `${this.action} param "script"`, debug);
+		this.argument = tryString(args.argument, `${this.action} param "argument"`, debug);
 	}
 	getScript() {
 		return this.script;
@@ -1448,12 +1488,12 @@ export class UNREGISTER_SERIAL_DIALOG_COMMAND extends Action {
 	action: 'UNREGISTER_SERIAL_DIALOG_COMMAND';
 	command: string;
 	is_fail?: boolean;
-	constructor(args: GenericObj) {
+	constructor(args: GenericObj, debug?: MathlangLocation) {
 		super();
 		this.action = 'UNREGISTER_SERIAL_DIALOG_COMMAND';
-		this.command = breakIfNotString(args.command);
+		this.command = tryString(args.command, `${this.action} param "command"`, debug);
 		if (args.is_fail !== undefined) {
-			this.is_fail = breakIfNotBool(args.is_fail);
+			this.is_fail = tryBool(args.is_fail, `${this.action} param "is_fail"`, debug);
 		}
 	}
 	print() {
@@ -1467,11 +1507,11 @@ export class UNREGISTER_SERIAL_DIALOG_COMMAND_ARGUMENT extends Action {
 	action: 'UNREGISTER_SERIAL_DIALOG_COMMAND_ARGUMENT';
 	command: string;
 	argument: string;
-	constructor(args: GenericObj) {
+	constructor(args: GenericObj, debug?: MathlangLocation) {
 		super();
 		this.action = 'UNREGISTER_SERIAL_DIALOG_COMMAND_ARGUMENT';
-		this.command = breakIfNotString(args.command);
-		this.argument = breakIfNotString(args.argument);
+		this.command = tryString(args.command, `${this.action} param "command"`, debug);
+		this.argument = tryString(args.argument, `${this.action} param "argument"`, debug);
 	}
 	print() {
 		return `delete command "${this.command}" + "${this.argument}";`;
@@ -1481,11 +1521,15 @@ export class SET_ENTITY_MOVEMENT_RELATIVE extends Action {
 	action: 'SET_ENTITY_MOVEMENT_RELATIVE';
 	relative_direction: number;
 	entity: string;
-	constructor(args: GenericObj) {
+	constructor(args: GenericObj, debug?: MathlangLocation) {
 		super();
 		this.action = 'SET_ENTITY_MOVEMENT_RELATIVE';
-		this.relative_direction = breakIfNotNumber(args.relative_direction);
-		this.entity = breakIfNotString(args.entity);
+		this.relative_direction = tryNumber(
+			args.relative_direction,
+			`${this.action} param "relative_direction"`,
+			debug,
+		);
+		this.entity = tryString(args.entity, `${this.action} param "entity"`, debug);
 	}
 	static quick(entity: string, relative_direction: number) {
 		return new SET_ENTITY_MOVEMENT_RELATIVE({ entity, relative_direction });
@@ -1517,10 +1561,10 @@ export class CLOSE_SERIAL_DIALOG extends Action {
 export class SET_LIGHTS_CONTROL extends ActionSetBool {
 	action: 'SET_LIGHTS_CONTROL';
 	enabled: boolean;
-	constructor(args: GenericObj) {
+	constructor(args: GenericObj, debug?: MathlangLocation) {
 		super();
 		this.action = 'SET_LIGHTS_CONTROL';
-		this.enabled = breakIfNotBool(args.enabled);
+		this.enabled = tryBool(args.enabled, `${this.action} param "enabled"`, debug);
 	}
 	updateProp(v: boolean) {
 		this.enabled = v;
@@ -1543,11 +1587,11 @@ export class SET_LIGHTS_STATE extends ActionSetBool {
 	action: 'SET_LIGHTS_STATE';
 	lights: string | string[];
 	enabled: boolean;
-	constructor(args: GenericObj) {
+	constructor(args: GenericObj, debug?: MathlangLocation) {
 		super();
 		this.action = 'SET_LIGHTS_STATE';
-		this.enabled = breakIfNotBool(args.enabled);
-		this.lights = breakIfNotStringOrStringArray(args.lights);
+		this.enabled = tryBool(args.enabled, `${this.action} param "enabled"`, debug);
+		this.lights = tryStringOrStringArray(args.lights, `${this.action} param "lights"`, debug);
 	}
 	updateProp(v: boolean) {
 		this.enabled = v;
@@ -1569,10 +1613,14 @@ export class SET_LIGHTS_STATE extends ActionSetBool {
 export class GOTO_ACTION_INDEX extends Action {
 	action: 'GOTO_ACTION_INDEX';
 	action_index: number | string;
-	constructor(args: GenericObj) {
+	constructor(args: GenericObj, debug?: MathlangLocation) {
 		super();
 		this.action = 'GOTO_ACTION_INDEX';
-		this.action_index = breakIfNotStringOrNumber(args.action_index);
+		this.action_index = tryStringOrNumber(
+			args.action_index,
+			`${this.action} param "action_index"`,
+			debug,
+		);
 	}
 	static quick(action_index: string | number) {
 		return new GOTO_ACTION_INDEX({ action_index });
@@ -1595,12 +1643,12 @@ export class SET_SCRIPT_PAUSE extends Action {
 	entity: string;
 	script_slot: string;
 	bool_value: boolean;
-	constructor(args: GenericObj) {
+	constructor(args: GenericObj, debug?: MathlangLocation) {
 		super();
 		this.action = 'SET_SCRIPT_PAUSE';
-		this.entity = breakIfNotString(args.entity);
-		this.script_slot = breakIfNotString(args.script_slot);
-		this.bool_value = breakIfNotBool(args.bool_value);
+		this.entity = tryString(args.entity, `${this.action} param "entity"`, debug);
+		this.script_slot = tryString(args.script_slot, `${this.action} param "script_slot"`, debug);
+		this.bool_value = tryBool(args.bool_value, `${this.action} param "bool_value"`, debug);
 	}
 	updateProp(v: boolean) {
 		this.bool_value = v;
@@ -1620,11 +1668,11 @@ export class REGISTER_SERIAL_DIALOG_COMMAND_ALIAS extends Action {
 	action: 'REGISTER_SERIAL_DIALOG_COMMAND_ALIAS';
 	command: string;
 	alias: string;
-	constructor(args: GenericObj) {
+	constructor(args: GenericObj, debug?: MathlangLocation) {
 		super();
 		this.action = 'REGISTER_SERIAL_DIALOG_COMMAND_ALIAS';
-		this.command = breakIfNotString(args.command);
-		this.alias = breakIfNotString(args.alias);
+		this.command = tryString(args.command, `${this.action} param "command"`, debug);
+		this.alias = tryString(args.alias, `${this.action} param "alias"`, debug);
 	}
 	print() {
 		return `alias "${this.alias}" = "${this.command}";`;
@@ -1633,10 +1681,10 @@ export class REGISTER_SERIAL_DIALOG_COMMAND_ALIAS extends Action {
 export class UNREGISTER_SERIAL_DIALOG_COMMAND_ALIAS extends Action {
 	action: 'UNREGISTER_SERIAL_DIALOG_COMMAND_ALIAS';
 	alias: string;
-	constructor(args: GenericObj) {
+	constructor(args: GenericObj, debug?: MathlangLocation) {
 		super();
 		this.action = 'UNREGISTER_SERIAL_DIALOG_COMMAND_ALIAS';
-		this.alias = breakIfNotString(args.alias);
+		this.alias = tryString(args.alias, `${this.action} param "alias"`, debug);
 	}
 	print() {
 		return `delete alias "${this.alias}";`;
@@ -1646,11 +1694,11 @@ export class SET_SERIAL_DIALOG_COMMAND_VISIBILITY extends Action {
 	action: 'SET_SERIAL_DIALOG_COMMAND_VISIBILITY';
 	command: string;
 	is_visible: boolean;
-	constructor(args: GenericObj) {
+	constructor(args: GenericObj, debug?: MathlangLocation) {
 		super();
 		this.action = 'SET_SERIAL_DIALOG_COMMAND_VISIBILITY';
-		this.command = breakIfNotString(args.command);
-		this.is_visible = breakIfNotBool(args.is_visible);
+		this.command = tryString(args.command, `${this.action} param "command"`, debug);
+		this.is_visible = tryBool(args.is_visible, `${this.action} param "is_visible"`, debug);
 	}
 	updateProp(v: boolean) {
 		this.is_visible = v;
@@ -1673,19 +1721,31 @@ export class CHECK_ENTITY_NAME extends ActionStringCheckable {
 	action: 'CHECK_ENTITY_NAME';
 	entity: string;
 	string: string;
-	constructor(args: GenericObj) {
+	constructor(args: GenericObj, debug?: MathlangLocation) {
 		super();
 		this.action = 'CHECK_ENTITY_NAME';
 		if (args.success_script) {
-			this.success_script = breakIfNotString(args.success_script);
+			this.success_script = tryString(
+				args.success_script,
+				`${this.action} param "success_script"`,
+				debug,
+			);
 		} else if (args.label) {
-			this.label = breakIfNotString(args.label);
+			this.label = tryString(args.label, `${this.action} param "label"`, debug);
 		} else if (args.jump_index) {
-			this.jump_index = breakIfNotStringOrNumber(args.jump_index);
+			this.jump_index = tryStringOrNumber(
+				args.jump_index,
+				`${this.action} param "jump_index"`,
+				debug,
+			);
 		}
-		this.entity = breakIfNotString(args.entity);
-		this.string = breakIfNotString(args.string);
-		this.expected_bool = breakIfNotBool(args.expected_bool);
+		this.entity = tryString(args.entity, `${this.action} param "entity"`, debug);
+		this.string = tryString(args.string, `${this.action} param "string"`, debug);
+		this.expected_bool = tryBool(
+			args.expected_bool,
+			`${this.action} param "expected_bool"`,
+			debug,
+		);
 	}
 	updateProp(value: string) {
 		this.string = value;
@@ -1705,19 +1765,31 @@ export class CHECK_ENTITY_X extends ActionNumberCheckableEquality {
 	action: 'CHECK_ENTITY_X';
 	entity: string;
 	expected_u2: number;
-	constructor(args: GenericObj) {
+	constructor(args: GenericObj, debug?: MathlangLocation) {
 		super();
 		this.action = 'CHECK_ENTITY_X';
 		if (args.success_script) {
-			this.success_script = breakIfNotString(args.success_script);
+			this.success_script = tryString(
+				args.success_script,
+				`${this.action} param "success_script"`,
+				debug,
+			);
 		} else if (args.label) {
-			this.label = breakIfNotString(args.label);
+			this.label = tryString(args.label, `${this.action} param "label"`, debug);
 		} else if (args.jump_index) {
-			this.jump_index = breakIfNotStringOrNumber(args.jump_index);
+			this.jump_index = tryStringOrNumber(
+				args.jump_index,
+				`${this.action} param "jump_index"`,
+				debug,
+			);
 		}
-		this.entity = breakIfNotString(args.entity);
-		this.expected_u2 = breakIfNotNumber(args.expected_u2);
-		this.expected_bool = breakIfNotBool(args.expected_bool);
+		this.entity = tryString(args.entity, `${this.action} param "entity"`, debug);
+		this.expected_u2 = tryNumber(args.expected_u2, `${this.action} param "expected_u2"`, debug);
+		this.expected_bool = tryBool(
+			args.expected_bool,
+			`${this.action} param "expected_bool"`,
+			debug,
+		);
 	}
 	updateProp(value: number) {
 		this.expected_u2 = value;
@@ -1741,19 +1813,31 @@ export class CHECK_ENTITY_Y extends ActionNumberCheckableEquality {
 	action: 'CHECK_ENTITY_Y';
 	entity: string;
 	expected_u2: number;
-	constructor(args: GenericObj) {
+	constructor(args: GenericObj, debug?: MathlangLocation) {
 		super();
 		this.action = 'CHECK_ENTITY_Y';
 		if (args.success_script) {
-			this.success_script = breakIfNotString(args.success_script);
+			this.success_script = tryString(
+				args.success_script,
+				`${this.action} param "success_script"`,
+				debug,
+			);
 		} else if (args.label) {
-			this.label = breakIfNotString(args.label);
+			this.label = tryString(args.label, `${this.action} param "label"`, debug);
 		} else if (args.jump_index) {
-			this.jump_index = breakIfNotStringOrNumber(args.jump_index);
+			this.jump_index = tryStringOrNumber(
+				args.jump_index,
+				`${this.action} param "jump_index"`,
+				debug,
+			);
 		}
-		this.entity = breakIfNotString(args.entity);
-		this.expected_u2 = breakIfNotNumber(args.expected_u2);
-		this.expected_bool = breakIfNotBool(args.expected_bool);
+		this.entity = tryString(args.entity, `${this.action} param "entity"`, debug);
+		this.expected_u2 = tryNumber(args.expected_u2, `${this.action} param "expected_u2"`, debug);
+		this.expected_bool = tryBool(
+			args.expected_bool,
+			`${this.action} param "expected_bool"`,
+			debug,
+		);
 	}
 	updateProp(value: number) {
 		this.expected_u2 = value;
@@ -1777,19 +1861,35 @@ export class CHECK_ENTITY_INTERACT_SCRIPT extends ActionStringCheckable {
 	action: 'CHECK_ENTITY_INTERACT_SCRIPT';
 	entity: string;
 	expected_script: string;
-	constructor(args: GenericObj) {
+	constructor(args: GenericObj, debug?: MathlangLocation) {
 		super();
 		this.action = 'CHECK_ENTITY_INTERACT_SCRIPT';
 		if (args.success_script) {
-			this.success_script = breakIfNotString(args.success_script);
+			this.success_script = tryString(
+				args.success_script,
+				`${this.action} param "success_script"`,
+				debug,
+			);
 		} else if (args.label) {
-			this.label = breakIfNotString(args.label);
+			this.label = tryString(args.label, `${this.action} param "label"`, debug);
 		} else if (args.jump_index) {
-			this.jump_index = breakIfNotStringOrNumber(args.jump_index);
+			this.jump_index = tryStringOrNumber(
+				args.jump_index,
+				`${this.action} param "jump_index"`,
+				debug,
+			);
 		}
-		this.entity = breakIfNotString(args.entity);
-		this.expected_script = breakIfNotString(args.expected_script);
-		this.expected_bool = breakIfNotBool(args.expected_bool);
+		this.entity = tryString(args.entity, `${this.action} param "entity"`, debug);
+		this.expected_script = tryString(
+			args.expected_script,
+			`${this.action} param "expected_script"`,
+			debug,
+		);
+		this.expected_bool = tryBool(
+			args.expected_bool,
+			`${this.action} param "expected_bool"`,
+			debug,
+		);
 	}
 	updateProp(value: string) {
 		this.expected_script = value;
@@ -1809,19 +1909,35 @@ export class CHECK_ENTITY_TICK_SCRIPT extends ActionStringCheckable {
 	action: 'CHECK_ENTITY_TICK_SCRIPT';
 	entity: string;
 	expected_script: string;
-	constructor(args: GenericObj) {
+	constructor(args: GenericObj, debug?: MathlangLocation) {
 		super();
 		this.action = 'CHECK_ENTITY_TICK_SCRIPT';
 		if (args.success_script) {
-			this.success_script = breakIfNotString(args.success_script);
+			this.success_script = tryString(
+				args.success_script,
+				`${this.action} param "success_script"`,
+				debug,
+			);
 		} else if (args.label) {
-			this.label = breakIfNotString(args.label);
+			this.label = tryString(args.label, `${this.action} param "label"`, debug);
 		} else if (args.jump_index) {
-			this.jump_index = breakIfNotStringOrNumber(args.jump_index);
+			this.jump_index = tryStringOrNumber(
+				args.jump_index,
+				`${this.action} param "jump_index"`,
+				debug,
+			);
 		}
-		this.entity = breakIfNotString(args.entity);
-		this.expected_script = breakIfNotString(args.expected_script);
-		this.expected_bool = breakIfNotBool(args.expected_bool);
+		this.entity = tryString(args.entity, `${this.action} param "entity"`, debug);
+		this.expected_script = tryString(
+			args.expected_script,
+			`${this.action} param "expected_script"`,
+			debug,
+		);
+		this.expected_bool = tryBool(
+			args.expected_bool,
+			`${this.action} param "expected_bool"`,
+			debug,
+		);
 	}
 	updateProp(value: string) {
 		this.expected_script = value;
@@ -1841,19 +1957,35 @@ export class CHECK_ENTITY_LOOK_SCRIPT extends ActionStringCheckable {
 	action: 'CHECK_ENTITY_LOOK_SCRIPT';
 	entity: string;
 	expected_script: string;
-	constructor(args: GenericObj) {
+	constructor(args: GenericObj, debug?: MathlangLocation) {
 		super();
 		this.action = 'CHECK_ENTITY_LOOK_SCRIPT';
 		if (args.success_script) {
-			this.success_script = breakIfNotString(args.success_script);
+			this.success_script = tryString(
+				args.success_script,
+				`${this.action} param "success_script"`,
+				debug,
+			);
 		} else if (args.label) {
-			this.label = breakIfNotString(args.label);
+			this.label = tryString(args.label, `${this.action} param "label"`, debug);
 		} else if (args.jump_index) {
-			this.jump_index = breakIfNotStringOrNumber(args.jump_index);
+			this.jump_index = tryStringOrNumber(
+				args.jump_index,
+				`${this.action} param "jump_index"`,
+				debug,
+			);
 		}
-		this.entity = breakIfNotString(args.entity);
-		this.expected_script = breakIfNotString(args.expected_script);
-		this.expected_bool = breakIfNotBool(args.expected_bool);
+		this.entity = tryString(args.entity, `${this.action} param "entity"`, debug);
+		this.expected_script = tryString(
+			args.expected_script,
+			`${this.action} param "expected_script"`,
+			debug,
+		);
+		this.expected_bool = tryBool(
+			args.expected_bool,
+			`${this.action} param "expected_bool"`,
+			debug,
+		);
 	}
 	updateProp(value: string) {
 		this.expected_script = value;
@@ -1873,19 +2005,31 @@ export class CHECK_ENTITY_TYPE extends ActionStringCheckable {
 	action: 'CHECK_ENTITY_TYPE';
 	entity: string;
 	entity_type: string;
-	constructor(args: GenericObj) {
+	constructor(args: GenericObj, debug?: MathlangLocation) {
 		super();
 		this.action = 'CHECK_ENTITY_TYPE';
 		if (args.success_script) {
-			this.success_script = breakIfNotString(args.success_script);
+			this.success_script = tryString(
+				args.success_script,
+				`${this.action} param "success_script"`,
+				debug,
+			);
 		} else if (args.label) {
-			this.label = breakIfNotString(args.label);
+			this.label = tryString(args.label, `${this.action} param "label"`, debug);
 		} else if (args.jump_index) {
-			this.jump_index = breakIfNotStringOrNumber(args.jump_index);
+			this.jump_index = tryStringOrNumber(
+				args.jump_index,
+				`${this.action} param "jump_index"`,
+				debug,
+			);
 		}
-		this.entity = breakIfNotString(args.entity);
-		this.entity_type = breakIfNotString(args.entity_type);
-		this.expected_bool = breakIfNotBool(args.expected_bool);
+		this.entity = tryString(args.entity, `${this.action} param "entity"`, debug);
+		this.entity_type = tryString(args.entity_type, `${this.action} param "entity_type"`, debug);
+		this.expected_bool = tryBool(
+			args.expected_bool,
+			`${this.action} param "expected_bool"`,
+			debug,
+		);
 	}
 	updateProp(value: string) {
 		this.entity_type = value;
@@ -1905,19 +2049,31 @@ export class CHECK_ENTITY_PRIMARY_ID extends ActionNumberCheckableEquality {
 	action: 'CHECK_ENTITY_PRIMARY_ID';
 	entity: string;
 	expected_u2: number;
-	constructor(args: GenericObj) {
+	constructor(args: GenericObj, debug?: MathlangLocation) {
 		super();
 		this.action = 'CHECK_ENTITY_PRIMARY_ID';
 		if (args.success_script) {
-			this.success_script = breakIfNotString(args.success_script);
+			this.success_script = tryString(
+				args.success_script,
+				`${this.action} param "success_script"`,
+				debug,
+			);
 		} else if (args.label) {
-			this.label = breakIfNotString(args.label);
+			this.label = tryString(args.label, `${this.action} param "label"`, debug);
 		} else if (args.jump_index) {
-			this.jump_index = breakIfNotStringOrNumber(args.jump_index);
+			this.jump_index = tryStringOrNumber(
+				args.jump_index,
+				`${this.action} param "jump_index"`,
+				debug,
+			);
 		}
-		this.entity = breakIfNotString(args.entity);
-		this.expected_u2 = breakIfNotNumber(args.expected_u2);
-		this.expected_bool = breakIfNotBool(args.expected_bool);
+		this.entity = tryString(args.entity, `${this.action} param "entity"`, debug);
+		this.expected_u2 = tryNumber(args.expected_u2, `${this.action} param "expected_u2"`, debug);
+		this.expected_bool = tryBool(
+			args.expected_bool,
+			`${this.action} param "expected_bool"`,
+			debug,
+		);
 	}
 	updateProp(value: number) {
 		this.expected_u2 = value;
@@ -1941,19 +2097,31 @@ export class CHECK_ENTITY_SECONDARY_ID extends ActionNumberCheckableEquality {
 	action: 'CHECK_ENTITY_SECONDARY_ID';
 	entity: string;
 	expected_u2: number;
-	constructor(args: GenericObj) {
+	constructor(args: GenericObj, debug?: MathlangLocation) {
 		super();
 		this.action = 'CHECK_ENTITY_SECONDARY_ID';
 		if (args.success_script) {
-			this.success_script = breakIfNotString(args.success_script);
+			this.success_script = tryString(
+				args.success_script,
+				`${this.action} param "success_script"`,
+				debug,
+			);
 		} else if (args.label) {
-			this.label = breakIfNotString(args.label);
+			this.label = tryString(args.label, `${this.action} param "label"`, debug);
 		} else if (args.jump_index) {
-			this.jump_index = breakIfNotStringOrNumber(args.jump_index);
+			this.jump_index = tryStringOrNumber(
+				args.jump_index,
+				`${this.action} param "jump_index"`,
+				debug,
+			);
 		}
-		this.entity = breakIfNotString(args.entity);
-		this.expected_u2 = breakIfNotNumber(args.expected_u2);
-		this.expected_bool = breakIfNotBool(args.expected_bool);
+		this.entity = tryString(args.entity, `${this.action} param "entity"`, debug);
+		this.expected_u2 = tryNumber(args.expected_u2, `${this.action} param "expected_u2"`, debug);
+		this.expected_bool = tryBool(
+			args.expected_bool,
+			`${this.action} param "expected_bool"`,
+			debug,
+		);
 	}
 	updateProp(value: number) {
 		this.expected_u2 = value;
@@ -1977,19 +2145,35 @@ export class CHECK_ENTITY_PRIMARY_ID_TYPE extends ActionNumberCheckableEquality 
 	action: 'CHECK_ENTITY_PRIMARY_ID_TYPE';
 	entity: string;
 	expected_byte: number;
-	constructor(args: GenericObj) {
+	constructor(args: GenericObj, debug?: MathlangLocation) {
 		super();
 		this.action = 'CHECK_ENTITY_PRIMARY_ID_TYPE';
 		if (args.success_script) {
-			this.success_script = breakIfNotString(args.success_script);
+			this.success_script = tryString(
+				args.success_script,
+				`${this.action} param "success_script"`,
+				debug,
+			);
 		} else if (args.label) {
-			this.label = breakIfNotString(args.label);
+			this.label = tryString(args.label, `${this.action} param "label"`, debug);
 		} else if (args.jump_index) {
-			this.jump_index = breakIfNotStringOrNumber(args.jump_index);
+			this.jump_index = tryStringOrNumber(
+				args.jump_index,
+				`${this.action} param "jump_index"`,
+				debug,
+			);
 		}
-		this.entity = breakIfNotString(args.entity);
-		this.expected_byte = breakIfNotNumber(args.expected_byte);
-		this.expected_bool = breakIfNotBool(args.expected_bool);
+		this.entity = tryString(args.entity, `${this.action} param "entity"`, debug);
+		this.expected_byte = tryNumber(
+			args.expected_byte,
+			`${this.action} param "expected_byte"`,
+			debug,
+		);
+		this.expected_bool = tryBool(
+			args.expected_bool,
+			`${this.action} param "expected_bool"`,
+			debug,
+		);
 	}
 	updateProp(value: number) {
 		this.expected_byte = value;
@@ -2013,19 +2197,35 @@ export class CHECK_ENTITY_CURRENT_ANIMATION extends ActionNumberCheckableEqualit
 	action: 'CHECK_ENTITY_CURRENT_ANIMATION';
 	entity: string;
 	expected_byte: number;
-	constructor(args: GenericObj) {
+	constructor(args: GenericObj, debug?: MathlangLocation) {
 		super();
 		this.action = 'CHECK_ENTITY_CURRENT_ANIMATION';
 		if (args.success_script) {
-			this.success_script = breakIfNotString(args.success_script);
+			this.success_script = tryString(
+				args.success_script,
+				`${this.action} param "success_script"`,
+				debug,
+			);
 		} else if (args.label) {
-			this.label = breakIfNotString(args.label);
+			this.label = tryString(args.label, `${this.action} param "label"`, debug);
 		} else if (args.jump_index) {
-			this.jump_index = breakIfNotStringOrNumber(args.jump_index);
+			this.jump_index = tryStringOrNumber(
+				args.jump_index,
+				`${this.action} param "jump_index"`,
+				debug,
+			);
 		}
-		this.entity = breakIfNotString(args.entity);
-		this.expected_byte = breakIfNotNumber(args.expected_byte);
-		this.expected_bool = breakIfNotBool(args.expected_bool);
+		this.entity = tryString(args.entity, `${this.action} param "entity"`, debug);
+		this.expected_byte = tryNumber(
+			args.expected_byte,
+			`${this.action} param "expected_byte"`,
+			debug,
+		);
+		this.expected_bool = tryBool(
+			args.expected_bool,
+			`${this.action} param "expected_bool"`,
+			debug,
+		);
 	}
 	updateProp(value: number) {
 		this.expected_byte = value;
@@ -2050,19 +2250,35 @@ export class CHECK_ENTITY_CURRENT_FRAME extends ActionNumberCheckableEquality {
 	entity: string;
 	expected_byte: number;
 	expected_bool: boolean;
-	constructor(args: GenericObj) {
+	constructor(args: GenericObj, debug?: MathlangLocation) {
 		super();
 		this.action = 'CHECK_ENTITY_CURRENT_FRAME';
 		if (args.success_script) {
-			this.success_script = breakIfNotString(args.success_script);
+			this.success_script = tryString(
+				args.success_script,
+				`${this.action} param "success_script"`,
+				debug,
+			);
 		} else if (args.label) {
-			this.label = breakIfNotString(args.label);
+			this.label = tryString(args.label, `${this.action} param "label"`, debug);
 		} else if (args.jump_index) {
-			this.jump_index = breakIfNotStringOrNumber(args.jump_index);
+			this.jump_index = tryStringOrNumber(
+				args.jump_index,
+				`${this.action} param "jump_index"`,
+				debug,
+			);
 		}
-		this.entity = breakIfNotString(args.entity);
-		this.expected_byte = breakIfNotNumber(args.expected_byte);
-		this.expected_bool = breakIfNotBool(args.expected_bool);
+		this.entity = tryString(args.entity, `${this.action} param "entity"`, debug);
+		this.expected_byte = tryNumber(
+			args.expected_byte,
+			`${this.action} param "expected_byte"`,
+			debug,
+		);
+		this.expected_bool = tryBool(
+			args.expected_bool,
+			`${this.action} param "expected_bool"`,
+			debug,
+		);
 	}
 	updateProp(value: number) {
 		this.expected_byte = value;
@@ -2086,19 +2302,31 @@ export class CHECK_ENTITY_DIRECTION extends ActionStringCheckable {
 	action: 'CHECK_ENTITY_DIRECTION';
 	entity: string;
 	direction: string; // north, south, east, west
-	constructor(args: GenericObj) {
+	constructor(args: GenericObj, debug?: MathlangLocation) {
 		super();
 		this.action = 'CHECK_ENTITY_DIRECTION';
 		if (args.success_script) {
-			this.success_script = breakIfNotString(args.success_script);
+			this.success_script = tryString(
+				args.success_script,
+				`${this.action} param "success_script"`,
+				debug,
+			);
 		} else if (args.label) {
-			this.label = breakIfNotString(args.label);
+			this.label = tryString(args.label, `${this.action} param "label"`, debug);
 		} else if (args.jump_index) {
-			this.jump_index = breakIfNotStringOrNumber(args.jump_index);
+			this.jump_index = tryStringOrNumber(
+				args.jump_index,
+				`${this.action} param "jump_index"`,
+				debug,
+			);
 		}
-		this.entity = breakIfNotString(args.entity);
-		this.direction = breakIfNotString(args.direction);
-		this.expected_bool = breakIfNotBool(args.expected_bool);
+		this.entity = tryString(args.entity, `${this.action} param "entity"`, debug);
+		this.direction = tryString(args.direction, `${this.action} param "direction"`, debug);
+		this.expected_bool = tryBool(
+			args.expected_bool,
+			`${this.action} param "expected_bool"`,
+			debug,
+		);
 	}
 	updateProp(value: string) {
 		this.direction = value;
@@ -2117,18 +2345,30 @@ export class CHECK_ENTITY_DIRECTION extends ActionStringCheckable {
 export class CHECK_ENTITY_GLITCHED extends ActionBoolGetable {
 	action: 'CHECK_ENTITY_GLITCHED';
 	entity: string;
-	constructor(args: GenericObj) {
+	constructor(args: GenericObj, debug?: MathlangLocation) {
 		super();
 		this.action = 'CHECK_ENTITY_GLITCHED';
 		if (args.success_script) {
-			this.success_script = breakIfNotString(args.success_script);
+			this.success_script = tryString(
+				args.success_script,
+				`${this.action} param "success_script"`,
+				debug,
+			);
 		} else if (args.label) {
-			this.label = breakIfNotString(args.label);
+			this.label = tryString(args.label, `${this.action} param "label"`, debug);
 		} else if (args.jump_index) {
-			this.jump_index = breakIfNotStringOrNumber(args.jump_index);
+			this.jump_index = tryStringOrNumber(
+				args.jump_index,
+				`${this.action} param "jump_index"`,
+				debug,
+			);
 		}
-		this.entity = breakIfNotString(args.entity);
-		this.expected_bool = breakIfNotBool(args.expected_bool);
+		this.entity = tryString(args.entity, `${this.action} param "entity"`, debug);
+		this.expected_bool = tryBool(
+			args.expected_bool,
+			`${this.action} param "expected_bool"`,
+			debug,
+		);
 	}
 	static quick(entity: string, provided_bool?: boolean) {
 		const expected_bool = provided_bool === undefined ? true : provided_bool;
@@ -2142,19 +2382,31 @@ export class CHECK_ENTITY_PATH extends ActionStringCheckable {
 	action: 'CHECK_ENTITY_PATH';
 	geometry: string;
 	entity: string;
-	constructor(args: GenericObj) {
+	constructor(args: GenericObj, debug?: MathlangLocation) {
 		super();
 		this.action = 'CHECK_ENTITY_PATH';
 		if (args.success_script) {
-			this.success_script = breakIfNotString(args.success_script);
+			this.success_script = tryString(
+				args.success_script,
+				`${this.action} param "success_script"`,
+				debug,
+			);
 		} else if (args.label) {
-			this.label = breakIfNotString(args.label);
+			this.label = tryString(args.label, `${this.action} param "label"`, debug);
 		} else if (args.jump_index) {
-			this.jump_index = breakIfNotStringOrNumber(args.jump_index);
+			this.jump_index = tryStringOrNumber(
+				args.jump_index,
+				`${this.action} param "jump_index"`,
+				debug,
+			);
 		}
-		this.entity = breakIfNotString(args.entity);
-		this.geometry = breakIfNotString(args.geometry);
-		this.expected_bool = breakIfNotBool(args.expected_bool);
+		this.entity = tryString(args.entity, `${this.action} param "entity"`, debug);
+		this.geometry = tryString(args.geometry, `${this.action} param "geometry"`, debug);
+		this.expected_bool = tryBool(
+			args.expected_bool,
+			`${this.action} param "expected_bool"`,
+			debug,
+		);
 	}
 	updateProp(value: string) {
 		this.geometry = value;
@@ -2173,18 +2425,30 @@ export class CHECK_ENTITY_PATH extends ActionStringCheckable {
 export class CHECK_SAVE_FLAG extends ActionBoolGetable {
 	action: 'CHECK_SAVE_FLAG';
 	save_flag: string;
-	constructor(args: GenericObj) {
+	constructor(args: GenericObj, debug?: MathlangLocation) {
 		super();
 		this.action = 'CHECK_SAVE_FLAG';
 		if (args.success_script) {
-			this.success_script = breakIfNotString(args.success_script);
+			this.success_script = tryString(
+				args.success_script,
+				`${this.action} param "success_script"`,
+				debug,
+			);
 		} else if (args.label) {
-			this.label = breakIfNotString(args.label);
+			this.label = tryString(args.label, `${this.action} param "label"`, debug);
 		} else if (args.jump_index) {
-			this.jump_index = breakIfNotStringOrNumber(args.jump_index);
+			this.jump_index = tryStringOrNumber(
+				args.jump_index,
+				`${this.action} param "jump_index"`,
+				debug,
+			);
 		}
-		this.save_flag = breakIfNotString(args.save_flag);
-		this.expected_bool = breakIfNotBool(args.expected_bool);
+		this.save_flag = tryString(args.save_flag, `${this.action} param "save_flag"`, debug);
+		this.expected_bool = tryBool(
+			args.expected_bool,
+			`${this.action} param "expected_bool"`,
+			debug,
+		);
 	}
 	static quick(save_flag: string, provided_bool?: boolean, provided_label?: string) {
 		const expected_bool = provided_bool === undefined ? true : provided_bool;
@@ -2200,19 +2464,31 @@ export class CHECK_IF_ENTITY_IS_IN_GEOMETRY extends ActionBoolGetable {
 	action: 'CHECK_IF_ENTITY_IS_IN_GEOMETRY';
 	geometry: string;
 	entity: string;
-	constructor(args: GenericObj) {
+	constructor(args: GenericObj, debug?: MathlangLocation) {
 		super();
 		this.action = 'CHECK_IF_ENTITY_IS_IN_GEOMETRY';
 		if (args.success_script) {
-			this.success_script = breakIfNotString(args.success_script);
+			this.success_script = tryString(
+				args.success_script,
+				`${this.action} param "success_script"`,
+				debug,
+			);
 		} else if (args.label) {
-			this.label = breakIfNotString(args.label);
+			this.label = tryString(args.label, `${this.action} param "label"`, debug);
 		} else if (args.jump_index) {
-			this.jump_index = breakIfNotStringOrNumber(args.jump_index);
+			this.jump_index = tryStringOrNumber(
+				args.jump_index,
+				`${this.action} param "jump_index"`,
+				debug,
+			);
 		}
-		this.geometry = breakIfNotString(args.geometry);
-		this.entity = breakIfNotString(args.entity);
-		this.expected_bool = breakIfNotBool(args.expected_bool);
+		this.geometry = tryString(args.geometry, `${this.action} param "geometry"`, debug);
+		this.entity = tryString(args.entity, `${this.action} param "entity"`, debug);
+		this.expected_bool = tryBool(
+			args.expected_bool,
+			`${this.action} param "expected_bool"`,
+			debug,
+		);
 	}
 	static quick(entity: string, geometry: string, provided_bool?: boolean) {
 		const expected_bool = provided_bool === undefined ? true : provided_bool;
@@ -2229,18 +2505,30 @@ export class CHECK_IF_ENTITY_IS_IN_GEOMETRY extends ActionBoolGetable {
 export class CHECK_FOR_BUTTON_PRESS extends ActionBoolGetable {
 	action: 'CHECK_FOR_BUTTON_PRESS';
 	button_id: string;
-	constructor(args: GenericObj) {
+	constructor(args: GenericObj, debug?: MathlangLocation) {
 		super();
 		this.action = 'CHECK_FOR_BUTTON_PRESS';
 		if (args.success_script) {
-			this.success_script = breakIfNotString(args.success_script);
+			this.success_script = tryString(
+				args.success_script,
+				`${this.action} param "success_script"`,
+				debug,
+			);
 		} else if (args.label) {
-			this.label = breakIfNotString(args.label);
+			this.label = tryString(args.label, `${this.action} param "label"`, debug);
 		} else if (args.jump_index) {
-			this.jump_index = breakIfNotStringOrNumber(args.jump_index);
+			this.jump_index = tryStringOrNumber(
+				args.jump_index,
+				`${this.action} param "jump_index"`,
+				debug,
+			);
 		}
-		this.button_id = breakIfNotString(args.button_id);
-		this.expected_bool = breakIfNotBool(args.expected_bool);
+		this.button_id = tryString(args.button_id, `${this.action} param "button_id"`, debug);
+		this.expected_bool = tryBool(
+			args.expected_bool,
+			`${this.action} param "expected_bool"`,
+			debug,
+		);
 	}
 	static quick(button_id: string, provided_bool?: boolean) {
 		const expected_bool = provided_bool === undefined ? true : provided_bool;
@@ -2253,18 +2541,30 @@ export class CHECK_FOR_BUTTON_PRESS extends ActionBoolGetable {
 export class CHECK_FOR_BUTTON_STATE extends ActionBoolGetable {
 	action: 'CHECK_FOR_BUTTON_STATE';
 	button_id: string;
-	constructor(args: GenericObj) {
+	constructor(args: GenericObj, debug?: MathlangLocation) {
 		super();
 		this.action = 'CHECK_FOR_BUTTON_STATE';
 		if (args.success_script) {
-			this.success_script = breakIfNotString(args.success_script);
+			this.success_script = tryString(
+				args.success_script,
+				`${this.action} param "success_script"`,
+				debug,
+			);
 		} else if (args.label) {
-			this.label = breakIfNotString(args.label);
+			this.label = tryString(args.label, `${this.action} param "label"`, debug);
 		} else if (args.jump_index) {
-			this.jump_index = breakIfNotStringOrNumber(args.jump_index);
+			this.jump_index = tryStringOrNumber(
+				args.jump_index,
+				`${this.action} param "jump_index"`,
+				debug,
+			);
 		}
-		this.button_id = breakIfNotString(args.button_id);
-		this.expected_bool = breakIfNotBool(args.expected_bool);
+		this.button_id = tryString(args.button_id, `${this.action} param "button_id"`, debug);
+		this.expected_bool = tryBool(
+			args.expected_bool,
+			`${this.action} param "expected_bool"`,
+			debug,
+		);
 	}
 	static quick(button_id: string, provided_bool?: boolean) {
 		const expected_bool = provided_bool === undefined ? true : provided_bool;
@@ -2281,18 +2581,30 @@ export class CHECK_FOR_BUTTON_STATE extends ActionBoolGetable {
 export class CHECK_WARP_STATE extends ActionStringCheckable {
 	action: 'CHECK_WARP_STATE';
 	string: string;
-	constructor(args: GenericObj) {
+	constructor(args: GenericObj, debug?: MathlangLocation) {
 		super();
 		this.action = 'CHECK_WARP_STATE';
 		if (args.success_script) {
-			this.success_script = breakIfNotString(args.success_script);
+			this.success_script = tryString(
+				args.success_script,
+				`${this.action} param "success_script"`,
+				debug,
+			);
 		} else if (args.label) {
-			this.label = breakIfNotString(args.label);
+			this.label = tryString(args.label, `${this.action} param "label"`, debug);
 		} else if (args.jump_index) {
-			this.jump_index = breakIfNotStringOrNumber(args.jump_index);
+			this.jump_index = tryStringOrNumber(
+				args.jump_index,
+				`${this.action} param "jump_index"`,
+				debug,
+			);
 		}
-		this.string = breakIfNotString(args.string);
-		this.expected_bool = breakIfNotBool(args.expected_bool);
+		this.string = tryString(args.string, `${this.action} param "string"`, debug);
+		this.expected_bool = tryBool(
+			args.expected_bool,
+			`${this.action} param "expected_bool"`,
+			debug,
+		);
 	}
 	updateProp(value: string) {
 		this.string = value;
@@ -2315,20 +2627,32 @@ export class CHECK_VARIABLE extends ActionNumberComparison {
 	variable: string;
 	comparison: string;
 	value: number;
-	constructor(args: GenericObj) {
+	constructor(args: GenericObj, debug?: MathlangLocation) {
 		super();
 		this.action = 'CHECK_VARIABLE';
 		if (args.success_script) {
-			this.success_script = breakIfNotString(args.success_script);
+			this.success_script = tryString(
+				args.success_script,
+				`${this.action} param "success_script"`,
+				debug,
+			);
 		} else if (args.label) {
-			this.label = breakIfNotString(args.label);
+			this.label = tryString(args.label, `${this.action} param "label"`, debug);
 		} else if (args.jump_index) {
-			this.jump_index = breakIfNotStringOrNumber(args.jump_index);
+			this.jump_index = tryStringOrNumber(
+				args.jump_index,
+				`${this.action} param "jump_index"`,
+				debug,
+			);
 		}
-		this.variable = breakIfNotString(args.variable);
-		this.comparison = breakIfNotString(args.comparison);
-		this.value = breakIfNotNumber(args.value);
-		this.expected_bool = breakIfNotBool(args.expected_bool);
+		this.variable = tryString(args.variable, `${this.action} param "variable"`, debug);
+		this.comparison = tryString(args.comparison, `${this.action} param "comparison"`, debug);
+		this.value = tryNumber(args.value, `${this.action} param "value"`, debug);
+		this.expected_bool = tryBool(
+			args.expected_bool,
+			`${this.action} param "expected_bool"`,
+			debug,
+		);
 		if (this.comparison === '!=') {
 			this.comparison = '==';
 			this.expected_bool = !this.expected_bool;
@@ -2360,20 +2684,32 @@ export class CHECK_VARIABLES extends ActionNumberComparison {
 	variable: string;
 	comparison: string;
 	source: string;
-	constructor(args: GenericObj) {
+	constructor(args: GenericObj, debug?: MathlangLocation) {
 		super();
 		this.action = 'CHECK_VARIABLES';
 		if (args.success_script) {
-			this.success_script = breakIfNotString(args.success_script);
+			this.success_script = tryString(
+				args.success_script,
+				`${this.action} param "success_script"`,
+				debug,
+			);
 		} else if (args.label) {
-			this.label = breakIfNotString(args.label);
+			this.label = tryString(args.label, `${this.action} param "label"`, debug);
 		} else if (args.jump_index) {
-			this.jump_index = breakIfNotStringOrNumber(args.jump_index);
+			this.jump_index = tryStringOrNumber(
+				args.jump_index,
+				`${this.action} param "jump_index"`,
+				debug,
+			);
 		}
-		this.variable = breakIfNotString(args.variable);
-		this.comparison = breakIfNotString(args.comparison);
-		this.source = breakIfNotString(args.source);
-		this.expected_bool = breakIfNotBool(args.expected_bool);
+		this.variable = tryString(args.variable, `${this.action} param "variable"`, debug);
+		this.comparison = tryString(args.comparison, `${this.action} param "comparison"`, debug);
+		this.source = tryString(args.source, `${this.action} param "source"`, debug);
+		this.expected_bool = tryBool(
+			args.expected_bool,
+			`${this.action} param "expected_bool"`,
+			debug,
+		);
 		if (this.comparison === '!=') {
 			this.comparison = '==';
 			this.expected_bool = !this.expected_bool;
@@ -2407,18 +2743,30 @@ export class CHECK_MAP extends ActionStringCheckable {
 	action: 'CHECK_MAP';
 	map: string;
 	expected_bool: boolean;
-	constructor(args: GenericObj) {
+	constructor(args: GenericObj, debug?: MathlangLocation) {
 		super();
 		this.action = 'CHECK_MAP';
 		if (args.success_script) {
-			this.success_script = breakIfNotString(args.success_script);
+			this.success_script = tryString(
+				args.success_script,
+				`${this.action} param "success_script"`,
+				debug,
+			);
 		} else if (args.label) {
-			this.label = breakIfNotString(args.label);
+			this.label = tryString(args.label, `${this.action} param "label"`, debug);
 		} else if (args.jump_index) {
-			this.jump_index = breakIfNotStringOrNumber(args.jump_index);
+			this.jump_index = tryStringOrNumber(
+				args.jump_index,
+				`${this.action} param "jump_index"`,
+				debug,
+			);
 		}
-		this.map = breakIfNotString(args.map);
-		this.expected_bool = breakIfNotBool(args.expected_bool);
+		this.map = tryString(args.map, `${this.action} param "map"`, debug);
+		this.expected_bool = tryBool(
+			args.expected_bool,
+			`${this.action} param "expected_bool"`,
+			debug,
+		);
 	}
 	updateProp(value: string) {
 		this.map = value;
@@ -2431,18 +2779,30 @@ export class CHECK_MAP extends ActionStringCheckable {
 export class CHECK_BLE_FLAG extends ActionStringCheckable {
 	action: 'CHECK_BLE_FLAG';
 	ble_flag: string;
-	constructor(args: GenericObj) {
+	constructor(args: GenericObj, debug?: MathlangLocation) {
 		super();
 		this.action = 'CHECK_BLE_FLAG';
 		if (args.success_script) {
-			this.success_script = breakIfNotString(args.success_script);
+			this.success_script = tryString(
+				args.success_script,
+				`${this.action} param "success_script"`,
+				debug,
+			);
 		} else if (args.label) {
-			this.label = breakIfNotString(args.label);
+			this.label = tryString(args.label, `${this.action} param "label"`, debug);
 		} else if (args.jump_index) {
-			this.jump_index = breakIfNotStringOrNumber(args.jump_index);
+			this.jump_index = tryStringOrNumber(
+				args.jump_index,
+				`${this.action} param "jump_index"`,
+				debug,
+			);
 		}
-		this.ble_flag = breakIfNotString(args.ble_flag);
-		this.expected_bool = breakIfNotBool(args.expected_bool);
+		this.ble_flag = tryString(args.ble_flag, `${this.action} param "ble_flag"`, debug);
+		this.expected_bool = tryBool(
+			args.expected_bool,
+			`${this.action} param "expected_bool"`,
+			debug,
+		);
 	}
 	updateProp(value: string) {
 		this.ble_flag = value;
@@ -2454,17 +2814,29 @@ export class CHECK_BLE_FLAG extends ActionStringCheckable {
 }
 export class CHECK_DIALOG_OPEN extends ActionBoolGetable {
 	action: 'CHECK_DIALOG_OPEN';
-	constructor(args: GenericObj) {
+	constructor(args: GenericObj, debug?: MathlangLocation) {
 		super();
 		this.action = 'CHECK_DIALOG_OPEN';
 		if (args.success_script) {
-			this.success_script = breakIfNotString(args.success_script);
+			this.success_script = tryString(
+				args.success_script,
+				`${this.action} param "success_script"`,
+				debug,
+			);
 		} else if (args.label) {
-			this.label = breakIfNotString(args.label);
+			this.label = tryString(args.label, `${this.action} param "label"`, debug);
 		} else if (args.jump_index) {
-			this.jump_index = breakIfNotStringOrNumber(args.jump_index);
+			this.jump_index = tryStringOrNumber(
+				args.jump_index,
+				`${this.action} param "jump_index"`,
+				debug,
+			);
 		}
-		this.expected_bool = breakIfNotBool(args.expected_bool);
+		this.expected_bool = tryBool(
+			args.expected_bool,
+			`${this.action} param "expected_bool"`,
+			debug,
+		);
 	}
 	static quick(provided_bool?: boolean) {
 		const expected_bool = provided_bool === undefined ? true : provided_bool;
@@ -2476,17 +2848,29 @@ export class CHECK_DIALOG_OPEN extends ActionBoolGetable {
 }
 export class CHECK_SERIAL_DIALOG_OPEN extends ActionBoolGetable {
 	action: 'CHECK_SERIAL_DIALOG_OPEN';
-	constructor(args: GenericObj) {
+	constructor(args: GenericObj, debug?: MathlangLocation) {
 		super();
 		this.action = 'CHECK_SERIAL_DIALOG_OPEN';
 		if (args.success_script) {
-			this.success_script = breakIfNotString(args.success_script);
+			this.success_script = tryString(
+				args.success_script,
+				`${this.action} param "success_script"`,
+				debug,
+			);
 		} else if (args.label) {
-			this.label = breakIfNotString(args.label);
+			this.label = tryString(args.label, `${this.action} param "label"`, debug);
 		} else if (args.jump_index) {
-			this.jump_index = breakIfNotStringOrNumber(args.jump_index);
+			this.jump_index = tryStringOrNumber(
+				args.jump_index,
+				`${this.action} param "jump_index"`,
+				debug,
+			);
 		}
-		this.expected_bool = breakIfNotBool(args.expected_bool);
+		this.expected_bool = tryBool(
+			args.expected_bool,
+			`${this.action} param "expected_bool"`,
+			debug,
+		);
 	}
 	static quick(provided_bool?: boolean) {
 		const expected_bool = provided_bool === undefined ? true : provided_bool;
@@ -2502,17 +2886,29 @@ export class CHECK_SERIAL_DIALOG_OPEN extends ActionBoolGetable {
 }
 export class CHECK_DEBUG_MODE extends ActionBoolGetable {
 	action: 'CHECK_DEBUG_MODE';
-	constructor(args: GenericObj) {
+	constructor(args: GenericObj, debug?: MathlangLocation) {
 		super();
 		this.action = 'CHECK_DEBUG_MODE';
 		if (args.success_script) {
-			this.success_script = breakIfNotString(args.success_script);
+			this.success_script = tryString(
+				args.success_script,
+				`${this.action} param "success_script"`,
+				debug,
+			);
 		} else if (args.label) {
-			this.label = breakIfNotString(args.label);
+			this.label = tryString(args.label, `${this.action} param "label"`, debug);
 		} else if (args.jump_index) {
-			this.jump_index = breakIfNotStringOrNumber(args.jump_index);
+			this.jump_index = tryStringOrNumber(
+				args.jump_index,
+				`${this.action} param "jump_index"`,
+				debug,
+			);
 		}
-		this.expected_bool = breakIfNotBool(args.expected_bool);
+		this.expected_bool = tryBool(
+			args.expected_bool,
+			`${this.action} param "expected_bool"`,
+			debug,
+		);
 	}
 	static quick(provided_bool?: boolean) {
 		const expected_bool = provided_bool === undefined ? true : provided_bool;
@@ -2525,10 +2921,10 @@ export class CHECK_DEBUG_MODE extends ActionBoolGetable {
 export class ARRAY_LOG extends Action {
 	action: 'ARRAY_LOG';
 	array_name: string;
-	constructor(args: GenericObj) {
+	constructor(args: GenericObj, debug?: MathlangLocation) {
 		super();
 		this.action = 'ARRAY_LOG';
-		this.array_name = breakIfNotString(args.array_name);
+		this.array_name = tryString(args.array_name, `${this.action} param "array_name"`, debug);
 	}
 	static quick(array_name: string) {
 		return new ARRAY_LOG({ array_name });
@@ -2540,10 +2936,10 @@ export class ARRAY_LOG extends Action {
 export class ARRAY_NEW extends Action {
 	action: 'ARRAY_NEW';
 	array_name: string;
-	constructor(args: GenericObj) {
+	constructor(args: GenericObj, debug?: MathlangLocation) {
 		super();
 		this.action = 'ARRAY_NEW';
-		this.array_name = breakIfNotString(args.array_name);
+		this.array_name = tryString(args.array_name, `${this.action} param "array_name"`, debug);
 	}
 	static quick(array_name: string) {
 		return new ARRAY_NEW({ array_name });
@@ -2555,10 +2951,10 @@ export class ARRAY_NEW extends Action {
 export class ARRAY_DELETE extends Action {
 	action: 'ARRAY_DELETE';
 	array_name: string;
-	constructor(args: GenericObj) {
+	constructor(args: GenericObj, debug?: MathlangLocation) {
 		super();
 		this.action = 'ARRAY_DELETE';
-		this.array_name = breakIfNotString(args.array_name);
+		this.array_name = tryString(args.array_name, `${this.action} param "array_name"`, debug);
 	}
 	static quick(array_name: string) {
 		return new ARRAY_DELETE({ array_name });
@@ -2571,11 +2967,11 @@ export class ARRAY_LENGTH_INTO_VARIABLE extends Action {
 	action: 'ARRAY_LENGTH_INTO_VARIABLE';
 	array_name: string;
 	variable: string;
-	constructor(args: GenericObj) {
+	constructor(args: GenericObj, debug?: MathlangLocation) {
 		super();
 		this.action = 'ARRAY_LENGTH_INTO_VARIABLE';
-		this.array_name = breakIfNotString(args.array_name);
-		this.variable = breakIfNotString(args.variable);
+		this.array_name = tryString(args.array_name, `${this.action} param "array_name"`, debug);
+		this.variable = tryString(args.variable, `${this.action} param "variable"`, debug);
 	}
 	static quick(array_name: string, variable: string) {
 		return new ARRAY_LENGTH_INTO_VARIABLE({ array_name, variable });
@@ -2589,12 +2985,12 @@ export class ARRAY_WRITE_INTO_INDEX_FROM_VALUE extends Action {
 	array_name: string;
 	index: number;
 	value: number;
-	constructor(args: GenericObj) {
+	constructor(args: GenericObj, debug?: MathlangLocation) {
 		super();
 		this.action = 'ARRAY_WRITE_INTO_INDEX_FROM_VALUE';
-		this.array_name = breakIfNotString(args.array_name);
-		this.index = breakIfNotNumber(args.index);
-		this.value = breakIfNotNumber(args.value);
+		this.array_name = tryString(args.array_name, `${this.action} param "array_name"`, debug);
+		this.index = tryNumber(args.index, `${this.action} param "index"`, debug);
+		this.value = tryNumber(args.value, `${this.action} param "value"`, debug);
 	}
 	static quick(array_name: string, index: number, value: number) {
 		return new ARRAY_WRITE_INTO_INDEX_FROM_VALUE({ array_name, index, value });
@@ -2608,12 +3004,12 @@ export class ARRAY_WRITE_INTO_INDEX_FROM_VARIABLE extends Action {
 	array_name: string;
 	index: number;
 	variable: string;
-	constructor(args: GenericObj) {
+	constructor(args: GenericObj, debug?: MathlangLocation) {
 		super();
 		this.action = 'ARRAY_WRITE_INTO_INDEX_FROM_VARIABLE';
-		this.array_name = breakIfNotString(args.array_name);
-		this.index = breakIfNotNumber(args.index);
-		this.variable = breakIfNotString(args.variable);
+		this.array_name = tryString(args.array_name, `${this.action} param "array_name"`, debug);
+		this.index = tryNumber(args.index, `${this.action} param "index"`, debug);
+		this.variable = tryString(args.variable, `${this.action} param "variable"`, debug);
 	}
 	static quick(array_name: string, index: number, variable: string) {
 		return new ARRAY_WRITE_INTO_INDEX_FROM_VARIABLE({ array_name, index, variable });
@@ -2627,12 +3023,16 @@ export class ARRAY_WRITE_INTO_VARIABLE_INDEX_FROM_VALUE extends Action {
 	array_name: string;
 	variable_index: string;
 	value: number;
-	constructor(args: GenericObj) {
+	constructor(args: GenericObj, debug?: MathlangLocation) {
 		super();
 		this.action = 'ARRAY_WRITE_INTO_VARIABLE_INDEX_FROM_VALUE';
-		this.array_name = breakIfNotString(args.array_name);
-		this.variable_index = breakIfNotString(args.variable_index);
-		this.value = breakIfNotNumber(args.value);
+		this.array_name = tryString(args.array_name, `${this.action} param "array_name"`, debug);
+		this.variable_index = tryString(
+			args.variable_index,
+			`${this.action} param "variable_index"`,
+			debug,
+		);
+		this.value = tryNumber(args.value, `${this.action} param "value"`, debug);
 	}
 	static quick(array_name: string, variable_index: string, value: number) {
 		return new ARRAY_WRITE_INTO_VARIABLE_INDEX_FROM_VALUE({
@@ -2650,12 +3050,16 @@ export class ARRAY_WRITE_INTO_VARIABLE_INDEX_FROM_VARIABLE extends Action {
 	array_name: string;
 	variable_index: string;
 	variable: string;
-	constructor(args: GenericObj) {
+	constructor(args: GenericObj, debug?: MathlangLocation) {
 		super();
 		this.action = 'ARRAY_WRITE_INTO_VARIABLE_INDEX_FROM_VARIABLE';
-		this.array_name = breakIfNotString(args.array_name);
-		this.variable_index = breakIfNotString(args.variable_index);
-		this.variable = breakIfNotString(args.variable);
+		this.array_name = tryString(args.array_name, `${this.action} param "array_name"`, debug);
+		this.variable_index = tryString(
+			args.variable_index,
+			`${this.action} param "variable_index"`,
+			debug,
+		);
+		this.variable = tryString(args.variable, `${this.action} param "variable"`, debug);
 	}
 	static quick(array_name: string, variable_index: string, variable: string) {
 		return new ARRAY_WRITE_INTO_VARIABLE_INDEX_FROM_VARIABLE({
@@ -2673,12 +3077,12 @@ export class ARRAY_READ_FROM_INDEX_INTO_VARIABLE extends Action {
 	array_name: string;
 	index: number;
 	variable: string;
-	constructor(args: GenericObj) {
+	constructor(args: GenericObj, debug?: MathlangLocation) {
 		super();
 		this.action = 'ARRAY_READ_FROM_INDEX_INTO_VARIABLE';
-		this.array_name = breakIfNotString(args.array_name);
-		this.index = breakIfNotNumber(args.index);
-		this.variable = breakIfNotString(args.variable);
+		this.array_name = tryString(args.array_name, `${this.action} param "array_name"`, debug);
+		this.index = tryNumber(args.index, `${this.action} param "index"`, debug);
+		this.variable = tryString(args.variable, `${this.action} param "variable"`, debug);
 	}
 	static quick(array_name: string, index: number, variable: string) {
 		return new ARRAY_READ_FROM_INDEX_INTO_VARIABLE({
@@ -2696,12 +3100,16 @@ export class ARRAY_READ_FROM_VARIABLE_INDEX_INTO_VARIABLE extends Action {
 	array_name: string;
 	variable_index: string;
 	variable: string;
-	constructor(args: GenericObj) {
+	constructor(args: GenericObj, debug?: MathlangLocation) {
 		super();
 		this.action = 'ARRAY_READ_FROM_VARIABLE_INDEX_INTO_VARIABLE';
-		this.array_name = breakIfNotString(args.array_name);
-		this.variable_index = breakIfNotString(args.variable_index);
-		this.variable = breakIfNotString(args.variable);
+		this.array_name = tryString(args.array_name, `${this.action} param "array_name"`, debug);
+		this.variable_index = tryString(
+			args.variable_index,
+			`${this.action} param "variable_index"`,
+			debug,
+		);
+		this.variable = tryString(args.variable, `${this.action} param "variable"`, debug);
 	}
 	static quick(array_name: string, variable_index: string, variable: string): Action {
 		return new ARRAY_READ_FROM_VARIABLE_INDEX_INTO_VARIABLE({
@@ -2718,11 +3126,11 @@ export class ARRAY_PUSH_FROM_VALUE extends Action {
 	action: 'ARRAY_PUSH_FROM_VALUE';
 	array_name: string;
 	value: number;
-	constructor(args: GenericObj) {
+	constructor(args: GenericObj, debug?: MathlangLocation) {
 		super();
 		this.action = 'ARRAY_PUSH_FROM_VALUE';
-		this.array_name = breakIfNotString(args.array_name);
-		this.value = breakIfNotNumber(args.value);
+		this.array_name = tryString(args.array_name, `${this.action} param "array_name"`, debug);
+		this.value = tryNumber(args.value, `${this.action} param "value"`, debug);
 	}
 	static quick(array_name: string, value: number) {
 		return new ARRAY_PUSH_FROM_VALUE({ array_name, value });
@@ -2735,11 +3143,19 @@ export class ARRAY_PUSH_FROM_VARIABLE extends Action {
 	action: 'ARRAY_PUSH_FROM_VARIABLE';
 	array_name: string;
 	variable: string;
-	constructor(args: GenericObj) {
+	constructor(args: GenericObj, debug?: MathlangLocation) {
 		super();
 		this.action = 'ARRAY_PUSH_FROM_VARIABLE';
-		this.array_name = breakIfNotString(args.array_name);
-		this.variable = breakIfNotString(args.variable);
+		this.array_name = tryString(
+			args.array_name,
+			'ARRAY_PUSH_FROM_VARIABLE param "array_name"',
+			debug,
+		);
+		this.variable = tryString(
+			args.variable,
+			'ARRAY_PUSH_FROM_VARIABLE param "variable"',
+			debug,
+		);
 	}
 	static quick(array_name: string, variable: string) {
 		return new ARRAY_PUSH_FROM_VARIABLE({ array_name, variable });
@@ -2752,11 +3168,15 @@ export class ARRAY_PUSH_LEFT_FROM_VALUE extends Action {
 	action: 'ARRAY_PUSH_LEFT_FROM_VALUE';
 	array_name: string;
 	value: number;
-	constructor(args: GenericObj) {
+	constructor(args: GenericObj, debug?: MathlangLocation) {
 		super();
 		this.action = 'ARRAY_PUSH_LEFT_FROM_VALUE';
-		this.array_name = breakIfNotString(args.array_name);
-		this.value = breakIfNotNumber(args.value);
+		this.array_name = tryString(
+			args.array_name,
+			'ARRAY_PUSH_LEFT_FROM_VALUE param "array_name"',
+			debug,
+		);
+		this.value = tryNumber(args.value, 'ARRAY_PUSH_LEFT_FROM_VALUE param "value"', debug);
 	}
 	static quick(array_name: string, value: number) {
 		return new ARRAY_PUSH_LEFT_FROM_VALUE({ array_name, value });
@@ -2769,11 +3189,19 @@ export class ARRAY_PUSH_LEFT_FROM_VARIABLE extends Action {
 	action: 'ARRAY_PUSH_LEFT_FROM_VARIABLE';
 	array_name: string;
 	variable: string;
-	constructor(args: GenericObj) {
+	constructor(args: GenericObj, debug?: MathlangLocation) {
 		super();
 		this.action = 'ARRAY_PUSH_LEFT_FROM_VARIABLE';
-		this.array_name = breakIfNotString(args.array_name);
-		this.variable = breakIfNotString(args.variable);
+		this.array_name = tryString(
+			args.array_name,
+			'ARRAY_PUSH_LEFT_FROM_VARIABLE param "array_name"',
+			debug,
+		);
+		this.variable = tryString(
+			args.variable,
+			'ARRAY_PUSH_LEFT_FROM_VARIABLE param "variable"',
+			debug,
+		);
 	}
 	static quick(array_name: string, variable: string) {
 		return new ARRAY_PUSH_LEFT_FROM_VARIABLE({ array_name, variable });
@@ -2786,11 +3214,15 @@ export class ARRAY_POP_INTO_VARIABLE extends Action {
 	action: 'ARRAY_POP_INTO_VARIABLE';
 	array_name: string;
 	variable: string;
-	constructor(args: GenericObj) {
+	constructor(args: GenericObj, debug?: MathlangLocation) {
 		super();
 		this.action = 'ARRAY_POP_INTO_VARIABLE';
-		this.array_name = breakIfNotString(args.array_name);
-		this.variable = breakIfNotString(args.variable);
+		this.array_name = tryString(
+			args.array_name,
+			'ARRAY_POP_INTO_VARIABLE param "array_name"',
+			debug,
+		);
+		this.variable = tryString(args.variable, 'ARRAY_POP_INTO_VARIABLE param "variable"', debug);
 	}
 	static quick(array_name: string, variable: string) {
 		return new ARRAY_POP_INTO_VARIABLE({ array_name, variable });
@@ -2803,11 +3235,19 @@ export class ARRAY_POP_LEFT_INTO_VARIABLE extends Action {
 	action: 'ARRAY_POP_LEFT_INTO_VARIABLE';
 	array_name: string;
 	variable: string;
-	constructor(args: GenericObj) {
+	constructor(args: GenericObj, debug?: MathlangLocation) {
 		super();
 		this.action = 'ARRAY_POP_LEFT_INTO_VARIABLE';
-		this.array_name = breakIfNotString(args.array_name);
-		this.variable = breakIfNotString(args.variable);
+		this.array_name = tryString(
+			args.array_name,
+			'ARRAY_POP_LEFT_INTO_VARIABLE param "array_name"',
+			debug,
+		);
+		this.variable = tryString(
+			args.variable,
+			'ARRAY_POP_LEFT_INTO_VARIABLE param "variable"',
+			debug,
+		);
 	}
 	static quick(array_name: string, variable: string) {
 		return new ARRAY_POP_LEFT_INTO_VARIABLE({ array_name, variable });
@@ -2821,12 +3261,16 @@ export class ARRAY_SLICE extends Action {
 	array_source: string;
 	array_destination: string;
 	index_start: number;
-	constructor(args: GenericObj) {
+	constructor(args: GenericObj, debug?: MathlangLocation) {
 		super();
 		this.action = 'ARRAY_SLICE';
-		this.array_destination = breakIfNotString(args.array_destination);
-		this.array_source = breakIfNotString(args.array_source);
-		this.index_start = breakIfNotNumber(args.index_start);
+		this.array_destination = tryString(
+			args.array_destination,
+			'ARRAY_SLICE param "array_destination"',
+			debug,
+		);
+		this.array_source = tryString(args.array_source, 'ARRAY_SLICE param "array_source"', debug);
+		this.index_start = tryNumber(args.index_start, 'ARRAY_SLICE param "index_start"', debug);
 	}
 	static quick(array_source: string, array_destination: string, index_start: number) {
 		return new ARRAY_SLICE({ array_source, array_destination, index_start });
@@ -2840,12 +3284,24 @@ export class ARRAY_SLICE_BY_VARIABLE extends Action {
 	array_source: string;
 	array_destination: string;
 	variable_start: string;
-	constructor(args: GenericObj) {
+	constructor(args: GenericObj, debug?: MathlangLocation) {
 		super();
 		this.action = 'ARRAY_SLICE_BY_VARIABLE';
-		this.array_source = breakIfNotString(args.array_source);
-		this.array_destination = breakIfNotString(args.array_destination);
-		this.variable_start = breakIfNotString(args.variable_start);
+		this.array_source = tryString(
+			args.array_source,
+			'ARRAY_SLICE_BY_VARIABLE param "array_source"',
+			debug,
+		);
+		this.array_destination = tryString(
+			args.array_destination,
+			'ARRAY_SLICE_BY_VARIABLE param "array_destination"',
+			debug,
+		);
+		this.variable_start = tryString(
+			args.variable_start,
+			'ARRAY_SLICE_BY_VARIABLE param "variable_start"',
+			debug,
+		);
 	}
 	static quick(array_source: string, array_destination: string, variable_start: string) {
 		return new ARRAY_SLICE_BY_VARIABLE({ array_source, array_destination, variable_start });
@@ -2860,13 +3316,25 @@ export class ARRAY_SLICE_TWICE extends Action {
 	array_destination: string;
 	index_start: number;
 	index_end: number;
-	constructor(args: GenericObj) {
+	constructor(args: GenericObj, debug?: MathlangLocation) {
 		super();
 		this.action = 'ARRAY_SLICE_TWICE';
-		this.array_source = breakIfNotString(args.array_source);
-		this.array_destination = breakIfNotString(args.array_destination);
-		this.index_start = breakIfNotNumber(args.index_start);
-		this.index_end = breakIfNotNumber(args.index_end);
+		this.array_source = tryString(
+			args.array_source,
+			'ARRAY_SLICE_TWICE param "array_source"',
+			debug,
+		);
+		this.array_destination = tryString(
+			args.array_destination,
+			'ARRAY_SLICE_TWICE param "array_destination"',
+			debug,
+		);
+		this.index_start = tryNumber(
+			args.index_start,
+			'ARRAY_SLICE_TWICE param "index_start"',
+			debug,
+		);
+		this.index_end = tryNumber(args.index_end, 'ARRAY_SLICE_TWICE param "index_end"', debug);
 	}
 	static quick(
 		array_source: string,
@@ -2886,13 +3354,29 @@ export class ARRAY_SLICE_TWICE_BY_VARIABLE extends Action {
 	array_destination: string;
 	variable_start: string;
 	variable_end: string;
-	constructor(args: GenericObj) {
+	constructor(args: GenericObj, debug?: MathlangLocation) {
 		super();
 		this.action = 'ARRAY_SLICE_TWICE_BY_VARIABLE';
-		this.array_source = breakIfNotString(args.array_source);
-		this.array_destination = breakIfNotString(args.array_destination);
-		this.variable_start = breakIfNotString(args.variable_start);
-		this.variable_end = breakIfNotString(args.variable_end);
+		this.array_source = tryString(
+			args.array_source,
+			'ARRAY_SLICE_TWICE_BY_VARIABLE param "array_source"',
+			debug,
+		);
+		this.array_destination = tryString(
+			args.array_destination,
+			'ARRAY_SLICE_TWICE_BY_VARIABLE param "array_destination"',
+			debug,
+		);
+		this.variable_start = tryString(
+			args.variable_start,
+			'ARRAY_SLICE_TWICE_BY_VARIABLE param "variable_start"',
+			debug,
+		);
+		this.variable_end = tryString(
+			args.variable_end,
+			'ARRAY_SLICE_TWICE_BY_VARIABLE param "variable_end"',
+			debug,
+		);
 	}
 	static quick(
 		array_source: string,
@@ -2914,10 +3398,10 @@ export class ARRAY_SLICE_TWICE_BY_VARIABLE extends Action {
 export class ARRAY_REVERSE extends Action {
 	action: 'ARRAY_REVERSE';
 	array_name: string;
-	constructor(args: GenericObj) {
+	constructor(args: GenericObj, debug?: MathlangLocation) {
 		super();
 		this.action = 'ARRAY_REVERSE';
-		this.array_name = breakIfNotString(args.array_name);
+		this.array_name = tryString(args.array_name, 'ARRAY_REVERSE param "array_name"', debug);
 	}
 	static quick(array_name: string) {
 		return new ARRAY_REVERSE({ array_name });
@@ -2929,10 +3413,10 @@ export class ARRAY_REVERSE extends Action {
 export class ARRAY_SORT extends Action {
 	action: 'ARRAY_SORT';
 	array_name: string;
-	constructor(args: GenericObj) {
+	constructor(args: GenericObj, debug?: MathlangLocation) {
 		super();
 		this.action = 'ARRAY_SORT';
-		this.array_name = breakIfNotString(args.array_name);
+		this.array_name = tryString(args.array_name, 'ARRAY_SORT param "array_name"', debug);
 	}
 	static quick(array_name: string) {
 		return new ARRAY_SORT({ array_name });
@@ -3001,200 +3485,286 @@ export const breakIfNotBool = (v: unknown): boolean => {
 
 export const actionConstructorLookup = {
 	NULL_ACTION: () => new NULL_ACTION(),
-	COPY_SCRIPT: (args: GenericObj) => new COPY_SCRIPT(args),
-	LABEL: (args: GenericObj) => new LABEL(args),
-	RUN_SCRIPT: (args: GenericObj) => new RUN_SCRIPT(args),
-	BLOCKING_DELAY: (args: GenericObj) => new BLOCKING_DELAY(args),
-	NON_BLOCKING_DELAY: (args: GenericObj) => new NON_BLOCKING_DELAY(args),
-	UNREGISTER_SERIAL_DIALOG_COMMAND: (args: GenericObj) => {
-		return new UNREGISTER_SERIAL_DIALOG_COMMAND(args);
+	COPY_SCRIPT: (args: GenericObj, debug?: MathlangLocation) => new COPY_SCRIPT(args, debug),
+	LABEL: (args: GenericObj, debug?: MathlangLocation) => new LABEL(args, debug),
+	RUN_SCRIPT: (args: GenericObj, debug?: MathlangLocation) => new RUN_SCRIPT(args, debug),
+	BLOCKING_DELAY: (args: GenericObj, debug?: MathlangLocation) => new BLOCKING_DELAY(args, debug),
+	NON_BLOCKING_DELAY: (args: GenericObj, debug?: MathlangLocation) =>
+		new NON_BLOCKING_DELAY(args, debug),
+	UNREGISTER_SERIAL_DIALOG_COMMAND: (args: GenericObj, debug?: MathlangLocation) => {
+		return new UNREGISTER_SERIAL_DIALOG_COMMAND(args, debug);
 	},
-	UNREGISTER_SERIAL_DIALOG_COMMAND_ARGUMENT: (args: GenericObj) => {
-		return new UNREGISTER_SERIAL_DIALOG_COMMAND_ARGUMENT(args);
+	UNREGISTER_SERIAL_DIALOG_COMMAND_ARGUMENT: (args: GenericObj, debug?: MathlangLocation) => {
+		return new UNREGISTER_SERIAL_DIALOG_COMMAND_ARGUMENT(args, debug);
 	},
-	SET_ENTITY_NAME: (args: GenericObj) => new SET_ENTITY_NAME(args),
-	SET_ENTITY_X: (args: GenericObj) => new SET_ENTITY_X(args),
-	SET_ENTITY_Y: (args: GenericObj) => new SET_ENTITY_Y(args),
-	SET_ENTITY_INTERACT_SCRIPT: (args: GenericObj) => new SET_ENTITY_INTERACT_SCRIPT(args),
-	SET_ENTITY_TICK_SCRIPT: (args: GenericObj) => new SET_ENTITY_TICK_SCRIPT(args),
-	SET_ENTITY_TYPE: (args: GenericObj) => new SET_ENTITY_TYPE(args),
-	SET_ENTITY_PRIMARY_ID: (args: GenericObj) => new SET_ENTITY_PRIMARY_ID(args),
-	SET_ENTITY_SECONDARY_ID: (args: GenericObj) => new SET_ENTITY_SECONDARY_ID(args),
-	SET_ENTITY_PRIMARY_ID_TYPE: (args: GenericObj) => new SET_ENTITY_PRIMARY_ID_TYPE(args),
-	SET_ENTITY_CURRENT_ANIMATION: (args: GenericObj) => {
-		return new SET_ENTITY_CURRENT_ANIMATION(args);
+	SET_ENTITY_NAME: (args: GenericObj, debug?: MathlangLocation) =>
+		new SET_ENTITY_NAME(args, debug),
+	SET_ENTITY_X: (args: GenericObj, debug?: MathlangLocation) => new SET_ENTITY_X(args, debug),
+	SET_ENTITY_Y: (args: GenericObj, debug?: MathlangLocation) => new SET_ENTITY_Y(args, debug),
+	SET_ENTITY_INTERACT_SCRIPT: (args: GenericObj, debug?: MathlangLocation) =>
+		new SET_ENTITY_INTERACT_SCRIPT(args, debug),
+	SET_ENTITY_TICK_SCRIPT: (args: GenericObj, debug?: MathlangLocation) =>
+		new SET_ENTITY_TICK_SCRIPT(args, debug),
+	SET_ENTITY_TYPE: (args: GenericObj, debug?: MathlangLocation) =>
+		new SET_ENTITY_TYPE(args, debug),
+	SET_ENTITY_PRIMARY_ID: (args: GenericObj, debug?: MathlangLocation) =>
+		new SET_ENTITY_PRIMARY_ID(args, debug),
+	SET_ENTITY_SECONDARY_ID: (args: GenericObj, debug?: MathlangLocation) =>
+		new SET_ENTITY_SECONDARY_ID(args, debug),
+	SET_ENTITY_PRIMARY_ID_TYPE: (args: GenericObj, debug?: MathlangLocation) =>
+		new SET_ENTITY_PRIMARY_ID_TYPE(args, debug),
+	SET_ENTITY_CURRENT_ANIMATION: (args: GenericObj, debug?: MathlangLocation) => {
+		return new SET_ENTITY_CURRENT_ANIMATION(args, debug);
 	},
-	SET_ENTITY_CURRENT_FRAME: (args: GenericObj) => new SET_ENTITY_CURRENT_FRAME(args),
-	SET_ENTITY_DIRECTION: (args: GenericObj) => new SET_ENTITY_DIRECTION(args),
-	SET_ENTITY_DIRECTION_RELATIVE: (args: GenericObj) => {
-		return new SET_ENTITY_DIRECTION_RELATIVE(args);
+	SET_ENTITY_CURRENT_FRAME: (args: GenericObj, debug?: MathlangLocation) =>
+		new SET_ENTITY_CURRENT_FRAME(args, debug),
+	SET_ENTITY_DIRECTION: (args: GenericObj, debug?: MathlangLocation) =>
+		new SET_ENTITY_DIRECTION(args, debug),
+	SET_ENTITY_DIRECTION_RELATIVE: (args: GenericObj, debug?: MathlangLocation) => {
+		return new SET_ENTITY_DIRECTION_RELATIVE(args, debug);
 	},
-	SET_ENTITY_DIRECTION_TARGET_ENTITY: (args: GenericObj) => {
-		return new SET_ENTITY_DIRECTION_TARGET_ENTITY(args);
+	SET_ENTITY_DIRECTION_TARGET_ENTITY: (args: GenericObj, debug?: MathlangLocation) => {
+		return new SET_ENTITY_DIRECTION_TARGET_ENTITY(args, debug);
 	},
-	SET_ENTITY_DIRECTION_TARGET_GEOMETRY: (args: GenericObj) => {
-		return new SET_ENTITY_DIRECTION_TARGET_GEOMETRY(args);
+	SET_ENTITY_DIRECTION_TARGET_GEOMETRY: (args: GenericObj, debug?: MathlangLocation) => {
+		return new SET_ENTITY_DIRECTION_TARGET_GEOMETRY(args, debug);
 	},
-	SET_ENTITY_GLITCHED: (args: GenericObj) => new SET_ENTITY_GLITCHED(args),
-	SET_ENTITY_PATH: (args: GenericObj) => new SET_ENTITY_PATH(args),
-	SET_SAVE_FLAG: (args: GenericObj) => new SET_SAVE_FLAG(args),
-	SET_PLAYER_CONTROL: (args: GenericObj) => new SET_PLAYER_CONTROL(args),
-	SET_MAP_TICK_SCRIPT: (args: GenericObj) => new SET_MAP_TICK_SCRIPT(args),
-	SET_HEX_CURSOR_LOCATION: (args: GenericObj) => new SET_HEX_CURSOR_LOCATION(args),
-	SET_WARP_STATE: (args: GenericObj) => new SET_WARP_STATE(args),
-	SET_HEX_EDITOR_STATE: (args: GenericObj) => new SET_HEX_EDITOR_STATE(args),
-	SET_HEX_EDITOR_DIALOG_MODE: (args: GenericObj) => new SET_HEX_EDITOR_DIALOG_MODE(args),
-	SET_HEX_EDITOR_CONTROL: (args: GenericObj) => new SET_HEX_EDITOR_CONTROL(args),
-	SET_HEX_EDITOR_CONTROL_CLIPBOARD: (args: GenericObj) => {
-		return new SET_HEX_EDITOR_CONTROL_CLIPBOARD(args);
+	SET_ENTITY_GLITCHED: (args: GenericObj, debug?: MathlangLocation) =>
+		new SET_ENTITY_GLITCHED(args, debug),
+	SET_ENTITY_PATH: (args: GenericObj, debug?: MathlangLocation) =>
+		new SET_ENTITY_PATH(args, debug),
+	SET_SAVE_FLAG: (args: GenericObj, debug?: MathlangLocation) => new SET_SAVE_FLAG(args, debug),
+	SET_PLAYER_CONTROL: (args: GenericObj, debug?: MathlangLocation) =>
+		new SET_PLAYER_CONTROL(args, debug),
+	SET_MAP_TICK_SCRIPT: (args: GenericObj, debug?: MathlangLocation) =>
+		new SET_MAP_TICK_SCRIPT(args, debug),
+	SET_HEX_CURSOR_LOCATION: (args: GenericObj, debug?: MathlangLocation) =>
+		new SET_HEX_CURSOR_LOCATION(args, debug),
+	SET_WARP_STATE: (args: GenericObj, debug?: MathlangLocation) => new SET_WARP_STATE(args, debug),
+	SET_HEX_EDITOR_STATE: (args: GenericObj, debug?: MathlangLocation) =>
+		new SET_HEX_EDITOR_STATE(args, debug),
+	SET_HEX_EDITOR_DIALOG_MODE: (args: GenericObj, debug?: MathlangLocation) =>
+		new SET_HEX_EDITOR_DIALOG_MODE(args, debug),
+	SET_HEX_EDITOR_CONTROL: (args: GenericObj, debug?: MathlangLocation) =>
+		new SET_HEX_EDITOR_CONTROL(args, debug),
+	SET_HEX_EDITOR_CONTROL_CLIPBOARD: (args: GenericObj, debug?: MathlangLocation) => {
+		return new SET_HEX_EDITOR_CONTROL_CLIPBOARD(args, debug);
 	},
-	LOAD_MAP: (args: GenericObj) => new LOAD_MAP(args),
-	SHOW_DIALOG: (args: GenericObj) => new SHOW_DIALOG(args),
-	PLAY_ENTITY_ANIMATION: (args: GenericObj) => new PLAY_ENTITY_ANIMATION(args),
-	TELEPORT_ENTITY_TO_GEOMETRY: (args: GenericObj) => new TELEPORT_ENTITY_TO_GEOMETRY(args),
-	WALK_ENTITY_TO_GEOMETRY: (args: GenericObj) => new WALK_ENTITY_TO_GEOMETRY(args),
-	WALK_ENTITY_ALONG_GEOMETRY: (args: GenericObj) => new WALK_ENTITY_ALONG_GEOMETRY(args),
-	LOOP_ENTITY_ALONG_GEOMETRY: (args: GenericObj) => new LOOP_ENTITY_ALONG_GEOMETRY(args),
-	SET_CAMERA_TO_FOLLOW_ENTITY: (args: GenericObj) => new SET_CAMERA_TO_FOLLOW_ENTITY(args),
-	TELEPORT_CAMERA_TO_GEOMETRY: (args: GenericObj) => new TELEPORT_CAMERA_TO_GEOMETRY(args),
-	PAN_CAMERA_TO_ENTITY: (args: GenericObj) => new PAN_CAMERA_TO_ENTITY(args),
-	PAN_CAMERA_TO_GEOMETRY: (args: GenericObj) => new PAN_CAMERA_TO_GEOMETRY(args),
-	PAN_CAMERA_ALONG_GEOMETRY: (args: GenericObj) => new PAN_CAMERA_ALONG_GEOMETRY(args),
-	LOOP_CAMERA_ALONG_GEOMETRY: (args: GenericObj) => new LOOP_CAMERA_ALONG_GEOMETRY(args),
-	SET_SCREEN_SHAKE: (args: GenericObj) => new SET_SCREEN_SHAKE(args),
-	SCREEN_FADE_OUT: (args: GenericObj) => new SCREEN_FADE_OUT(args),
-	SCREEN_FADE_IN: (args: GenericObj) => new SCREEN_FADE_IN(args),
-	MUTATE_VARIABLE: (args: GenericObj) => new MUTATE_VARIABLE(args),
-	MUTATE_VARIABLES: (args: GenericObj) => new MUTATE_VARIABLES(args),
-	COPY_VARIABLE: (args: GenericObj) => new COPY_VARIABLE(args),
+	LOAD_MAP: (args: GenericObj, debug?: MathlangLocation) => new LOAD_MAP(args, debug),
+	SHOW_DIALOG: (args: GenericObj, debug?: MathlangLocation) => new SHOW_DIALOG(args, debug),
+	PLAY_ENTITY_ANIMATION: (args: GenericObj, debug?: MathlangLocation) =>
+		new PLAY_ENTITY_ANIMATION(args, debug),
+	TELEPORT_ENTITY_TO_GEOMETRY: (args: GenericObj, debug?: MathlangLocation) =>
+		new TELEPORT_ENTITY_TO_GEOMETRY(args, debug),
+	WALK_ENTITY_TO_GEOMETRY: (args: GenericObj, debug?: MathlangLocation) =>
+		new WALK_ENTITY_TO_GEOMETRY(args, debug),
+	WALK_ENTITY_ALONG_GEOMETRY: (args: GenericObj, debug?: MathlangLocation) =>
+		new WALK_ENTITY_ALONG_GEOMETRY(args, debug),
+	LOOP_ENTITY_ALONG_GEOMETRY: (args: GenericObj, debug?: MathlangLocation) =>
+		new LOOP_ENTITY_ALONG_GEOMETRY(args, debug),
+	SET_CAMERA_TO_FOLLOW_ENTITY: (args: GenericObj, debug?: MathlangLocation) =>
+		new SET_CAMERA_TO_FOLLOW_ENTITY(args, debug),
+	TELEPORT_CAMERA_TO_GEOMETRY: (args: GenericObj, debug?: MathlangLocation) =>
+		new TELEPORT_CAMERA_TO_GEOMETRY(args, debug),
+	PAN_CAMERA_TO_ENTITY: (args: GenericObj, debug?: MathlangLocation) =>
+		new PAN_CAMERA_TO_ENTITY(args, debug),
+	PAN_CAMERA_TO_GEOMETRY: (args: GenericObj, debug?: MathlangLocation) =>
+		new PAN_CAMERA_TO_GEOMETRY(args, debug),
+	PAN_CAMERA_ALONG_GEOMETRY: (args: GenericObj, debug?: MathlangLocation) =>
+		new PAN_CAMERA_ALONG_GEOMETRY(args, debug),
+	LOOP_CAMERA_ALONG_GEOMETRY: (args: GenericObj, debug?: MathlangLocation) =>
+		new LOOP_CAMERA_ALONG_GEOMETRY(args, debug),
+	SET_SCREEN_SHAKE: (args: GenericObj, debug?: MathlangLocation) =>
+		new SET_SCREEN_SHAKE(args, debug),
+	SCREEN_FADE_OUT: (args: GenericObj, debug?: MathlangLocation) =>
+		new SCREEN_FADE_OUT(args, debug),
+	SCREEN_FADE_IN: (args: GenericObj, debug?: MathlangLocation) => new SCREEN_FADE_IN(args, debug),
+	MUTATE_VARIABLE: (args: GenericObj, debug?: MathlangLocation) =>
+		new MUTATE_VARIABLE(args, debug),
+	MUTATE_VARIABLES: (args: GenericObj, debug?: MathlangLocation) =>
+		new MUTATE_VARIABLES(args, debug),
+	COPY_VARIABLE: (args: GenericObj, debug?: MathlangLocation) => new COPY_VARIABLE(args, debug),
 	SLOT_SAVE: () => new SLOT_SAVE(),
-	SLOT_LOAD: (args: GenericObj) => new SLOT_LOAD(args),
-	SLOT_ERASE: (args: GenericObj) => new SLOT_ERASE(args),
-	SET_CONNECT_SERIAL_DIALOG: (args: GenericObj) => new SET_CONNECT_SERIAL_DIALOG(args),
-	SHOW_SERIAL_DIALOG: (args: GenericObj) => new SHOW_SERIAL_DIALOG(args),
-	SET_MAP_LOOK_SCRIPT: (args: GenericObj) => new SET_MAP_LOOK_SCRIPT(args),
-	SET_ENTITY_LOOK_SCRIPT: (args: GenericObj) => new SET_ENTITY_LOOK_SCRIPT(args),
-	SET_TELEPORT_ENABLED: (args: GenericObj) => new SET_TELEPORT_ENABLED(args),
-	SET_BLE_FLAG: (args: GenericObj) => new SET_BLE_FLAG(args),
-	SET_SERIAL_DIALOG_CONTROL: (args: GenericObj) => new SET_SERIAL_DIALOG_CONTROL(args),
-	REGISTER_SERIAL_DIALOG_COMMAND: (args: GenericObj) => {
-		return new REGISTER_SERIAL_DIALOG_COMMAND(args);
+	SLOT_LOAD: (args: GenericObj, debug?: MathlangLocation) => new SLOT_LOAD(args, debug),
+	SLOT_ERASE: (args: GenericObj, debug?: MathlangLocation) => new SLOT_ERASE(args, debug),
+	SET_CONNECT_SERIAL_DIALOG: (args: GenericObj, debug?: MathlangLocation) =>
+		new SET_CONNECT_SERIAL_DIALOG(args, debug),
+	SHOW_SERIAL_DIALOG: (args: GenericObj, debug?: MathlangLocation) =>
+		new SHOW_SERIAL_DIALOG(args, debug),
+	SET_MAP_LOOK_SCRIPT: (args: GenericObj, debug?: MathlangLocation) =>
+		new SET_MAP_LOOK_SCRIPT(args, debug),
+	SET_ENTITY_LOOK_SCRIPT: (args: GenericObj, debug?: MathlangLocation) =>
+		new SET_ENTITY_LOOK_SCRIPT(args, debug),
+	SET_TELEPORT_ENABLED: (args: GenericObj, debug?: MathlangLocation) =>
+		new SET_TELEPORT_ENABLED(args, debug),
+	SET_BLE_FLAG: (args: GenericObj, debug?: MathlangLocation) => new SET_BLE_FLAG(args, debug),
+	SET_SERIAL_DIALOG_CONTROL: (args: GenericObj, debug?: MathlangLocation) =>
+		new SET_SERIAL_DIALOG_CONTROL(args, debug),
+	REGISTER_SERIAL_DIALOG_COMMAND: (args: GenericObj, debug?: MathlangLocation) => {
+		return new REGISTER_SERIAL_DIALOG_COMMAND(args, debug);
 	},
-	REGISTER_SERIAL_DIALOG_COMMAND_ARGUMENT: (args: GenericObj) => {
-		return new REGISTER_SERIAL_DIALOG_COMMAND_ARGUMENT(args);
+	REGISTER_SERIAL_DIALOG_COMMAND_ARGUMENT: (args: GenericObj, debug?: MathlangLocation) => {
+		return new REGISTER_SERIAL_DIALOG_COMMAND_ARGUMENT(args, debug);
 	},
-	SET_ENTITY_MOVEMENT_RELATIVE: (args: GenericObj) => {
-		return new SET_ENTITY_MOVEMENT_RELATIVE(args);
+	SET_ENTITY_MOVEMENT_RELATIVE: (args: GenericObj, debug?: MathlangLocation) => {
+		return new SET_ENTITY_MOVEMENT_RELATIVE(args, debug);
 	},
 	CLOSE_DIALOG: () => new CLOSE_DIALOG(),
 	CLOSE_SERIAL_DIALOG: () => new CLOSE_SERIAL_DIALOG(),
-	SET_LIGHTS_CONTROL: (args: GenericObj) => new SET_LIGHTS_CONTROL(args),
-	SET_LIGHTS_STATE: (args: GenericObj) => new SET_LIGHTS_STATE(args),
-	GOTO_ACTION_INDEX: (args: GenericObj) => new GOTO_ACTION_INDEX(args),
-	SET_SCRIPT_PAUSE: (args: GenericObj) => new SET_SCRIPT_PAUSE(args),
-	REGISTER_SERIAL_DIALOG_COMMAND_ALIAS: (args: GenericObj) => {
-		return new REGISTER_SERIAL_DIALOG_COMMAND_ALIAS(args);
+	SET_LIGHTS_CONTROL: (args: GenericObj, debug?: MathlangLocation) =>
+		new SET_LIGHTS_CONTROL(args, debug),
+	SET_LIGHTS_STATE: (args: GenericObj, debug?: MathlangLocation) =>
+		new SET_LIGHTS_STATE(args, debug),
+	GOTO_ACTION_INDEX: (args: GenericObj, debug?: MathlangLocation) =>
+		new GOTO_ACTION_INDEX(args, debug),
+	SET_SCRIPT_PAUSE: (args: GenericObj, debug?: MathlangLocation) =>
+		new SET_SCRIPT_PAUSE(args, debug),
+	REGISTER_SERIAL_DIALOG_COMMAND_ALIAS: (args: GenericObj, debug?: MathlangLocation) => {
+		return new REGISTER_SERIAL_DIALOG_COMMAND_ALIAS(args, debug);
 	},
-	UNREGISTER_SERIAL_DIALOG_COMMAND_ALIAS: (args: GenericObj) => {
-		return new UNREGISTER_SERIAL_DIALOG_COMMAND_ALIAS(args);
+	UNREGISTER_SERIAL_DIALOG_COMMAND_ALIAS: (args: GenericObj, debug?: MathlangLocation) => {
+		return new UNREGISTER_SERIAL_DIALOG_COMMAND_ALIAS(args, debug);
 	},
-	SET_SERIAL_DIALOG_COMMAND_VISIBILITY: (args: GenericObj) => {
-		return new SET_SERIAL_DIALOG_COMMAND_VISIBILITY(args);
+	SET_SERIAL_DIALOG_COMMAND_VISIBILITY: (args: GenericObj, debug?: MathlangLocation) => {
+		return new SET_SERIAL_DIALOG_COMMAND_VISIBILITY(args, debug);
 	},
-	CHECK_ENTITY_NAME: (args: GenericObj) => new CHECK_ENTITY_NAME(args),
-	CHECK_ENTITY_X: (args: GenericObj) => new CHECK_ENTITY_X(args),
-	CHECK_ENTITY_Y: (args: GenericObj) => new CHECK_ENTITY_Y(args),
-	CHECK_ENTITY_INTERACT_SCRIPT: (args: GenericObj) => {
-		return new CHECK_ENTITY_INTERACT_SCRIPT(args);
+	CHECK_ENTITY_NAME: (args: GenericObj, debug?: MathlangLocation) =>
+		new CHECK_ENTITY_NAME(args, debug),
+	CHECK_ENTITY_X: (args: GenericObj, debug?: MathlangLocation) => new CHECK_ENTITY_X(args, debug),
+	CHECK_ENTITY_Y: (args: GenericObj, debug?: MathlangLocation) => new CHECK_ENTITY_Y(args, debug),
+	CHECK_ENTITY_INTERACT_SCRIPT: (args: GenericObj, debug?: MathlangLocation) => {
+		return new CHECK_ENTITY_INTERACT_SCRIPT(args, debug);
 	},
-	CHECK_ENTITY_TICK_SCRIPT: (args: GenericObj) => new CHECK_ENTITY_TICK_SCRIPT(args),
-	CHECK_ENTITY_LOOK_SCRIPT: (args: GenericObj) => new CHECK_ENTITY_LOOK_SCRIPT(args),
-	CHECK_ENTITY_TYPE: (args: GenericObj) => new CHECK_ENTITY_TYPE(args),
-	CHECK_ENTITY_PRIMARY_ID: (args: GenericObj) => new CHECK_ENTITY_PRIMARY_ID(args),
-	CHECK_ENTITY_SECONDARY_ID: (args: GenericObj) => new CHECK_ENTITY_SECONDARY_ID(args),
-	CHECK_ENTITY_PRIMARY_ID_TYPE: (args: GenericObj) => {
-		return new CHECK_ENTITY_PRIMARY_ID_TYPE(args);
+	CHECK_ENTITY_TICK_SCRIPT: (args: GenericObj, debug?: MathlangLocation) =>
+		new CHECK_ENTITY_TICK_SCRIPT(args, debug),
+	CHECK_ENTITY_LOOK_SCRIPT: (args: GenericObj, debug?: MathlangLocation) =>
+		new CHECK_ENTITY_LOOK_SCRIPT(args, debug),
+	CHECK_ENTITY_TYPE: (args: GenericObj, debug?: MathlangLocation) =>
+		new CHECK_ENTITY_TYPE(args, debug),
+	CHECK_ENTITY_PRIMARY_ID: (args: GenericObj, debug?: MathlangLocation) =>
+		new CHECK_ENTITY_PRIMARY_ID(args, debug),
+	CHECK_ENTITY_SECONDARY_ID: (args: GenericObj, debug?: MathlangLocation) =>
+		new CHECK_ENTITY_SECONDARY_ID(args, debug),
+	CHECK_ENTITY_PRIMARY_ID_TYPE: (args: GenericObj, debug?: MathlangLocation) => {
+		return new CHECK_ENTITY_PRIMARY_ID_TYPE(args, debug);
 	},
-	CHECK_ENTITY_CURRENT_ANIMATION: (args: GenericObj) => {
-		return new CHECK_ENTITY_CURRENT_ANIMATION(args);
+	CHECK_ENTITY_CURRENT_ANIMATION: (args: GenericObj, debug?: MathlangLocation) => {
+		return new CHECK_ENTITY_CURRENT_ANIMATION(args, debug);
 	},
-	CHECK_ENTITY_CURRENT_FRAME: (args: GenericObj) => new CHECK_ENTITY_CURRENT_FRAME(args),
-	CHECK_ENTITY_DIRECTION: (args: GenericObj) => new CHECK_ENTITY_DIRECTION(args),
-	CHECK_ENTITY_GLITCHED: (args: GenericObj) => new CHECK_ENTITY_GLITCHED(args),
-	CHECK_ENTITY_PATH: (args: GenericObj) => new CHECK_ENTITY_PATH(args),
-	CHECK_SAVE_FLAG: (args: GenericObj) => new CHECK_SAVE_FLAG(args),
-	CHECK_IF_ENTITY_IS_IN_GEOMETRY: (args: GenericObj) => {
-		return new CHECK_IF_ENTITY_IS_IN_GEOMETRY(args);
+	CHECK_ENTITY_CURRENT_FRAME: (args: GenericObj, debug?: MathlangLocation) =>
+		new CHECK_ENTITY_CURRENT_FRAME(args, debug),
+	CHECK_ENTITY_DIRECTION: (args: GenericObj, debug?: MathlangLocation) =>
+		new CHECK_ENTITY_DIRECTION(args, debug),
+	CHECK_ENTITY_GLITCHED: (args: GenericObj, debug?: MathlangLocation) =>
+		new CHECK_ENTITY_GLITCHED(args, debug),
+	CHECK_ENTITY_PATH: (args: GenericObj, debug?: MathlangLocation) =>
+		new CHECK_ENTITY_PATH(args, debug),
+	CHECK_SAVE_FLAG: (args: GenericObj, debug?: MathlangLocation) =>
+		new CHECK_SAVE_FLAG(args, debug),
+	CHECK_IF_ENTITY_IS_IN_GEOMETRY: (args: GenericObj, debug?: MathlangLocation) => {
+		return new CHECK_IF_ENTITY_IS_IN_GEOMETRY(args, debug);
 	},
-	CHECK_FOR_BUTTON_PRESS: (args: GenericObj) => new CHECK_FOR_BUTTON_PRESS(args),
-	CHECK_FOR_BUTTON_STATE: (args: GenericObj) => new CHECK_FOR_BUTTON_STATE(args),
-	CHECK_WARP_STATE: (args: GenericObj) => new CHECK_WARP_STATE(args),
-	CHECK_VARIABLE: (args: GenericObj) => new CHECK_VARIABLE(args),
-	CHECK_VARIABLES: (args: GenericObj) => new CHECK_VARIABLES(args),
-	CHECK_MAP: (args: GenericObj) => new CHECK_MAP(args),
-	CHECK_BLE_FLAG: (args: GenericObj) => new CHECK_BLE_FLAG(args),
-	CHECK_DIALOG_OPEN: (args: GenericObj) => new CHECK_DIALOG_OPEN(args),
-	CHECK_SERIAL_DIALOG_OPEN: (args: GenericObj) => new CHECK_SERIAL_DIALOG_OPEN(args),
-	CHECK_DEBUG_MODE: (args: GenericObj) => new CHECK_DEBUG_MODE(args),
-	ARRAY_LOG: (args: GenericObj) => new ARRAY_LOG(args),
-	ARRAY_NEW: (args: GenericObj) => new ARRAY_NEW(args),
-	ARRAY_DELETE: (args: GenericObj) => new ARRAY_DELETE(args),
-	ARRAY_LENGTH_INTO_VARIABLE: (args: GenericObj) => new ARRAY_LENGTH_INTO_VARIABLE(args),
-	ARRAY_WRITE_INTO_INDEX_FROM_VALUE: (args: GenericObj) => {
-		return new ARRAY_WRITE_INTO_INDEX_FROM_VALUE(args);
+	CHECK_FOR_BUTTON_PRESS: (args: GenericObj, debug?: MathlangLocation) =>
+		new CHECK_FOR_BUTTON_PRESS(args, debug),
+	CHECK_FOR_BUTTON_STATE: (args: GenericObj, debug?: MathlangLocation) =>
+		new CHECK_FOR_BUTTON_STATE(args, debug),
+	CHECK_WARP_STATE: (args: GenericObj, debug?: MathlangLocation) =>
+		new CHECK_WARP_STATE(args, debug),
+	CHECK_VARIABLE: (args: GenericObj, debug?: MathlangLocation) => new CHECK_VARIABLE(args, debug),
+	CHECK_VARIABLES: (args: GenericObj, debug?: MathlangLocation) =>
+		new CHECK_VARIABLES(args, debug),
+	CHECK_MAP: (args: GenericObj, debug?: MathlangLocation) => new CHECK_MAP(args, debug),
+	CHECK_BLE_FLAG: (args: GenericObj, debug?: MathlangLocation) => new CHECK_BLE_FLAG(args, debug),
+	CHECK_DIALOG_OPEN: (args: GenericObj, debug?: MathlangLocation) =>
+		new CHECK_DIALOG_OPEN(args, debug),
+	CHECK_SERIAL_DIALOG_OPEN: (args: GenericObj, debug?: MathlangLocation) =>
+		new CHECK_SERIAL_DIALOG_OPEN(args, debug),
+	CHECK_DEBUG_MODE: (args: GenericObj, debug?: MathlangLocation) =>
+		new CHECK_DEBUG_MODE(args, debug),
+	ARRAY_LOG: (args: GenericObj, debug?: MathlangLocation) => new ARRAY_LOG(args, debug),
+	ARRAY_NEW: (args: GenericObj, debug?: MathlangLocation) => new ARRAY_NEW(args, debug),
+	ARRAY_DELETE: (args: GenericObj, debug?: MathlangLocation) => new ARRAY_DELETE(args, debug),
+	ARRAY_LENGTH_INTO_VARIABLE: (args: GenericObj, debug?: MathlangLocation) =>
+		new ARRAY_LENGTH_INTO_VARIABLE(args, debug),
+	ARRAY_WRITE_INTO_INDEX_FROM_VALUE: (args: GenericObj, debug?: MathlangLocation) => {
+		return new ARRAY_WRITE_INTO_INDEX_FROM_VALUE(args, debug);
 	},
-	ARRAY_WRITE_INTO_INDEX_FROM_VARIABLE: (args: GenericObj) => {
-		return new ARRAY_WRITE_INTO_INDEX_FROM_VARIABLE(args);
+	ARRAY_WRITE_INTO_INDEX_FROM_VARIABLE: (args: GenericObj, debug?: MathlangLocation) => {
+		return new ARRAY_WRITE_INTO_INDEX_FROM_VARIABLE(args, debug);
 	},
-	ARRAY_WRITE_INTO_VARIABLE_INDEX_FROM_VALUE: (args: GenericObj) => {
-		return new ARRAY_WRITE_INTO_VARIABLE_INDEX_FROM_VALUE(args);
+	ARRAY_WRITE_INTO_VARIABLE_INDEX_FROM_VALUE: (args: GenericObj, debug?: MathlangLocation) => {
+		return new ARRAY_WRITE_INTO_VARIABLE_INDEX_FROM_VALUE(args, debug);
 	},
-	ARRAY_WRITE_INTO_VARIABLE_INDEX_FROM_VARIABLE: (args: GenericObj) => {
-		return new ARRAY_WRITE_INTO_VARIABLE_INDEX_FROM_VARIABLE(args);
+	ARRAY_WRITE_INTO_VARIABLE_INDEX_FROM_VARIABLE: (args: GenericObj, debug?: MathlangLocation) => {
+		return new ARRAY_WRITE_INTO_VARIABLE_INDEX_FROM_VARIABLE(args, debug);
 	},
-	ARRAY_READ_FROM_INDEX_INTO_VARIABLE: (args: GenericObj) => {
-		return new ARRAY_READ_FROM_INDEX_INTO_VARIABLE(args);
+	ARRAY_READ_FROM_INDEX_INTO_VARIABLE: (args: GenericObj, debug?: MathlangLocation) => {
+		return new ARRAY_READ_FROM_INDEX_INTO_VARIABLE(args, debug);
 	},
-	ARRAY_READ_FROM_VARIABLE_INDEX_INTO_VARIABLE: (args: GenericObj) => {
-		return new ARRAY_READ_FROM_VARIABLE_INDEX_INTO_VARIABLE(args);
+	ARRAY_READ_FROM_VARIABLE_INDEX_INTO_VARIABLE: (args: GenericObj, debug?: MathlangLocation) => {
+		return new ARRAY_READ_FROM_VARIABLE_INDEX_INTO_VARIABLE(args, debug);
 	},
-	ARRAY_PUSH_FROM_VALUE: (args: GenericObj) => new ARRAY_PUSH_FROM_VALUE(args),
-	ARRAY_PUSH_FROM_VARIABLE: (args: GenericObj) => new ARRAY_PUSH_FROM_VARIABLE(args),
-	ARRAY_PUSH_LEFT_FROM_VALUE: (args: GenericObj) => new ARRAY_PUSH_LEFT_FROM_VALUE(args),
-	ARRAY_PUSH_LEFT_FROM_VARIABLE: (args: GenericObj) => new ARRAY_PUSH_LEFT_FROM_VARIABLE(args),
-	ARRAY_SLICE: (args: GenericObj) => new ARRAY_SLICE(args),
-	ARRAY_SLICE_BY_VARIABLE: (args: GenericObj) => new ARRAY_SLICE_BY_VARIABLE(args),
-	ARRAY_SLICE_TWICE: (args: GenericObj) => new ARRAY_SLICE_TWICE(args),
-	ARRAY_SLICE_TWICE_BY_VARIABLE: (args: GenericObj) => new ARRAY_SLICE_TWICE_BY_VARIABLE(args),
-	ARRAY_POP_INTO_VARIABLE: (args: GenericObj) => new ARRAY_POP_INTO_VARIABLE(args),
-	ARRAY_POP_LEFT_INTO_VARIABLE: (args: GenericObj) => new ARRAY_POP_LEFT_INTO_VARIABLE(args),
-	ARRAY_REVERSE: (args: GenericObj) => new ARRAY_REVERSE(args),
-	ARRAY_SORT: (args: GenericObj) => new ARRAY_SORT(args),
+	ARRAY_PUSH_FROM_VALUE: (args: GenericObj, debug?: MathlangLocation) =>
+		new ARRAY_PUSH_FROM_VALUE(args, debug),
+	ARRAY_PUSH_FROM_VARIABLE: (args: GenericObj, debug?: MathlangLocation) =>
+		new ARRAY_PUSH_FROM_VARIABLE(args, debug),
+	ARRAY_PUSH_LEFT_FROM_VALUE: (args: GenericObj, debug?: MathlangLocation) =>
+		new ARRAY_PUSH_LEFT_FROM_VALUE(args, debug),
+	ARRAY_PUSH_LEFT_FROM_VARIABLE: (args: GenericObj, debug?: MathlangLocation) =>
+		new ARRAY_PUSH_LEFT_FROM_VARIABLE(args, debug),
+	ARRAY_SLICE: (args: GenericObj, debug?: MathlangLocation) => new ARRAY_SLICE(args, debug),
+	ARRAY_SLICE_BY_VARIABLE: (args: GenericObj, debug?: MathlangLocation) =>
+		new ARRAY_SLICE_BY_VARIABLE(args, debug),
+	ARRAY_SLICE_TWICE: (args: GenericObj, debug?: MathlangLocation) =>
+		new ARRAY_SLICE_TWICE(args, debug),
+	ARRAY_SLICE_TWICE_BY_VARIABLE: (args: GenericObj, debug?: MathlangLocation) =>
+		new ARRAY_SLICE_TWICE_BY_VARIABLE(args, debug),
+	ARRAY_POP_INTO_VARIABLE: (args: GenericObj, debug?: MathlangLocation) =>
+		new ARRAY_POP_INTO_VARIABLE(args, debug),
+	ARRAY_POP_LEFT_INTO_VARIABLE: (args: GenericObj, debug?: MathlangLocation) =>
+		new ARRAY_POP_LEFT_INTO_VARIABLE(args, debug),
+	ARRAY_REVERSE: (args: GenericObj, debug?: MathlangLocation) => new ARRAY_REVERSE(args, debug),
+	ARRAY_SORT: (args: GenericObj, debug?: MathlangLocation) => new ARRAY_SORT(args, debug),
 };
 
-/*
-In grammar:
+// more nuanced!???!
 
-- [x] ARRAY_LOG
-- [x] ARRAY_NEW
-- [x] ARRAY_DELETE
-- [x] ARRAY_LENGTH_INTO_VARIABLE
-- [ ] ARRAY_WRITE_INTO_INDEX_FROM_VALUE
-- [ ] ARRAY_WRITE_INTO_INDEX_FROM_VARIABLE
-- [ ] ARRAY_WRITE_INTO_VARIABLE_INDEX_FROM_VALUE
-- [ ] ARRAY_WRITE_INTO_VARIABLE_INDEX_FROM_VARIABLE
-- [x] ARRAY_READ_FROM_INDEX_INTO_VARIABLE
-- [x] ARRAY_READ_FROM_VARIABLE_INDEX_INTO_VARIABLE
-- [x] ARRAY_PUSH_FROM_VALUE
-- [x] ARRAY_PUSH_FROM_VARIABLE
-- [x] ARRAY_PUSH_LEFT_FROM_VALUE
-- [x] ARRAY_PUSH_LEFT_FROM_VARIABLE
-- [x] ARRAY_SLICE
-- [x] ARRAY_SLICE_BY_VARIABLE
-- [x] ARRAY_SLICE_TWICE
-- [x] ARRAY_SLICE_TWICE_BY_VARIABLE
-- [x] ARRAY_POP_INTO_VARIABLE
-- [x] ARRAY_POP_LEFT_INTO_VARIABLE
-- [x] ARRAY_REVERSE
-- [x] ARRAY_SORT
-*/
+const tryString = (v: unknown, label?: string, debug?: MathlangLocation) => {
+	if (debug) return coerceToString(debug, v, label);
+	return breakIfNotString(v);
+};
+
+const tryStringOrStringArray = (v: unknown, label?: string, debug?: MathlangLocation) => {
+	if (Array.isArray(v)) {
+		return v.map((w, i) => {
+			const innerLabel = label ? label + `[${i}]` : label;
+			return tryString(w, innerLabel, debug);
+		});
+	}
+	if (debug) return coerceToString(debug, v, label);
+	return breakIfNotString(v);
+};
+
+const tryNumber = (v: unknown, label?: string, debug?: MathlangLocation) => {
+	if (debug) return coerceToNumber(debug, v, label);
+	return breakIfNotNumber(v);
+};
+
+const tryStringOrNumber = (v: unknown, label?: string, debug?: MathlangLocation) => {
+	if (typeof v === 'number') return v;
+	if (typeof v === 'string') return v;
+	if (debug) {
+		if (label) {
+			debug.f.newError(
+				new MathlangMessage([debug], 'value wrong type', `${label} is not a number`),
+			);
+		}
+		return debug.node.text;
+	}
+	return breakIfNotStringOrNumber(v);
+};
+
+const tryBool = (v: unknown, label?: string, debug?: MathlangLocation) => {
+	if (debug) return coerceToBool(debug, v, label);
+	return breakIfNotBool(v);
+};

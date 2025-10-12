@@ -582,19 +582,24 @@ const nodeFns: Record<string, (debug: MathlangLocation) => AnyNode[]> = {
 	json_object: (debug): AnyNode[] => {
 		try {
 			const parsed = JSON.parse(debug.node.text);
-			let parsedAction = Action.fromArgs(parsed);
-			if (parsedAction instanceof COPY_SCRIPT) {
-				parsedAction = CopyMacro.quick(
-					debug,
-					parsedAction.script,
-					parsedAction.search_and_replace,
-				);
+			try {
+				let parsedAction = Action.fromArgs(parsed, debug);
+				if (parsedAction instanceof COPY_SCRIPT) {
+					parsedAction = CopyMacro.quick(
+						debug,
+						parsedAction.script,
+						parsedAction.search_and_replace,
+					);
+				}
+				return [parsedAction];
+			} catch {
+				const actionName = parsed.action || 'UNKNOWN_ACTION';
+				debug.quickError('invalid action', `invalid parameters for "${actionName}"`);
 			}
-			return [parsedAction];
 		} catch {
 			debug.quickError(
 				`invalid JSON action`,
-				`invalid JSON error, no known cause; check trailing commas and param names!`,
+				`JSON.parse() error, unknown cause; check trailing commas!`,
 			);
 		}
 		return [];

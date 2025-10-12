@@ -20,7 +20,7 @@ const actionArrayToScript = (
 };
 
 // if there are any entries in any of these, the only the listed tests will be run
-const onlyDoTheseActionTests = ['broken_action_test'];
+const onlyDoTheseActionTests = [];
 const onlyDoTheseFileTests = [];
 const doErrorTests = true;
 
@@ -515,6 +515,8 @@ const runTests = async () => {
 			});
 		}
 		// PRINT TEST RESULTS
+		if (result.mgsErrors) console.error(result.mgsErrors);
+		if (result.mgsWarnings) console.warn(result.mgsWarnings);
 		errors.forEach((error) => {
 			console.error('\n' + error.message);
 			if (error.lines) {
@@ -563,6 +565,7 @@ const runErrorTests = async () => {
 		await parseProject(errorTestFileMap, {}).then((p) => {
 			// check warnings
 			if (p.warnings.length !== testData.expectedWarnings.length) {
+				console.warn(p.mgsWarnings);
 				errorErrors.push(
 					`${header} Found ${p.warnings.length} warnings, expected ${testData.expectedWarnings.length}`,
 				);
@@ -578,6 +581,7 @@ const runErrorTests = async () => {
 			}
 			// check errors
 			if (p.errors.length !== testData.expectedErrors.length) {
+				console.error(p.mgsErrors);
 				errorErrors.push(
 					`${header} Found ${p.errors.length} errors, expected ${testData.expectedErrors.length}`,
 				);

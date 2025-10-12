@@ -239,7 +239,7 @@ export const handleAction = (debug: MathlangLocation): AnyNode[] => {
 	const spreads: GenericObj[] = spreadValues(debug, action, fieldsToSpread);
 	// Different param combinations will result in different actions,
 	// so let the handler identify them AFTER the spreads are spread
-	const handleFn = data.handle || Action.fromArgs;
+	const handleFn = data.handle;
 	return spreads.map((v, i) => handleFn(v, debug, i)).filter((v) => v !== undefined);
 };
 
@@ -367,7 +367,7 @@ type actionDataEntry = {
 	values?: Record<string, unknown>;
 	captures?: string[];
 	optionalCaptures?: string[];
-	handle?: (v: GenericObj, debug: MathlangLocation, i?: number) => AnyNode | undefined;
+	handle: (v: GenericObj, debug: MathlangLocation, i?: number) => AnyNode | undefined;
 };
 const actionData: Record<string, actionDataEntry> = {
 	action_return_statement: {
@@ -416,15 +416,15 @@ const actionData: Record<string, actionDataEntry> = {
 	},
 	action_load_slot: {
 		captures: ['slot'],
-		handle: (v) => new SLOT_LOAD(v),
+		handle: (v, debug) => new SLOT_LOAD(v, debug),
 	},
 	action_erase_slot: {
 		captures: ['slot'],
-		handle: (v) => new SLOT_ERASE(v),
+		handle: (v, debug) => new SLOT_ERASE(v, debug),
 	},
 	action_load_map: {
 		captures: ['map'],
-		handle: (v) => new LOAD_MAP(v),
+		handle: (v, debug) => new LOAD_MAP(v, debug),
 	},
 	action_goto_label: {
 		captures: ['label'],
@@ -432,86 +432,89 @@ const actionData: Record<string, actionDataEntry> = {
 	},
 	action_goto_index: {
 		captures: ['action_index'],
-		handle: (v) => new GOTO_ACTION_INDEX(v),
+		handle: (v, debug) => new GOTO_ACTION_INDEX(v, debug),
 	},
 	action_run_script: {
 		captures: ['script'],
-		handle: (v) => new RUN_SCRIPT(v),
+		handle: (v, debug) => new RUN_SCRIPT(v, debug),
 	},
 	action_non_blocking_delay: {
 		captures: ['duration'],
-		handle: (v) => new NON_BLOCKING_DELAY(v),
+		handle: (v, debug) => new NON_BLOCKING_DELAY(v, debug),
 	},
 	action_blocking_delay: {
 		captures: ['duration'],
-		handle: (v) => new BLOCKING_DELAY(v),
+		handle: (v, debug) => new BLOCKING_DELAY(v, debug),
 	},
 	action_delete_command: {
 		captures: ['command', 'fail'],
 		optionalCaptures: ['fail'],
-		handle: (v) => {
-			const ret = new UNREGISTER_SERIAL_DIALOG_COMMAND({
-				...v,
-				is_fail: v.fail !== undefined,
-			});
+		handle: (v, debug) => {
+			const ret = new UNREGISTER_SERIAL_DIALOG_COMMAND(
+				{
+					...v,
+					is_fail: v.fail !== undefined,
+				},
+				debug,
+			);
 			return ret;
 		},
 	},
 	action_delete_command_arg: {
 		captures: ['command', 'argument'],
-		handle: (v) => new UNREGISTER_SERIAL_DIALOG_COMMAND_ARGUMENT(v),
+		handle: (v, debug) => new UNREGISTER_SERIAL_DIALOG_COMMAND_ARGUMENT(v, debug),
 	},
 	action_delete_alias: {
 		captures: ['alias'],
-		handle: (v) => new UNREGISTER_SERIAL_DIALOG_COMMAND_ALIAS(v),
+		handle: (v, debug) => new UNREGISTER_SERIAL_DIALOG_COMMAND_ALIAS(v, debug),
 	},
 	action_hide_command: {
 		values: { is_visible: false },
 		captures: ['command'],
-		handle: (v) => new SET_SERIAL_DIALOG_COMMAND_VISIBILITY(v),
+		handle: (v, debug) => new SET_SERIAL_DIALOG_COMMAND_VISIBILITY(v, debug),
 	},
 	action_unhide_command: {
 		values: { is_visible: true },
 		captures: ['command'],
-		handle: (v) => new SET_SERIAL_DIALOG_COMMAND_VISIBILITY(v),
+		handle: (v, debug) => new SET_SERIAL_DIALOG_COMMAND_VISIBILITY(v, debug),
 	},
 	action_camera_shake: {
 		captures: ['frequency', 'amplitude', 'duration'],
-		handle: (v) => new SET_SCREEN_SHAKE(v),
+		handle: (v, debug) => new SET_SCREEN_SHAKE(v, debug),
 	},
 	action_camera_fade_in: {
 		captures: ['color', 'duration'],
-		handle: (v) => new SCREEN_FADE_IN(v),
+		handle: (v, debug) => new SCREEN_FADE_IN(v, debug),
 	},
 	action_camera_fade_out: {
 		captures: ['color', 'duration'],
-		handle: (v) => new SCREEN_FADE_OUT(v),
+		handle: (v, debug) => new SCREEN_FADE_OUT(v, debug),
 	},
 	action_pause_script: {
 		values: { bool_value: true },
 		captures: ['script_slot', 'entity'],
-		handle: (v) => new SET_SCRIPT_PAUSE(v),
+		handle: (v, debug) => new SET_SCRIPT_PAUSE(v, debug),
 	},
 	action_unpause_script: {
 		values: { bool_value: false },
 		captures: ['script_slot', 'entity'],
-		handle: (v) => new SET_SCRIPT_PAUSE(v),
+		handle: (v, debug) => new SET_SCRIPT_PAUSE(v, debug),
 	},
 	action_play_entity_animation: {
 		captures: ['entity', 'animation', 'play_count'],
-		handle: (v) => new PLAY_ENTITY_ANIMATION(v),
+		handle: (v, debug) => new PLAY_ENTITY_ANIMATION(v, debug),
 	},
 	action_set_warp_state: {
 		captures: ['string'],
-		handle: (v) => new SET_WARP_STATE(v),
+		handle: (v, debug) => new SET_WARP_STATE(v, debug),
 	},
 	action_set_serial_connect: {
 		captures: ['serial_dialog'],
-		handle: (v) => new SET_CONNECT_SERIAL_DIALOG(v),
+		handle: (v, debug) => new SET_CONNECT_SERIAL_DIALOG(v, debug),
 	},
 	action_print_array: {
 		captures: ['array_name'],
-		handle: (v) => new ARRAY_LOG(v),
+		handle: (v, debug) => new ARRAY_LOG(v, debug),
 	},
 	action_delete_array: {
 		captures: ['array'],
@@ -522,7 +525,7 @@ const actionData: Record<string, actionDataEntry> = {
 	},
 	action_set_alias: {
 		captures: ['alias', 'command'],
-		handle: (v) => new REGISTER_SERIAL_DIALOG_COMMAND_ALIAS(v),
+		handle: (v, debug) => new REGISTER_SERIAL_DIALOG_COMMAND_ALIAS(v, debug),
 	},
 	action_set_command: {
 		values: { is_fail: false },

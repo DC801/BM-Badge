@@ -79,7 +79,7 @@ export const errorTests: Record<string, ErrorTest> = {
 	undefined_const: {
 		testText: `_ { wait $undefinedConst; }`,
 		expectedWarnings: [],
-		expectedErrors: ['undefined constant'],
+		expectedErrors: ['undefined constant', 'value wrong type'],
 	},
 	undefined_fn: {
 		testText: `_ { undefinedFn($_) }`,

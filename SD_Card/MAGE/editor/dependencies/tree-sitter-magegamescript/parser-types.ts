@@ -112,7 +112,9 @@ export class MathlangLocation {
 		this.f = args.f;
 		this.fileName = args.f.fileName;
 		this.node = args.node;
-		if (args.comment) this.comment = ACTION.breakIfNotString(args.comment);
+		if (args.comment) {
+			this.comment = ACTION.breakIfNotString(args.comment);
+		}
 	}
 	static quick(f: FileState, node: TreeSitterNode) {
 		return new MathlangLocation({ f, node });
@@ -174,9 +176,11 @@ const mathlangMessageTypes: Record<string, string> = {
 	'mismatched spread lengths': 'spreads must have the same count of items within each context',
 	'unsupported entity field': 'this entity field is not supported in this action',
 	'misordered params': 'invalid param order',
+	'invalid action': 'malformed action object',
 	'invalid action param combination': 'this action cannot have this combination of params',
 	'invalid entity script slot':
 		'entities can only have "on_tick", "on_interact", and "on_look" scripts',
+	'value wrong type': 'provided value not the necessary type',
 
 	// arrays
 	'array method on non-array':
@@ -227,7 +231,7 @@ export class FunctionDefinition extends MathlangNode {
 	callCount: 0;
 	constructor(debug: MathlangLocation, args: GenericObj) {
 		super(debug, args);
-		this.name = ACTION.breakIfNotString(args.name);
+		this.name = coerceToString(debug, args.name);
 		this.params = ACTION.breakIfNotStringArray(args.params);
 		this.paramNodes = ACTION.breakIfNotTSNodeArray(args.paramNodes);
 		this.bodyNode = ACTION.breakIfNotTSNode(args.bodyNode);
@@ -318,7 +322,7 @@ export class AddDialogSettingsTarget extends MathlangNode {
 	target?: string;
 	constructor(debug: MathlangLocation, args: GenericObj) {
 		super(debug, args);
-		this.type = ACTION.breakIfNotString(args.type);
+		this.type = coerceToString(debug, args.type);
 		this.parameters = DialogParameter.breakIfNotAll(args.parameters);
 		if (typeof args.target === 'string') this.target = args.target;
 	}
@@ -456,7 +460,7 @@ export class GotoLabel extends MathlangNode {
 	comment?: string;
 	constructor(debug: MathlangLocation, args: GenericObj) {
 		super(debug, args);
-		this.label = ACTION.breakIfNotString(args.label);
+		this.label = coerceToString(debug, args.label);
 		if (typeof args.comment === 'string') this.comment = args.comment;
 	}
 	isIdenticalTo(that: MathlangNode) {
@@ -487,7 +491,7 @@ export class DialogDefinition extends MathlangNode {
 	dialogs: Dialog[];
 	constructor(debug: MathlangLocation, args: GenericObj) {
 		super(debug, args);
-		this.dialogName = ACTION.breakIfNotString(args.dialogName);
+		this.dialogName = coerceToString(debug, args.dialogName);
 		this.dialogs = Dialog.breakIfNotAll(args.dialogs);
 	}
 	isIdenticalTo(that: unknown) {
@@ -526,7 +530,7 @@ export class DialogParameter extends MathlangNode {
 	value: MGSPrimitive;
 	constructor(debug: MathlangLocation, args: GenericObj) {
 		super(debug, args);
-		this.property = ACTION.breakIfNotString(args.property);
+		this.property = coerceToString(debug, args.property);
 		this.value = ACTION.breakIfNotStringOrNumber(args.value);
 	}
 	isIdenticalTo(that: unknown) {
@@ -645,7 +649,7 @@ export class DialogIdentifier extends MathlangNode {
 			throw new Error('invalid DialogIdentifier type');
 		}
 		this.type = args.type;
-		this.value = ACTION.breakIfNotString(args.value);
+		this.value = coerceToString(debug, args.value);
 	}
 	isIdenticalTo(that: unknown) {
 		if (!(that instanceof DialogIdentifier)) return false;
@@ -676,8 +680,8 @@ export class DialogOption extends MathlangNode {
 	script: string;
 	constructor(debug: MathlangLocation, args: GenericObj) {
 		super(debug, args);
-		this.label = ACTION.breakIfNotString(args.label);
-		this.script = ACTION.breakIfNotString(args.script);
+		this.label = coerceToString(debug, args.label);
+		this.script = coerceToString(debug, args.script);
 	}
 	isIdenticalTo(that: unknown) {
 		if (!(that instanceof DialogOption)) return false;
@@ -718,7 +722,7 @@ export class SerialDialogDefinition extends MathlangNode {
 		if (!(args.serialDialog instanceof SerialDialog)) {
 			throw new Error('SerialDialogDefinition not given valid SerialDialog');
 		}
-		this.dialogName = ACTION.breakIfNotString(args.dialogName);
+		this.dialogName = coerceToString(debug, args.dialogName);
 		this.serialDialog = args.serialDialog;
 	}
 	isIdenticalTo(that: unknown) {
@@ -750,7 +754,7 @@ export class SerialDialogParameter extends MathlangNode {
 	value: MGSPrimitive;
 	constructor(debug: MathlangLocation, args: GenericObj) {
 		super(debug, args);
-		this.property = ACTION.breakIfNotString(args.property);
+		this.property = coerceToString(debug, args.property);
 		this.value = ACTION.breakIfNotStringOrNumber(args.value);
 	}
 	isIdenticalTo(that: unknown) {
@@ -861,8 +865,8 @@ export class SerialDialogOption extends MathlangNode {
 			throw new Error('invalid option type ' + args.optionType);
 		}
 		this.optionType = args.optionType;
-		this.label = ACTION.breakIfNotString(args.label);
-		this.script = ACTION.breakIfNotString(args.script);
+		this.label = coerceToString(debug, args.label);
+		this.script = coerceToString(debug, args.script);
 	}
 	isIdenticalTo(that: unknown) {
 		if (!(that instanceof SerialDialogOption)) return false;
@@ -900,7 +904,7 @@ export class IncludeNode extends MathlangNode {
 	value: string;
 	constructor(debug: MathlangLocation, args: GenericObj) {
 		super(debug, args);
-		this.value = ACTION.breakIfNotString(args.value);
+		this.value = coerceToString(debug, args.value);
 	}
 	isIdenticalTo(that: unknown) {
 		if (!(that instanceof IncludeNode)) return false;
@@ -924,7 +928,7 @@ export class ConstantDefinition extends MathlangNode {
 	constructor(debug: MathlangLocation, args: GenericObj) {
 		super(debug, args);
 		if (!isMGSPrimitive(args.value)) throw new Error('not primitive');
-		this.label = ACTION.breakIfNotString(args.label);
+		this.label = coerceToString(debug, args.label);
 		this.value = args.value;
 	}
 	isIdenticalTo(that: unknown) {
@@ -959,7 +963,7 @@ export class ScriptDefinition extends MathlangNode {
 	copyScriptResolved?: boolean;
 	constructor(debug: MathlangLocation, args: GenericObj) {
 		super(debug, args);
-		this.scriptName = ACTION.breakIfNotString(args.scriptName);
+		this.scriptName = coerceToString(debug, args.scriptName);
 		if (typeof args.prePrint === 'string') this.prePrint = args.prePrint;
 		if (typeof args.testPrint === 'string') this.testPrint = args.testPrint;
 		if (typeof args.printed === 'string') this.printed = args.printed;
@@ -1015,7 +1019,7 @@ export class CommentNode extends MathlangNode {
 	comment: string;
 	constructor(debug: MathlangLocation, args: GenericObj) {
 		super(debug, args);
-		this.comment = ACTION.breakIfNotString(args.comment);
+		this.comment = coerceToString(debug, args.comment);
 	}
 	isIdenticalTo(that: unknown) {
 		if (!(that instanceof CommentNode)) return false;
@@ -1038,7 +1042,7 @@ export class LabelDefinition extends MathlangNode {
 	label: string;
 	constructor(debug: MathlangLocation, args: GenericObj) {
 		super(debug, args);
-		this.label = ACTION.breakIfNotString(args.label);
+		this.label = coerceToString(debug, args.label);
 	}
 	isIdenticalTo(that: unknown) {
 		if (!(that instanceof LabelDefinition)) return false;
@@ -1071,7 +1075,7 @@ export class JSONLiteral extends MathlangNode {
 			if (v instanceof AnyNode) {
 				return v;
 			}
-			return ACTION.Action.fromArgs(v);
+			return ACTION.Action.fromArgs(v, debug);
 		});
 		this.json = AnyNode.breakIfNotAll(sanitized);
 	}
@@ -1099,7 +1103,7 @@ export class CopyMacro extends MathlangNode {
 	search_and_replace?: Record<string, string>;
 	constructor(debug: MathlangLocation, args: GenericObj) {
 		super(debug, args);
-		this.script = ACTION.breakIfNotString(args.script);
+		this.script = coerceToString(debug, args.script);
 		if (
 			args.search_and_replace &&
 			typeof args.search_and_replace === 'object' &&
@@ -1236,7 +1240,7 @@ export class IntBinaryExpression extends IntExpression {
 		super(debug, args);
 		this.lhs = IntExpression.breakIfNot(args.lhs);
 		this.rhs = IntExpression.breakIfNot(args.rhs);
-		this.op = ACTION.breakIfNotString(args.op);
+		this.op = coerceToString(debug, args.op);
 	}
 	isIdenticalTo(that: unknown) {
 		if (!(that instanceof IntBinaryExpression)) return false;
@@ -1402,7 +1406,7 @@ export class IdentifierLiteral extends IntGetable {
 	source: string;
 	constructor(debug: MathlangLocation, args: GenericObj) {
 		super(debug, args);
-		this.source = ACTION.breakIfNotString(args.source);
+		this.source = coerceToString(debug, args.source);
 	}
 	isIdenticalTo(that: unknown) {
 		if (!(that instanceof IdentifierLiteral)) return false;
@@ -1441,8 +1445,8 @@ export class EntityIntField extends IntGetable {
 	constructor(debug: MathlangLocation, args: GenericObj) {
 		super(debug, args);
 		this.inbound = false;
-		this.entity = ACTION.breakIfNotString(args.entity);
-		this.field = ACTION.breakIfNotString(args.field);
+		this.entity = coerceToString(debug, args.entity);
+		this.field = coerceToString(debug, args.field);
 	}
 	isIdenticalTo(that: unknown) {
 		if (!(that instanceof EntityIntField)) return false;
@@ -1614,12 +1618,12 @@ export class FnCall extends IntGetable {
 	rawBody: TreeSitterNode;
 	constructor(debug: MathlangLocation, args: GenericObj) {
 		super(debug, args);
-		this.identifier = ACTION.breakIfNotString(args.identifier);
+		this.identifier = coerceToString(debug, args.identifier);
 		if (!(args.rawBody instanceof TreeSitterNode)) {
 			throw new Error('should be TreeSitterNode');
 		}
 		this.rawBody = args.rawBody;
-		const type = ACTION.breakIfNotString(args.type);
+		const type = coerceToString(debug, args.type);
 		if (type === 'script' || type === 'fn') {
 			this.type = type;
 		} else {
@@ -1672,9 +1676,9 @@ export class FnCallReturnValue extends IntGetable {
 	type: 'script' | 'fn';
 	constructor(debug: MathlangLocation, args: GenericObj) {
 		super(debug, args);
-		this.identifier = ACTION.breakIfNotString(args.identifier);
+		this.identifier = coerceToString(debug, args.identifier);
 		this.steps = AnyNode.breakIfNotAll(args.steps);
-		const type = ACTION.breakIfNotString(args.type);
+		const type = coerceToString(debug, args.type);
 		if (type === 'script' || type === 'fn') {
 			this.type = type;
 		} else {
@@ -1961,7 +1965,7 @@ export class BoolBinaryExpression extends BoolExpression {
 		if (!(args.rhs instanceof BoolExpression)) throw new Error('not BoolExpression');
 		if (!(args.lhsNode instanceof TreeSitterNode)) throw new Error('not TSNode');
 		if (!(args.rhsNode instanceof TreeSitterNode)) throw new Error('not TSNode');
-		this.op = ACTION.breakIfNotString(args.op);
+		this.op = coerceToString(debug, args.op);
 		this.lhs = args.lhs;
 		this.rhs = args.rhs;
 		this.lhsNode = args.lhsNode;
@@ -2097,7 +2101,7 @@ export class CheckEntityGlitched extends BoolGetable {
 	constructor(debug: MathlangLocation, args: GenericObj) {
 		super(debug, args);
 		this.action = 'CHECK_ENTITY_GLITCHED';
-		this.entity = ACTION.breakIfNotString(args.entity);
+		this.entity = coerceToString(debug, args.entity);
 	}
 	isIdenticalTo(that: unknown) {
 		if (!(that instanceof CheckEntityGlitched)) return false;
@@ -2129,7 +2133,7 @@ export class CheckSaveFlag extends BoolGetable {
 	constructor(debug: MathlangLocation, args: GenericObj) {
 		super(debug, args);
 		this.action = 'CHECK_SAVE_FLAG';
-		this.save_flag = ACTION.breakIfNotString(args.save_flag);
+		this.save_flag = coerceToString(debug, args.save_flag);
 	}
 	isIdenticalTo(that: unknown) {
 		if (!(that instanceof CheckSaveFlag)) return false;
@@ -2158,8 +2162,8 @@ export class CheckIfEntityIsInGeometry extends BoolGetable {
 	constructor(debug: MathlangLocation, args: GenericObj) {
 		super(debug, args);
 		this.action = 'CHECK_IF_ENTITY_IS_IN_GEOMETRY';
-		this.geometry = ACTION.breakIfNotString(args.geometry);
-		this.entity = ACTION.breakIfNotString(args.entity);
+		this.geometry = coerceToString(debug, args.geometry);
+		this.entity = coerceToString(debug, args.entity);
 	}
 	isIdenticalTo(that: unknown) {
 		if (!(that instanceof CheckIfEntityIsInGeometry)) return false;
@@ -2199,7 +2203,7 @@ export class CheckForButtonPress extends BoolGetable {
 	constructor(debug: MathlangLocation, args: GenericObj) {
 		super(debug, args);
 		this.action = 'CHECK_FOR_BUTTON_PRESS';
-		this.button_id = ACTION.breakIfNotString(args.button_id);
+		this.button_id = coerceToString(debug, args.button_id);
 	}
 	isIdenticalTo(that: unknown) {
 		if (!(that instanceof CheckForButtonPress)) return false;
@@ -2229,7 +2233,7 @@ export class CheckForButtonState extends BoolGetable {
 	constructor(debug: MathlangLocation, args: GenericObj) {
 		super(debug, args);
 		this.action = 'CHECK_FOR_BUTTON_STATE';
-		this.button_id = ACTION.breakIfNotString(args.button_id);
+		this.button_id = coerceToString(debug, args.button_id);
 	}
 	isIdenticalTo(that: unknown) {
 		if (!(that instanceof CheckForButtonState)) return false;
@@ -2361,8 +2365,8 @@ export class CheckEntityName extends StringCheckable {
 	constructor(debug: MathlangLocation, args: GenericObj) {
 		super(debug, args);
 		this.action = 'CHECK_ENTITY_NAME';
-		this.entity = ACTION.breakIfNotString(args.entity);
-		this.string = ACTION.breakIfNotString(args.string);
+		this.entity = coerceToString(debug, args.entity);
+		this.string = coerceToString(debug, args.string);
 	}
 	isIdenticalTo(that: unknown) {
 		if (!(that instanceof CheckEntityName)) return false;
@@ -2404,8 +2408,8 @@ export class CheckEntityInteractScript extends StringCheckable {
 	constructor(debug: MathlangLocation, args: GenericObj) {
 		super(debug, args);
 		this.action = 'CHECK_ENTITY_INTERACT_SCRIPT';
-		this.entity = ACTION.breakIfNotString(args.entity);
-		this.expected_script = ACTION.breakIfNotString(args.expected_script);
+		this.entity = coerceToString(debug, args.entity);
+		this.expected_script = coerceToString(debug, args.expected_script);
 	}
 	isIdenticalTo(that: unknown) {
 		if (!(that instanceof CheckEntityInteractScript)) return false;
@@ -2452,8 +2456,8 @@ export class CheckEntityTickScript extends StringCheckable {
 	constructor(debug: MathlangLocation, args: GenericObj) {
 		super(debug, args);
 		this.action = 'CHECK_ENTITY_TICK_SCRIPT';
-		this.entity = ACTION.breakIfNotString(args.entity);
-		this.expected_script = ACTION.breakIfNotString(args.expected_script);
+		this.entity = coerceToString(debug, args.entity);
+		this.expected_script = coerceToString(debug, args.expected_script);
 	}
 	isIdenticalTo(that: unknown) {
 		if (!(that instanceof CheckEntityTickScript)) return false;
@@ -2500,8 +2504,8 @@ export class CheckEntityLookScript extends StringCheckable {
 	constructor(debug: MathlangLocation, args: GenericObj) {
 		super(debug, args);
 		this.action = 'CHECK_ENTITY_LOOK_SCRIPT';
-		this.entity = ACTION.breakIfNotString(args.entity);
-		this.expected_script = ACTION.breakIfNotString(args.expected_script);
+		this.entity = coerceToString(debug, args.entity);
+		this.expected_script = coerceToString(debug, args.expected_script);
 	}
 	isIdenticalTo(that: unknown) {
 		if (!(that instanceof CheckEntityTickScript)) return false;
@@ -2548,8 +2552,8 @@ export class CheckEntityType extends StringCheckable {
 	constructor(debug: MathlangLocation, args: GenericObj) {
 		super(debug, args);
 		this.action = 'CHECK_ENTITY_TYPE';
-		this.entity = ACTION.breakIfNotString(args.entity);
-		this.entity_type = ACTION.breakIfNotString(args.entity_type);
+		this.entity = coerceToString(debug, args.entity);
+		this.entity_type = coerceToString(debug, args.entity_type);
 	}
 	isIdenticalTo(that: unknown) {
 		if (!(that instanceof CheckEntityType)) return false;
@@ -2592,8 +2596,8 @@ export class CheckEntityDirection extends StringCheckable {
 	constructor(debug: MathlangLocation, args: GenericObj) {
 		super(debug, args);
 		this.action = 'CHECK_ENTITY_DIRECTION';
-		this.entity = ACTION.breakIfNotString(args.entity);
-		this.direction = ACTION.breakIfNotString(args.direction);
+		this.entity = coerceToString(debug, args.entity);
+		this.direction = coerceToString(debug, args.direction);
 	}
 	isIdenticalTo(that: unknown) {
 		if (!(that instanceof CheckEntityDirection)) return false;
@@ -2634,8 +2638,8 @@ export class CheckEntityPath extends StringCheckable {
 	constructor(debug: MathlangLocation, args: GenericObj) {
 		super(debug, args);
 		this.action = 'CHECK_ENTITY_PATH';
-		this.entity = ACTION.breakIfNotString(args.entity);
-		this.geometry = ACTION.breakIfNotString(args.geometry);
+		this.entity = coerceToString(debug, args.entity);
+		this.geometry = coerceToString(debug, args.geometry);
 	}
 	isIdenticalTo(that: unknown) {
 		if (!(that instanceof CheckEntityPath)) return false;
@@ -2677,7 +2681,7 @@ export class CheckWarpState extends StringCheckable {
 	constructor(debug: MathlangLocation, args: GenericObj) {
 		super(debug, args);
 		this.action = 'CHECK_WARP_STATE';
-		this.string = ACTION.breakIfNotString(args.string);
+		this.string = coerceToString(debug, args.string);
 		this.expected_bool = ACTION.breakIfNotBool(args.expected_bool);
 	}
 	isIdenticalTo(that: unknown) {
@@ -2715,7 +2719,7 @@ export class CheckMap extends StringCheckable {
 	constructor(debug: MathlangLocation, args: GenericObj) {
 		super(debug, args);
 		this.action = 'CHECK_MAP';
-		this.map = ACTION.breakIfNotString(args.map);
+		this.map = coerceToString(debug, args.map);
 	}
 	isIdenticalTo(that: unknown) {
 		if (!(that instanceof CheckMap)) return false;
@@ -2746,7 +2750,7 @@ export class CheckBLEFlag extends StringCheckable {
 	constructor(debug: MathlangLocation, args: GenericObj) {
 		super(debug, args);
 		this.action = 'CHECK_BLE_FLAG';
-		this.ble_flag = ACTION.breakIfNotString(args.ble_flag);
+		this.ble_flag = coerceToString(debug, args.ble_flag);
 	}
 	isIdenticalTo(that: unknown) {
 		if (!(that instanceof CheckBLEFlag)) return false;
@@ -2797,8 +2801,8 @@ export class CheckVariable extends NumberComparison {
 	constructor(debug: MathlangLocation, args: GenericObj) {
 		super(debug, args);
 		this.action = 'CHECK_VARIABLE';
-		this.variable = ACTION.breakIfNotString(args.variable);
-		this.comparison = ACTION.breakIfNotString(args.comparison);
+		this.variable = coerceToString(debug, args.variable);
+		this.comparison = coerceToString(debug, args.comparison);
 		this.value = ACTION.breakIfNotNumber(args.value);
 		this.expected_bool = ACTION.breakIfNotBool(args.expected_bool);
 	}
@@ -2845,9 +2849,9 @@ export class CheckVariables extends NumberComparison {
 	constructor(debug: MathlangLocation, args: GenericObj) {
 		super(debug, args);
 		this.action = 'CHECK_VARIABLES';
-		this.variable = ACTION.breakIfNotString(args.variable);
-		this.comparison = ACTION.breakIfNotString(args.comparison);
-		this.source = ACTION.breakIfNotString(args.source);
+		this.variable = coerceToString(debug, args.variable);
+		this.comparison = coerceToString(debug, args.comparison);
+		this.source = coerceToString(debug, args.source);
 		this.expected_bool = ACTION.breakIfNotBool(args.expected_bool);
 	}
 	isIdenticalTo(that: unknown) {
@@ -2916,7 +2920,7 @@ export class CheckEntityX extends NumberCheckableEquality {
 	constructor(debug: MathlangLocation, args: GenericObj) {
 		super(debug, args);
 		this.action = 'CHECK_ENTITY_X';
-		this.entity = ACTION.breakIfNotString(args.entity);
+		this.entity = coerceToString(debug, args.entity);
 		this.expected_u2 = ACTION.breakIfNotNumber(args.expected_u2);
 	}
 	isIdenticalTo(that: unknown) {
@@ -2960,7 +2964,7 @@ export class CheckEntityY extends NumberCheckableEquality {
 	constructor(debug: MathlangLocation, args: GenericObj) {
 		super(debug, args);
 		this.action = 'CHECK_ENTITY_Y';
-		this.entity = ACTION.breakIfNotString(args.entity);
+		this.entity = coerceToString(debug, args.entity);
 		this.expected_u2 = ACTION.breakIfNotNumber(args.expected_u2);
 	}
 	isIdenticalTo(that: unknown) {
@@ -3004,7 +3008,7 @@ export class CheckEntityPrimaryID extends NumberCheckableEquality {
 	constructor(debug: MathlangLocation, args: GenericObj) {
 		super(debug, args);
 		this.action = 'CHECK_ENTITY_PRIMARY_ID';
-		this.entity = ACTION.breakIfNotString(args.entity);
+		this.entity = coerceToString(debug, args.entity);
 		this.expected_u2 = ACTION.breakIfNotNumber(args.expected_u2);
 	}
 	isIdenticalTo(that: unknown) {
@@ -3048,7 +3052,7 @@ export class CheckEntitySecondaryID extends NumberCheckableEquality {
 	constructor(debug: MathlangLocation, args: GenericObj) {
 		super(debug, args);
 		this.action = 'CHECK_ENTITY_SECONDARY_ID';
-		this.entity = ACTION.breakIfNotString(args.entity);
+		this.entity = coerceToString(debug, args.entity);
 		this.expected_u2 = ACTION.breakIfNotNumber(args.expected_u2);
 	}
 	isIdenticalTo(that: unknown) {
@@ -3092,7 +3096,7 @@ export class CheckEntityPrimaryIDType extends NumberCheckableEquality {
 	constructor(debug: MathlangLocation, args: GenericObj) {
 		super(debug, args);
 		this.action = 'CHECK_ENTITY_PRIMARY_ID_TYPE';
-		this.entity = ACTION.breakIfNotString(args.entity);
+		this.entity = coerceToString(debug, args.entity);
 		this.expected_byte = ACTION.breakIfNotNumber(args.expected_byte);
 	}
 	isIdenticalTo(that: unknown) {
@@ -3140,7 +3144,7 @@ export class CheckEntityCurrentAnimation extends NumberCheckableEquality {
 	constructor(debug: MathlangLocation, args: GenericObj) {
 		super(debug, args);
 		this.action = 'CHECK_ENTITY_CURRENT_ANIMATION';
-		this.entity = ACTION.breakIfNotString(args.entity);
+		this.entity = coerceToString(debug, args.entity);
 		this.expected_byte = ACTION.breakIfNotNumber(args.expected_byte);
 	}
 	isIdenticalTo(that: unknown) {
@@ -3188,7 +3192,7 @@ export class CheckEntityCurrentFrame extends NumberCheckableEquality {
 	constructor(debug: MathlangLocation, args: GenericObj) {
 		super(debug, args);
 		this.action = 'CHECK_ENTITY_CURRENT_FRAME';
-		this.entity = ACTION.breakIfNotString(args.entity);
+		this.entity = coerceToString(debug, args.entity);
 		this.expected_byte = ACTION.breakIfNotNumber(args.expected_byte);
 	}
 	isIdenticalTo(that: unknown) {
@@ -3237,8 +3241,8 @@ export class BoolSetable extends MathlangNode {
 	value: string;
 	constructor(debug: MathlangLocation, args: GenericObj) {
 		super(debug, args);
-		this.value = ACTION.breakIfNotString(args.value);
-		this.type = ACTION.breakIfNotString(args.type);
+		this.value = coerceToString(debug, args.value);
+		this.type = coerceToString(debug, args.type);
 	}
 	clone() {
 		return new BoolSetable(this.debug.clone(), this.args);
@@ -3270,8 +3274,8 @@ export class MovableIdentifier extends MathlangNode {
 	value: string;
 	constructor(debug: MathlangLocation, args: GenericObj) {
 		super(debug, args);
-		this.value = ACTION.breakIfNotString(args.value);
-		this.type = ACTION.breakIfNotString(args.type);
+		this.value = coerceToString(debug, args.value);
+		this.type = coerceToString(debug, args.type);
 	}
 	isIdenticalTo(that: unknown) {
 		if (!(that instanceof MovableIdentifier)) return false;
@@ -3304,9 +3308,9 @@ export class CoordinateIdentifier extends MathlangNode {
 	polygonType?: string;
 	constructor(debug: MathlangLocation, args: GenericObj) {
 		super(debug, args);
-		this.value = ACTION.breakIfNotString(args.value);
-		this.type = ACTION.breakIfNotString(args.type);
-		if (args.polygonType) this.polygonType = ACTION.breakIfNotString(args.polygonType);
+		this.value = coerceToString(debug, args.value);
+		this.type = coerceToString(debug, args.type);
+		if (args.polygonType) this.polygonType = coerceToString(debug, args.polygonType);
 	}
 	isIdenticalTo(that: unknown) {
 		if (!(that instanceof CoordinateIdentifier)) return false;
@@ -3343,8 +3347,8 @@ export class DirectionTarget extends MathlangNode {
 	value: string;
 	constructor(debug: MathlangLocation, args: GenericObj) {
 		super(debug, args);
-		this.value = ACTION.breakIfNotString(args.value);
-		this.type = ACTION.breakIfNotString(args.type);
+		this.value = coerceToString(debug, args.value);
+		this.type = coerceToString(debug, args.type);
 	}
 	isIdenticalTo(that: unknown) {
 		if (!(that instanceof DirectionTarget)) return false;
@@ -3383,7 +3387,7 @@ export class ArrayMethodChain extends MathlangNode {
 	final: ArrayMethod;
 	constructor(debug: MathlangLocation, args: GenericObj) {
 		super(debug, args);
-		this.identifier = ACTION.breakIfNotString(args.identifier);
+		this.identifier = coerceToString(debug, args.identifier);
 		const chain = ArrayMethod.breakIfNotAll(args.chain);
 		this.return_type = 'array';
 		this.chain = [];
@@ -3645,7 +3649,7 @@ export class ArraySliceByVariable extends ArraySliceMethod {
 	steps: AnyNode[];
 	constructor(debug: MathlangLocation, args: GenericObj) {
 		super(debug, args);
-		this.variable_start = ACTION.breakIfNotString(args.variable_start);
+		this.variable_start = coerceToString(debug, args.variable_start);
 		this.steps = AnyNode.breakIfNotAll(args.steps);
 	}
 	isIdenticalTo(that: unknown) {
@@ -3699,8 +3703,8 @@ export class ArraySliceTwiceByVariable extends ArraySliceMethod {
 	steps: AnyNode[];
 	constructor(debug: MathlangLocation, args: GenericObj) {
 		super(debug, args);
-		this.variable_start = ACTION.breakIfNotString(args.variable_start);
-		this.variable_end = ACTION.breakIfNotString(args.variable_end);
+		this.variable_start = coerceToString(debug, args.variable_start);
+		this.variable_end = coerceToString(debug, args.variable_end);
 		this.steps = AnyNode.breakIfNotAll(args.steps);
 	}
 	isIdenticalTo(that: unknown) {
@@ -3899,7 +3903,7 @@ export class ArrayReadFromVariableIndex extends ArrayMethodReturningValue {
 	steps?: AnyNode[];
 	constructor(debug: MathlangLocation, args: GenericObj) {
 		super(debug, args);
-		this.variable_index = ACTION.breakIfNotString(args.variable_index);
+		this.variable_index = coerceToString(debug, args.variable_index);
 		if (args.steps) {
 			this.steps = AnyNode.breakIfNotAll(args.steps);
 		}
@@ -4065,7 +4069,7 @@ export class ArrayPushVariable extends ArrayMethodReturningNothing {
 	steps?: AnyNode[];
 	constructor(debug: MathlangLocation, args: GenericObj) {
 		super(debug, args);
-		this.variable = ACTION.breakIfNotString(args.variable);
+		this.variable = coerceToString(debug, args.variable);
 		if (args.steps) {
 			this.steps = AnyNode.breakIfNotAll(args.steps);
 		}
@@ -4154,7 +4158,7 @@ export class ArrayPushLeftVariable extends ArrayMethodReturningNothing {
 	steps?: AnyNode[];
 	constructor(debug: MathlangLocation, args: GenericObj) {
 		super(debug, args);
-		this.variable = ACTION.breakIfNotString(args.variable);
+		this.variable = coerceToString(debug, args.variable);
 		if (args.steps) {
 			this.steps = AnyNode.breakIfNotAll(args.steps);
 		}
@@ -4207,7 +4211,7 @@ export class ArrayWriteToIndex extends MathlangNode {
 	exp_index: IntExpression;
 	constructor(debug: MathlangLocation, args: GenericObj) {
 		super(debug, args);
-		this.array_name = ACTION.breakIfNotString(args.array_name);
+		this.array_name = coerceToString(debug, args.array_name);
 		this.exp_index = IntExpression.breakIfNot(args.exp_index);
 	}
 	isIdenticalTo(that: unknown) {

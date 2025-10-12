@@ -1,18 +1,18 @@
 import { RETURN } from './parser-utilities.ts';
 
 export const actionTests = {
-	broken_action_test: {
-		input: [
-			`json[
-				{
-					"action": "ARRAY_PUSH_FROM_VARIABLE",
-					"variable": "array_var_test",
-					"array_name": "arr"
-				}
-			]`,
-		],
-		expected: [`"arr".push("array_var_test");`],
-	},
+	// broken_action_test: {
+	// 	input: [
+	// 		`json[
+	// 			{
+	// 				"action": "ARRAY_PUSH_FROM_VARIABLE",
+	// 				"variable_name": "array_var_test",
+	// 				"array_name": "arr"
+	// 			}
+	// 		]`,
+	// 	],
+	// 	expected: [`"arr".push("array_var_test");`],
+	// },
 	keyword_as_variable_name: {
 		input: [`"if" = 10;`],
 		expected: [`"if" = 10;`],

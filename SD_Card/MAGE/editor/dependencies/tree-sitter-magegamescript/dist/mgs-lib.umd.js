@@ -4325,7 +4325,7 @@ ${JSON.stringify(symbolNames, null, 2)}`);
       }
     });
     const spreads = spreadValues(debug, action, fieldsToSpread);
-    const handleFn = data.handle || Action.fromArgs;
+    const handleFn = data.handle;
     return spreads.map((v, i2) => handleFn(v, debug, i2)).filter((v) => v !== void 0);
   };
   const actionFns = {
@@ -4474,15 +4474,15 @@ ${JSON.stringify(symbolNames, null, 2)}`);
     },
     action_load_slot: {
       captures: ["slot"],
-      handle: (v) => new SLOT_LOAD(v)
+      handle: (v, debug) => new SLOT_LOAD(v, debug)
     },
     action_erase_slot: {
       captures: ["slot"],
-      handle: (v) => new SLOT_ERASE(v)
+      handle: (v, debug) => new SLOT_ERASE(v, debug)
     },
     action_load_map: {
       captures: ["map"],
-      handle: (v) => new LOAD_MAP(v)
+      handle: (v, debug) => new LOAD_MAP(v, debug)
     },
     action_goto_label: {
       captures: ["label"],
@@ -4490,86 +4490,89 @@ ${JSON.stringify(symbolNames, null, 2)}`);
     },
     action_goto_index: {
       captures: ["action_index"],
-      handle: (v) => new GOTO_ACTION_INDEX(v)
+      handle: (v, debug) => new GOTO_ACTION_INDEX(v, debug)
     },
     action_run_script: {
       captures: ["script"],
-      handle: (v) => new RUN_SCRIPT(v)
+      handle: (v, debug) => new RUN_SCRIPT(v, debug)
     },
     action_non_blocking_delay: {
       captures: ["duration"],
-      handle: (v) => new NON_BLOCKING_DELAY(v)
+      handle: (v, debug) => new NON_BLOCKING_DELAY(v, debug)
     },
     action_blocking_delay: {
       captures: ["duration"],
-      handle: (v) => new BLOCKING_DELAY(v)
+      handle: (v, debug) => new BLOCKING_DELAY(v, debug)
     },
     action_delete_command: {
       captures: ["command", "fail"],
       optionalCaptures: ["fail"],
-      handle: (v) => {
-        const ret = new UNREGISTER_SERIAL_DIALOG_COMMAND({
-          ...v,
-          is_fail: v.fail !== void 0
-        });
+      handle: (v, debug) => {
+        const ret = new UNREGISTER_SERIAL_DIALOG_COMMAND(
+          {
+            ...v,
+            is_fail: v.fail !== void 0
+          },
+          debug
+        );
         return ret;
       }
     },
     action_delete_command_arg: {
       captures: ["command", "argument"],
-      handle: (v) => new UNREGISTER_SERIAL_DIALOG_COMMAND_ARGUMENT(v)
+      handle: (v, debug) => new UNREGISTER_SERIAL_DIALOG_COMMAND_ARGUMENT(v, debug)
     },
     action_delete_alias: {
       captures: ["alias"],
-      handle: (v) => new UNREGISTER_SERIAL_DIALOG_COMMAND_ALIAS(v)
+      handle: (v, debug) => new UNREGISTER_SERIAL_DIALOG_COMMAND_ALIAS(v, debug)
     },
     action_hide_command: {
       values: { is_visible: false },
       captures: ["command"],
-      handle: (v) => new SET_SERIAL_DIALOG_COMMAND_VISIBILITY(v)
+      handle: (v, debug) => new SET_SERIAL_DIALOG_COMMAND_VISIBILITY(v, debug)
     },
     action_unhide_command: {
       values: { is_visible: true },
       captures: ["command"],
-      handle: (v) => new SET_SERIAL_DIALOG_COMMAND_VISIBILITY(v)
+      handle: (v, debug) => new SET_SERIAL_DIALOG_COMMAND_VISIBILITY(v, debug)
     },
     action_camera_shake: {
       captures: ["frequency", "amplitude", "duration"],
-      handle: (v) => new SET_SCREEN_SHAKE(v)
+      handle: (v, debug) => new SET_SCREEN_SHAKE(v, debug)
     },
     action_camera_fade_in: {
       captures: ["color", "duration"],
-      handle: (v) => new SCREEN_FADE_IN(v)
+      handle: (v, debug) => new SCREEN_FADE_IN(v, debug)
     },
     action_camera_fade_out: {
       captures: ["color", "duration"],
-      handle: (v) => new SCREEN_FADE_OUT(v)
+      handle: (v, debug) => new SCREEN_FADE_OUT(v, debug)
     },
     action_pause_script: {
       values: { bool_value: true },
       captures: ["script_slot", "entity"],
-      handle: (v) => new SET_SCRIPT_PAUSE(v)
+      handle: (v, debug) => new SET_SCRIPT_PAUSE(v, debug)
     },
     action_unpause_script: {
       values: { bool_value: false },
       captures: ["script_slot", "entity"],
-      handle: (v) => new SET_SCRIPT_PAUSE(v)
+      handle: (v, debug) => new SET_SCRIPT_PAUSE(v, debug)
     },
     action_play_entity_animation: {
       captures: ["entity", "animation", "play_count"],
-      handle: (v) => new PLAY_ENTITY_ANIMATION(v)
+      handle: (v, debug) => new PLAY_ENTITY_ANIMATION(v, debug)
     },
     action_set_warp_state: {
       captures: ["string"],
-      handle: (v) => new SET_WARP_STATE(v)
+      handle: (v, debug) => new SET_WARP_STATE(v, debug)
     },
     action_set_serial_connect: {
       captures: ["serial_dialog"],
-      handle: (v) => new SET_CONNECT_SERIAL_DIALOG(v)
+      handle: (v, debug) => new SET_CONNECT_SERIAL_DIALOG(v, debug)
     },
     action_print_array: {
       captures: ["array_name"],
-      handle: (v) => new ARRAY_LOG(v)
+      handle: (v, debug) => new ARRAY_LOG(v, debug)
     },
     action_delete_array: {
       captures: ["array"],
@@ -4580,7 +4583,7 @@ ${JSON.stringify(symbolNames, null, 2)}`);
     },
     action_set_alias: {
       captures: ["alias", "command"],
-      handle: (v) => new REGISTER_SERIAL_DIALOG_COMMAND_ALIAS(v)
+      handle: (v, debug) => new REGISTER_SERIAL_DIALOG_COMMAND_ALIAS(v, debug)
     },
     action_set_command: {
       values: { is_fail: false },
@@ -5505,19 +5508,24 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
     json_object: (debug) => {
       try {
         const parsed = JSON.parse(debug.node.text);
-        let parsedAction = Action.fromArgs(parsed);
-        if (parsedAction instanceof COPY_SCRIPT) {
-          parsedAction = CopyMacro.quick(
-            debug,
-            parsedAction.script,
-            parsedAction.search_and_replace
-          );
+        try {
+          let parsedAction = Action.fromArgs(parsed, debug);
+          if (parsedAction instanceof COPY_SCRIPT) {
+            parsedAction = CopyMacro.quick(
+              debug,
+              parsedAction.script,
+              parsedAction.search_and_replace
+            );
+          }
+          return [parsedAction];
+        } catch {
+          const actionName = parsed.action || "UNKNOWN_ACTION";
+          debug.quickError("invalid action", `invalid parameters for "${actionName}"`);
         }
-        return [parsedAction];
       } catch {
         debug.quickError(
           `invalid JSON action`,
-          `invalid JSON error, no known cause; check trailing commas and param names!`
+          `JSON.parse() error, unknown cause; check trailing commas!`
         );
       }
       return [];
@@ -6523,7 +6531,9 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       this.f = args2.f;
       this.fileName = args2.f.fileName;
       this.node = args2.node;
-      if (args2.comment) this.comment = breakIfNotString(args2.comment);
+      if (args2.comment) {
+        this.comment = breakIfNotString(args2.comment);
+      }
     }
     static quick(f, node) {
       return new MathlangLocation({ f, node });
@@ -6574,8 +6584,10 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
     "mismatched spread lengths": "spreads must have the same count of items within each context",
     "unsupported entity field": "this entity field is not supported in this action",
     "misordered params": "invalid param order",
+    "invalid action": "malformed action object",
     "invalid action param combination": "this action cannot have this combination of params",
     "invalid entity script slot": 'entities can only have "on_tick", "on_interact", and "on_look" scripts',
+    "value wrong type": "provided value not the necessary type",
     // arrays
     "array method on non-array": "previous method does not return an array; cannot call array method afterward",
     "array does not return value": "this array method chain does not return an int value; 0 will be used",
@@ -6618,7 +6630,7 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       __publicField(this, "paramNodes");
       __publicField(this, "bodyNode");
       __publicField(this, "callCount");
-      this.name = breakIfNotString(args2.name);
+      this.name = coerceToString(debug, args2.name);
       this.params = breakIfNotStringArray(args2.params);
       this.paramNodes = breakIfNotTSNodeArray(args2.paramNodes);
       this.bodyNode = breakIfNotTSNode(args2.bodyNode);
@@ -6699,7 +6711,7 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       __publicField(this, "type");
       __publicField(this, "parameters");
       __publicField(this, "target");
-      this.type = breakIfNotString(args2.type);
+      this.type = coerceToString(debug, args2.type);
       this.parameters = DialogParameter.breakIfNotAll(args2.parameters);
       if (typeof args2.target === "string") this.target = args2.target;
     }
@@ -6827,7 +6839,7 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       super(debug, args2);
       __publicField(this, "label");
       __publicField(this, "comment");
-      this.label = breakIfNotString(args2.label);
+      this.label = coerceToString(debug, args2.label);
       if (typeof args2.comment === "string") this.comment = args2.comment;
     }
     isIdenticalTo(that) {
@@ -6855,7 +6867,7 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       super(debug, args2);
       __publicField(this, "dialogName");
       __publicField(this, "dialogs");
-      this.dialogName = breakIfNotString(args2.dialogName);
+      this.dialogName = coerceToString(debug, args2.dialogName);
       this.dialogs = Dialog.breakIfNotAll(args2.dialogs);
     }
     isIdenticalTo(that) {
@@ -6884,7 +6896,7 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       super(debug, args2);
       __publicField(this, "property");
       __publicField(this, "value");
-      this.property = breakIfNotString(args2.property);
+      this.property = coerceToString(debug, args2.property);
       this.value = breakIfNotStringOrNumber(args2.value);
     }
     isIdenticalTo(that) {
@@ -6994,7 +7006,7 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
         throw new Error("invalid DialogIdentifier type");
       }
       this.type = args2.type;
-      this.value = breakIfNotString(args2.value);
+      this.value = coerceToString(debug, args2.value);
     }
     isIdenticalTo(that) {
       if (!(that instanceof DialogIdentifier)) return false;
@@ -7023,8 +7035,8 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       super(debug, args2);
       __publicField(this, "label");
       __publicField(this, "script");
-      this.label = breakIfNotString(args2.label);
-      this.script = breakIfNotString(args2.script);
+      this.label = coerceToString(debug, args2.label);
+      this.script = coerceToString(debug, args2.script);
     }
     isIdenticalTo(that) {
       if (!(that instanceof DialogOption)) return false;
@@ -7062,7 +7074,7 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       if (!(args2.serialDialog instanceof SerialDialog)) {
         throw new Error("SerialDialogDefinition not given valid SerialDialog");
       }
-      this.dialogName = breakIfNotString(args2.dialogName);
+      this.dialogName = coerceToString(debug, args2.dialogName);
       this.serialDialog = args2.serialDialog;
     }
     isIdenticalTo(that) {
@@ -7088,7 +7100,7 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       super(debug, args2);
       __publicField(this, "property");
       __publicField(this, "value");
-      this.property = breakIfNotString(args2.property);
+      this.property = coerceToString(debug, args2.property);
       this.value = breakIfNotStringOrNumber(args2.value);
     }
     isIdenticalTo(that) {
@@ -7190,8 +7202,8 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
         throw new Error("invalid option type " + args2.optionType);
       }
       this.optionType = args2.optionType;
-      this.label = breakIfNotString(args2.label);
-      this.script = breakIfNotString(args2.script);
+      this.label = coerceToString(debug, args2.label);
+      this.script = coerceToString(debug, args2.script);
     }
     isIdenticalTo(that) {
       if (!(that instanceof SerialDialogOption)) return false;
@@ -7227,7 +7239,7 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
     constructor(debug, args2) {
       super(debug, args2);
       __publicField(this, "value");
-      this.value = breakIfNotString(args2.value);
+      this.value = coerceToString(debug, args2.value);
     }
     isIdenticalTo(that) {
       if (!(that instanceof IncludeNode)) return false;
@@ -7250,7 +7262,7 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       __publicField(this, "label");
       __publicField(this, "value");
       if (!isMGSPrimitive(args2.value)) throw new Error("not primitive");
-      this.label = breakIfNotString(args2.label);
+      this.label = coerceToString(debug, args2.label);
       this.value = args2.value;
     }
     isIdenticalTo(that) {
@@ -7284,7 +7296,7 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       __publicField(this, "actions");
       __publicField(this, "preBakingActions");
       __publicField(this, "copyScriptResolved");
-      this.scriptName = breakIfNotString(args2.scriptName);
+      this.scriptName = coerceToString(debug, args2.scriptName);
       if (typeof args2.prePrint === "string") this.prePrint = args2.prePrint;
       if (typeof args2.testPrint === "string") this.testPrint = args2.testPrint;
       if (typeof args2.printed === "string") this.printed = args2.printed;
@@ -7339,7 +7351,7 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
     constructor(debug, args2) {
       super(debug, args2);
       __publicField(this, "comment");
-      this.comment = breakIfNotString(args2.comment);
+      this.comment = coerceToString(debug, args2.comment);
     }
     isIdenticalTo(that) {
       if (!(that instanceof CommentNode)) return false;
@@ -7361,7 +7373,7 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
     constructor(debug, args2) {
       super(debug, args2);
       __publicField(this, "label");
-      this.label = breakIfNotString(args2.label);
+      this.label = coerceToString(debug, args2.label);
     }
     isIdenticalTo(that) {
       if (!(that instanceof LabelDefinition)) return false;
@@ -7393,7 +7405,7 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
         if (v instanceof AnyNode) {
           return v;
         }
-        return Action.fromArgs(v);
+        return Action.fromArgs(v, debug);
       });
       this.json = AnyNode.breakIfNotAll(sanitized);
     }
@@ -7420,7 +7432,7 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       super(debug, args2);
       __publicField(this, "script");
       __publicField(this, "search_and_replace");
-      this.script = breakIfNotString(args2.script);
+      this.script = coerceToString(debug, args2.script);
       if (args2.search_and_replace && typeof args2.search_and_replace === "object" && Object.keys(args2.search_and_replace).length > 0) {
         const search_and_replace = {};
         Object.entries(args2.search_and_replace).forEach(([k, v]) => {
@@ -7541,7 +7553,7 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       __publicField(this, "op");
       this.lhs = IntExpression.breakIfNot(args2.lhs);
       this.rhs = IntExpression.breakIfNot(args2.rhs);
-      this.op = breakIfNotString(args2.op);
+      this.op = coerceToString(debug, args2.op);
     }
     isIdenticalTo(that) {
       if (!(that instanceof IntBinaryExpression)) return false;
@@ -7690,7 +7702,7 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
     constructor(debug, args2) {
       super(debug, args2);
       __publicField(this, "source");
-      this.source = breakIfNotString(args2.source);
+      this.source = coerceToString(debug, args2.source);
     }
     isIdenticalTo(that) {
       if (!(that instanceof IdentifierLiteral)) return false;
@@ -7729,8 +7741,8 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       __publicField(this, "field");
       __publicField(this, "inbound");
       this.inbound = false;
-      this.entity = breakIfNotString(args2.entity);
-      this.field = breakIfNotString(args2.field);
+      this.entity = coerceToString(debug, args2.entity);
+      this.field = coerceToString(debug, args2.field);
     }
     isIdenticalTo(that) {
       if (!(that instanceof EntityIntField)) return false;
@@ -7900,12 +7912,12 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       __publicField(this, "identifier");
       __publicField(this, "type");
       __publicField(this, "rawBody");
-      this.identifier = breakIfNotString(args2.identifier);
+      this.identifier = coerceToString(debug, args2.identifier);
       if (!(args2.rawBody instanceof Node)) {
         throw new Error("should be TreeSitterNode");
       }
       this.rawBody = args2.rawBody;
-      const type = breakIfNotString(args2.type);
+      const type = coerceToString(debug, args2.type);
       if (type === "script" || type === "fn") {
         this.type = type;
       } else {
@@ -7954,9 +7966,9 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       __publicField(this, "steps");
       __publicField(this, "identifier");
       __publicField(this, "type");
-      this.identifier = breakIfNotString(args2.identifier);
+      this.identifier = coerceToString(debug, args2.identifier);
       this.steps = AnyNode.breakIfNotAll(args2.steps);
-      const type = breakIfNotString(args2.type);
+      const type = coerceToString(debug, args2.type);
       if (type === "script" || type === "fn") {
         this.type = type;
       } else {
@@ -8231,7 +8243,7 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       if (!(args2.rhs instanceof BoolExpression)) throw new Error("not BoolExpression");
       if (!(args2.lhsNode instanceof Node)) throw new Error("not TSNode");
       if (!(args2.rhsNode instanceof Node)) throw new Error("not TSNode");
-      this.op = breakIfNotString(args2.op);
+      this.op = coerceToString(debug, args2.op);
       this.lhs = args2.lhs;
       this.rhs = args2.rhs;
       this.lhsNode = args2.lhsNode;
@@ -8355,7 +8367,7 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       __publicField(this, "action");
       __publicField(this, "entity");
       this.action = "CHECK_ENTITY_GLITCHED";
-      this.entity = breakIfNotString(args2.entity);
+      this.entity = coerceToString(debug, args2.entity);
     }
     isIdenticalTo(that) {
       if (!(that instanceof CheckEntityGlitched)) return false;
@@ -8384,7 +8396,7 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       __publicField(this, "action");
       __publicField(this, "save_flag");
       this.action = "CHECK_SAVE_FLAG";
-      this.save_flag = breakIfNotString(args2.save_flag);
+      this.save_flag = coerceToString(debug, args2.save_flag);
     }
     isIdenticalTo(that) {
       if (!(that instanceof CheckSaveFlag)) return false;
@@ -8412,8 +8424,8 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       __publicField(this, "geometry");
       __publicField(this, "entity");
       this.action = "CHECK_IF_ENTITY_IS_IN_GEOMETRY";
-      this.geometry = breakIfNotString(args2.geometry);
-      this.entity = breakIfNotString(args2.entity);
+      this.geometry = coerceToString(debug, args2.geometry);
+      this.entity = coerceToString(debug, args2.entity);
     }
     isIdenticalTo(that) {
       if (!(that instanceof CheckIfEntityIsInGeometry)) return false;
@@ -8445,7 +8457,7 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       __publicField(this, "action");
       __publicField(this, "button_id");
       this.action = "CHECK_FOR_BUTTON_PRESS";
-      this.button_id = breakIfNotString(args2.button_id);
+      this.button_id = coerceToString(debug, args2.button_id);
     }
     isIdenticalTo(that) {
       if (!(that instanceof CheckForButtonPress)) return false;
@@ -8472,7 +8484,7 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       __publicField(this, "action");
       __publicField(this, "button_id");
       this.action = "CHECK_FOR_BUTTON_STATE";
-      this.button_id = breakIfNotString(args2.button_id);
+      this.button_id = coerceToString(debug, args2.button_id);
     }
     isIdenticalTo(that) {
       if (!(that instanceof CheckForButtonState)) return false;
@@ -8596,8 +8608,8 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       __publicField(this, "entity");
       __publicField(this, "string");
       this.action = "CHECK_ENTITY_NAME";
-      this.entity = breakIfNotString(args2.entity);
-      this.string = breakIfNotString(args2.string);
+      this.entity = coerceToString(debug, args2.entity);
+      this.string = coerceToString(debug, args2.string);
     }
     isIdenticalTo(that) {
       if (!(that instanceof CheckEntityName)) return false;
@@ -8636,8 +8648,8 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       __publicField(this, "entity");
       __publicField(this, "expected_script");
       this.action = "CHECK_ENTITY_INTERACT_SCRIPT";
-      this.entity = breakIfNotString(args2.entity);
-      this.expected_script = breakIfNotString(args2.expected_script);
+      this.entity = coerceToString(debug, args2.entity);
+      this.expected_script = coerceToString(debug, args2.expected_script);
     }
     isIdenticalTo(that) {
       if (!(that instanceof CheckEntityInteractScript)) return false;
@@ -8676,8 +8688,8 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       __publicField(this, "entity");
       __publicField(this, "expected_script");
       this.action = "CHECK_ENTITY_TICK_SCRIPT";
-      this.entity = breakIfNotString(args2.entity);
-      this.expected_script = breakIfNotString(args2.expected_script);
+      this.entity = coerceToString(debug, args2.entity);
+      this.expected_script = coerceToString(debug, args2.expected_script);
     }
     isIdenticalTo(that) {
       if (!(that instanceof CheckEntityTickScript)) return false;
@@ -8716,8 +8728,8 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       __publicField(this, "entity");
       __publicField(this, "expected_script");
       this.action = "CHECK_ENTITY_LOOK_SCRIPT";
-      this.entity = breakIfNotString(args2.entity);
-      this.expected_script = breakIfNotString(args2.expected_script);
+      this.entity = coerceToString(debug, args2.entity);
+      this.expected_script = coerceToString(debug, args2.expected_script);
     }
     isIdenticalTo(that) {
       if (!(that instanceof CheckEntityTickScript)) return false;
@@ -8756,8 +8768,8 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       __publicField(this, "entity");
       __publicField(this, "entity_type");
       this.action = "CHECK_ENTITY_TYPE";
-      this.entity = breakIfNotString(args2.entity);
-      this.entity_type = breakIfNotString(args2.entity_type);
+      this.entity = coerceToString(debug, args2.entity);
+      this.entity_type = coerceToString(debug, args2.entity_type);
     }
     isIdenticalTo(that) {
       if (!(that instanceof CheckEntityType)) return false;
@@ -8793,8 +8805,8 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       __publicField(this, "entity");
       __publicField(this, "direction");
       this.action = "CHECK_ENTITY_DIRECTION";
-      this.entity = breakIfNotString(args2.entity);
-      this.direction = breakIfNotString(args2.direction);
+      this.entity = coerceToString(debug, args2.entity);
+      this.direction = coerceToString(debug, args2.direction);
     }
     isIdenticalTo(that) {
       if (!(that instanceof CheckEntityDirection)) return false;
@@ -8832,8 +8844,8 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       __publicField(this, "geometry");
       __publicField(this, "entity");
       this.action = "CHECK_ENTITY_PATH";
-      this.entity = breakIfNotString(args2.entity);
-      this.geometry = breakIfNotString(args2.geometry);
+      this.entity = coerceToString(debug, args2.entity);
+      this.geometry = coerceToString(debug, args2.geometry);
     }
     isIdenticalTo(that) {
       if (!(that instanceof CheckEntityPath)) return false;
@@ -8867,7 +8879,7 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       __publicField(this, "action");
       __publicField(this, "string");
       this.action = "CHECK_WARP_STATE";
-      this.string = breakIfNotString(args2.string);
+      this.string = coerceToString(debug, args2.string);
       this.expected_bool = breakIfNotBool(args2.expected_bool);
     }
     isIdenticalTo(that) {
@@ -8916,8 +8928,8 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       __publicField(this, "comparison");
       __publicField(this, "value");
       this.action = "CHECK_VARIABLE";
-      this.variable = breakIfNotString(args2.variable);
-      this.comparison = breakIfNotString(args2.comparison);
+      this.variable = coerceToString(debug, args2.variable);
+      this.comparison = coerceToString(debug, args2.comparison);
       this.value = breakIfNotNumber(args2.value);
       this.expected_bool = breakIfNotBool(args2.expected_bool);
     }
@@ -8955,9 +8967,9 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       __publicField(this, "comparison");
       __publicField(this, "source");
       this.action = "CHECK_VARIABLES";
-      this.variable = breakIfNotString(args2.variable);
-      this.comparison = breakIfNotString(args2.comparison);
-      this.source = breakIfNotString(args2.source);
+      this.variable = coerceToString(debug, args2.variable);
+      this.comparison = coerceToString(debug, args2.comparison);
+      this.source = coerceToString(debug, args2.source);
       this.expected_bool = breakIfNotBool(args2.expected_bool);
     }
     isIdenticalTo(that) {
@@ -9013,7 +9025,7 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       __publicField(this, "entity");
       __publicField(this, "expected_u2");
       this.action = "CHECK_ENTITY_X";
-      this.entity = breakIfNotString(args2.entity);
+      this.entity = coerceToString(debug, args2.entity);
       this.expected_u2 = breakIfNotNumber(args2.expected_u2);
     }
     isIdenticalTo(that) {
@@ -9049,7 +9061,7 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       __publicField(this, "entity");
       __publicField(this, "expected_u2");
       this.action = "CHECK_ENTITY_Y";
-      this.entity = breakIfNotString(args2.entity);
+      this.entity = coerceToString(debug, args2.entity);
       this.expected_u2 = breakIfNotNumber(args2.expected_u2);
     }
     isIdenticalTo(that) {
@@ -9085,7 +9097,7 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       __publicField(this, "entity");
       __publicField(this, "expected_u2");
       this.action = "CHECK_ENTITY_PRIMARY_ID";
-      this.entity = breakIfNotString(args2.entity);
+      this.entity = coerceToString(debug, args2.entity);
       this.expected_u2 = breakIfNotNumber(args2.expected_u2);
     }
     isIdenticalTo(that) {
@@ -9121,7 +9133,7 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       __publicField(this, "entity");
       __publicField(this, "expected_u2");
       this.action = "CHECK_ENTITY_SECONDARY_ID";
-      this.entity = breakIfNotString(args2.entity);
+      this.entity = coerceToString(debug, args2.entity);
       this.expected_u2 = breakIfNotNumber(args2.expected_u2);
     }
     isIdenticalTo(that) {
@@ -9157,7 +9169,7 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       __publicField(this, "entity");
       __publicField(this, "expected_byte");
       this.action = "CHECK_ENTITY_PRIMARY_ID_TYPE";
-      this.entity = breakIfNotString(args2.entity);
+      this.entity = coerceToString(debug, args2.entity);
       this.expected_byte = breakIfNotNumber(args2.expected_byte);
     }
     isIdenticalTo(that) {
@@ -9197,7 +9209,7 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       __publicField(this, "entity");
       __publicField(this, "expected_byte");
       this.action = "CHECK_ENTITY_CURRENT_ANIMATION";
-      this.entity = breakIfNotString(args2.entity);
+      this.entity = coerceToString(debug, args2.entity);
       this.expected_byte = breakIfNotNumber(args2.expected_byte);
     }
     isIdenticalTo(that) {
@@ -9237,7 +9249,7 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       __publicField(this, "entity");
       __publicField(this, "expected_byte");
       this.action = "CHECK_ENTITY_CURRENT_FRAME";
-      this.entity = breakIfNotString(args2.entity);
+      this.entity = coerceToString(debug, args2.entity);
       this.expected_byte = breakIfNotNumber(args2.expected_byte);
     }
     isIdenticalTo(that) {
@@ -9275,8 +9287,8 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       super(debug, args2);
       __publicField(this, "type");
       __publicField(this, "value");
-      this.value = breakIfNotString(args2.value);
-      this.type = breakIfNotString(args2.type);
+      this.value = coerceToString(debug, args2.value);
+      this.type = coerceToString(debug, args2.type);
     }
     clone() {
       return new BoolSetable(this.debug.clone(), this.args);
@@ -9308,8 +9320,8 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       super(debug, args2);
       __publicField(this, "type");
       __publicField(this, "value");
-      this.value = breakIfNotString(args2.value);
-      this.type = breakIfNotString(args2.type);
+      this.value = coerceToString(debug, args2.value);
+      this.type = coerceToString(debug, args2.type);
     }
     isIdenticalTo(that) {
       if (!(that instanceof MovableIdentifier)) return false;
@@ -9342,9 +9354,9 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       __publicField(this, "type");
       __publicField(this, "value");
       __publicField(this, "polygonType");
-      this.value = breakIfNotString(args2.value);
-      this.type = breakIfNotString(args2.type);
-      if (args2.polygonType) this.polygonType = breakIfNotString(args2.polygonType);
+      this.value = coerceToString(debug, args2.value);
+      this.type = coerceToString(debug, args2.type);
+      if (args2.polygonType) this.polygonType = coerceToString(debug, args2.polygonType);
     }
     isIdenticalTo(that) {
       if (!(that instanceof CoordinateIdentifier)) return false;
@@ -9381,8 +9393,8 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       super(debug, args2);
       __publicField(this, "type");
       __publicField(this, "value");
-      this.value = breakIfNotString(args2.value);
-      this.type = breakIfNotString(args2.type);
+      this.value = coerceToString(debug, args2.value);
+      this.type = coerceToString(debug, args2.type);
     }
     isIdenticalTo(that) {
       if (!(that instanceof DirectionTarget)) return false;
@@ -9418,7 +9430,7 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       __publicField(this, "return_type");
       __publicField(this, "chain");
       __publicField(this, "final");
-      this.identifier = breakIfNotString(args2.identifier);
+      this.identifier = coerceToString(debug, args2.identifier);
       const chain = ArrayMethod.breakIfNotAll(args2.chain);
       this.return_type = "array";
       this.chain = [];
@@ -9671,7 +9683,7 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       super(debug, args2);
       __publicField(this, "variable_start");
       __publicField(this, "steps");
-      this.variable_start = breakIfNotString(args2.variable_start);
+      this.variable_start = coerceToString(debug, args2.variable_start);
       this.steps = AnyNode.breakIfNotAll(args2.steps);
     }
     isIdenticalTo(that) {
@@ -9725,8 +9737,8 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       __publicField(this, "variable_start");
       __publicField(this, "variable_end");
       __publicField(this, "steps");
-      this.variable_start = breakIfNotString(args2.variable_start);
-      this.variable_end = breakIfNotString(args2.variable_end);
+      this.variable_start = coerceToString(debug, args2.variable_start);
+      this.variable_end = coerceToString(debug, args2.variable_end);
       this.steps = AnyNode.breakIfNotAll(args2.steps);
     }
     isIdenticalTo(that) {
@@ -9916,7 +9928,7 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       super(debug, args2);
       __publicField(this, "variable_index");
       __publicField(this, "steps");
-      this.variable_index = breakIfNotString(args2.variable_index);
+      this.variable_index = coerceToString(debug, args2.variable_index);
       if (args2.steps) {
         this.steps = AnyNode.breakIfNotAll(args2.steps);
       }
@@ -10078,7 +10090,7 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       super(debug, args2);
       __publicField(this, "variable");
       __publicField(this, "steps");
-      this.variable = breakIfNotString(args2.variable);
+      this.variable = coerceToString(debug, args2.variable);
       if (args2.steps) {
         this.steps = AnyNode.breakIfNotAll(args2.steps);
       }
@@ -10166,7 +10178,7 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       super(debug, args2);
       __publicField(this, "variable");
       __publicField(this, "steps");
-      this.variable = breakIfNotString(args2.variable);
+      this.variable = coerceToString(debug, args2.variable);
       if (args2.steps) {
         this.steps = AnyNode.breakIfNotAll(args2.steps);
       }
@@ -10218,7 +10230,7 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       super(debug, args2);
       __publicField(this, "array_name");
       __publicField(this, "exp_index");
-      this.array_name = breakIfNotString(args2.array_name);
+      this.array_name = coerceToString(debug, args2.array_name);
       this.exp_index = IntExpression.breakIfNot(args2.exp_index);
     }
     isIdenticalTo(that) {
@@ -10413,19 +10425,37 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
     print() {
       return `json[${JSON.stringify(this, null, "	")}];`;
     }
-    static fromArgs(args2) {
+    static fromArgs(args2, debug) {
       if (args2 instanceof CopyMacro) {
         return COPY_SCRIPT.quick(args2.script, args2.search_and_replace);
       }
       if (typeof args2 !== "object" || args2 === null) {
-        throw new Error("cannot make Action from non-object");
+        if (debug) {
+          debug.quickError("invalid action", "cannot make Action from non-object");
+        } else {
+          throw new Error("cannot make Action from non-object");
+        }
       }
-      const actionName = breakIfNotString(args2.action);
-      if (!actionName) {
-        throw new Error("Action sans action?");
+      const actionName = args2.action;
+      if (!actionName === void 0 || typeof actionName !== "string") {
+        if (debug) {
+          debug.quickError("invalid action", 'action missing "action" property');
+        } else {
+          throw new Error(`Action sans action param (${actionName})`);
+        }
       }
       if (actionConstructorLookup[actionName]) {
-        return actionConstructorLookup[actionName](args2);
+        try {
+          const newAction = actionConstructorLookup[actionName](args2, debug);
+          return newAction;
+        } catch (e) {
+          if (debug) {
+            const message = e.message;
+            debug.quickError("invalid action params", message);
+          } else {
+            throw new Error(`invalid action params for "${actionName}"`);
+          }
+        }
       }
       return new UnknownAction(args2);
     }
@@ -10558,12 +10588,12 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
     }
   }
   class LABEL extends Action {
-    constructor(args2) {
+    constructor(args2, debug) {
       super();
       __publicField(this, "action");
       __publicField(this, "value");
       this.action = "LABEL";
-      this.value = breakIfNotString(args2.value);
+      this.value = tryString(args2.value, 'LABEL param "value"', debug);
     }
     ifLabelAddSuffix(suffix) {
       this.value += suffix;
@@ -10574,12 +10604,12 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
     }
   }
   class RUN_SCRIPT extends Action {
-    constructor(args2) {
+    constructor(args2, debug) {
       super();
       __publicField(this, "action");
       __publicField(this, "script");
       this.action = "RUN_SCRIPT";
-      this.script = breakIfNotString(args2.script);
+      this.script = tryString(args2.script, 'RUN_SCRIPT param "script"', debug);
     }
     getScript() {
       return this.script;
@@ -10595,38 +10625,38 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
     }
   }
   class BLOCKING_DELAY extends Action {
-    constructor(args2) {
+    constructor(args2, debug) {
       super();
       __publicField(this, "action");
       __publicField(this, "duration");
       this.action = "BLOCKING_DELAY";
-      this.duration = typeof args2.duration === "number" ? args2.duration : 0;
+      this.duration = tryNumber(args2.duration, `${this.action} param "duration"`, debug);
     }
     print() {
       return `block ${printDuration(this.duration)};`;
     }
   }
   class NON_BLOCKING_DELAY extends Action {
-    constructor(args2) {
+    constructor(args2, debug) {
       super();
       __publicField(this, "action");
       __publicField(this, "duration");
       this.action = "NON_BLOCKING_DELAY";
-      this.duration = typeof args2.duration === "number" ? args2.duration : 0;
+      this.duration = tryNumber(args2.duration, `${this.action} param "duration"`, debug);
     }
     print() {
       return `wait ${printDuration(this.duration)};`;
     }
   }
   class SET_ENTITY_NAME extends Action {
-    constructor(args2) {
+    constructor(args2, debug) {
       super();
       __publicField(this, "action");
       __publicField(this, "entity");
       __publicField(this, "string");
       this.action = "SET_ENTITY_NAME";
-      this.entity = breakIfNotString(args2.entity);
-      this.string = breakIfNotString(args2.string);
+      this.entity = tryString(args2.entity, `${this.action} param "duration"`, debug);
+      this.string = tryString(args2.string, `${this.action} param "duration"`, debug);
     }
     static quick(entity, string) {
       return new SET_ENTITY_NAME({ entity, string });
@@ -10636,14 +10666,14 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
     }
   }
   class SET_ENTITY_X extends Action {
-    constructor(args2) {
+    constructor(args2, debug) {
       super();
       __publicField(this, "action");
       __publicField(this, "entity");
       __publicField(this, "u2_value");
       this.action = "SET_ENTITY_X";
-      this.entity = breakIfNotString(args2.entity);
-      this.u2_value = breakIfNotNumber(args2.u2_value);
+      this.entity = tryString(args2.entity, `${this.action} param "entity"`, debug);
+      this.u2_value = tryNumber(args2.u2_value, `${this.action} param "u2_value"`, debug);
     }
     static quick(entity, u2_value) {
       return new SET_ENTITY_X({ entity, u2_value });
@@ -10653,14 +10683,14 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
     }
   }
   class SET_ENTITY_Y extends Action {
-    constructor(args2) {
+    constructor(args2, debug) {
       super();
       __publicField(this, "action");
       __publicField(this, "entity");
       __publicField(this, "u2_value");
       this.action = "SET_ENTITY_Y";
-      this.entity = breakIfNotString(args2.entity);
-      this.u2_value = breakIfNotNumber(args2.u2_value);
+      this.entity = tryString(args2.entity, `${this.action} param "entity"`, debug);
+      this.u2_value = tryNumber(args2.u2_value, `${this.action} param "u2_value"`, debug);
     }
     static quick(entity, u2_value) {
       return new SET_ENTITY_Y({ entity, u2_value });
@@ -10670,10 +10700,10 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
     }
   }
   class ActionSetScript extends Action {
-    constructor(args2) {
+    constructor(args2, debug) {
       super();
       __publicField(this, "script");
-      this.script = breakIfNotString(args2.script);
+      this.script = tryString(args2.script, `ActionSetScript param "script"`, debug);
     }
     getScript() {
       return this.script;
@@ -10683,12 +10713,12 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
     }
   }
   class SET_ENTITY_INTERACT_SCRIPT extends ActionSetScript {
-    constructor(args2) {
-      super(args2);
+    constructor(args2, debug) {
+      super(args2, debug);
       __publicField(this, "action");
       __publicField(this, "entity");
       this.action = "SET_ENTITY_INTERACT_SCRIPT";
-      this.entity = breakIfNotString(args2.entity);
+      this.entity = tryString(args2.entity, `${this.action} param "entity"`, debug);
     }
     static quick(entity, script) {
       return new SET_ENTITY_INTERACT_SCRIPT({ entity, script });
@@ -10698,12 +10728,12 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
     }
   }
   class SET_ENTITY_TICK_SCRIPT extends ActionSetScript {
-    constructor(args2) {
-      super(args2);
+    constructor(args2, debug) {
+      super(args2, debug);
       __publicField(this, "action");
       __publicField(this, "entity");
       this.action = "SET_ENTITY_TICK_SCRIPT";
-      this.entity = breakIfNotString(args2.entity);
+      this.entity = tryString(args2.entity, `${this.action} param "entity"`, debug);
     }
     static quick(entity, script) {
       return new SET_ENTITY_TICK_SCRIPT({ entity, script });
@@ -10713,14 +10743,14 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
     }
   }
   class SET_ENTITY_TYPE extends Action {
-    constructor(args2) {
+    constructor(args2, debug) {
       super();
       __publicField(this, "action");
       __publicField(this, "entity");
       __publicField(this, "entity_type");
       this.action = "SET_ENTITY_TYPE";
-      this.entity = breakIfNotString(args2.entity);
-      this.entity_type = breakIfNotString(args2.entity_type);
+      this.entity = tryString(args2.entity, `${this.action} param "entity"`, debug);
+      this.entity_type = tryString(args2.entity_type, `${this.action} param "entity_type"`, debug);
     }
     static quick(entity, entity_type) {
       return new SET_ENTITY_TYPE({ entity, entity_type });
@@ -10730,14 +10760,14 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
     }
   }
   class SET_ENTITY_PRIMARY_ID extends Action {
-    constructor(args2) {
+    constructor(args2, debug) {
       super();
       __publicField(this, "action");
       __publicField(this, "entity");
       __publicField(this, "u2_value");
       this.action = "SET_ENTITY_PRIMARY_ID";
-      this.entity = breakIfNotString(args2.entity);
-      this.u2_value = breakIfNotNumber(args2.u2_value);
+      this.entity = tryString(args2.entity, `${this.action} param "entity"`, debug);
+      this.u2_value = tryNumber(args2.u2_value, `${this.action} param "u2_value"`, debug);
     }
     static quick(entity, u2_value) {
       return new SET_ENTITY_PRIMARY_ID({ entity, u2_value });
@@ -10747,14 +10777,14 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
     }
   }
   class SET_ENTITY_SECONDARY_ID extends Action {
-    constructor(args2) {
+    constructor(args2, debug) {
       super();
       __publicField(this, "action");
       __publicField(this, "entity");
       __publicField(this, "u2_value");
       this.action = "SET_ENTITY_SECONDARY_ID";
-      this.entity = breakIfNotString(args2.entity);
-      this.u2_value = breakIfNotNumber(args2.u2_value);
+      this.entity = tryString(args2.entity, `${this.action} param "entity"`, debug);
+      this.u2_value = tryNumber(args2.u2_value, `${this.action} param "u2_value"`, debug);
     }
     static quick(entity, u2_value) {
       return new SET_ENTITY_SECONDARY_ID({ entity, u2_value });
@@ -10764,14 +10794,14 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
     }
   }
   class SET_ENTITY_PRIMARY_ID_TYPE extends Action {
-    constructor(args2) {
+    constructor(args2, debug) {
       super();
       __publicField(this, "action");
       __publicField(this, "entity");
       __publicField(this, "byte_value");
       this.action = "SET_ENTITY_PRIMARY_ID_TYPE";
-      this.entity = breakIfNotString(args2.entity);
-      this.byte_value = breakIfNotNumber(args2.byte_value);
+      this.entity = tryString(args2.entity, `${this.action} param "entity"`, debug);
+      this.byte_value = tryNumber(args2.byte_value, `${this.action} param "byte_value"`, debug);
     }
     static quick(entity, byte_value) {
       return new SET_ENTITY_PRIMARY_ID_TYPE({ entity, byte_value });
@@ -10781,14 +10811,14 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
     }
   }
   class SET_ENTITY_CURRENT_ANIMATION extends Action {
-    constructor(args2) {
+    constructor(args2, debug) {
       super();
       __publicField(this, "action");
       __publicField(this, "entity");
       __publicField(this, "byte_value");
       this.action = "SET_ENTITY_CURRENT_ANIMATION";
-      this.entity = breakIfNotString(args2.entity);
-      this.byte_value = breakIfNotNumber(args2.byte_value);
+      this.entity = tryString(args2.entity, `${this.action} param "entity"`, debug);
+      this.byte_value = tryNumber(args2.byte_value, `${this.action} param "byte_value"`, debug);
     }
     static quick(entity, byte_value) {
       return new SET_ENTITY_CURRENT_ANIMATION({ entity, byte_value });
@@ -10798,14 +10828,14 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
     }
   }
   class SET_ENTITY_CURRENT_FRAME extends Action {
-    constructor(args2) {
+    constructor(args2, debug) {
       super();
       __publicField(this, "action");
       __publicField(this, "entity");
       __publicField(this, "byte_value");
       this.action = "SET_ENTITY_CURRENT_FRAME";
-      this.entity = breakIfNotString(args2.entity);
-      this.byte_value = breakIfNotNumber(args2.byte_value);
+      this.entity = tryString(args2.entity, `${this.action} param "entity"`, debug);
+      this.byte_value = tryNumber(args2.byte_value, `${this.action} param "byte_value"`, debug);
     }
     static quick(entity, byte_value) {
       return new SET_ENTITY_CURRENT_FRAME({ entity, byte_value });
@@ -10815,14 +10845,18 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
     }
   }
   class SET_ENTITY_DIRECTION_RELATIVE extends Action {
-    constructor(args2) {
+    constructor(args2, debug) {
       super();
       __publicField(this, "action");
       __publicField(this, "entity");
       __publicField(this, "relative_direction");
       this.action = "SET_ENTITY_DIRECTION_RELATIVE";
-      this.entity = breakIfNotString(args2.entity);
-      this.relative_direction = breakIfNotNumber(args2.relative_direction);
+      this.entity = tryString(args2.entity, `${this.action} param "entity"`, debug);
+      this.relative_direction = tryNumber(
+        args2.relative_direction,
+        `${this.action} param "relative_direction"`,
+        debug
+      );
     }
     static quick(entity, relative_direction) {
       return new SET_ENTITY_DIRECTION_RELATIVE({ entity, relative_direction });
@@ -10836,14 +10870,14 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
     }
   }
   class SET_ENTITY_DIRECTION extends Action {
-    constructor(args2) {
+    constructor(args2, debug) {
       super();
       __publicField(this, "action");
       __publicField(this, "entity");
       __publicField(this, "direction");
       this.action = "SET_ENTITY_DIRECTION";
-      this.entity = breakIfNotString(args2.entity);
-      this.direction = breakIfNotString(args2.direction);
+      this.entity = tryString(args2.entity, `${this.action} param "entity"`, debug);
+      this.direction = tryString(args2.direction, `${this.action} param "direction"`, debug);
     }
     static quick(entity, direction) {
       return new SET_ENTITY_DIRECTION({ entity, direction });
@@ -10853,14 +10887,18 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
     }
   }
   class SET_ENTITY_DIRECTION_TARGET_ENTITY extends Action {
-    constructor(args2) {
+    constructor(args2, debug) {
       super();
       __publicField(this, "action");
       __publicField(this, "entity");
       __publicField(this, "target_entity");
       this.action = "SET_ENTITY_DIRECTION_TARGET_ENTITY";
-      this.entity = breakIfNotString(args2.entity);
-      this.target_entity = breakIfNotString(args2.target_entity);
+      this.entity = tryString(args2.entity, `${this.action} param "entity"`, debug);
+      this.target_entity = tryString(
+        args2.target_entity,
+        `${this.action} param "target_entity"`,
+        debug
+      );
     }
     static quick(entity, target_entity) {
       return new SET_ENTITY_DIRECTION_TARGET_ENTITY({ entity, target_entity });
@@ -10870,14 +10908,18 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
     }
   }
   class SET_ENTITY_DIRECTION_TARGET_GEOMETRY extends Action {
-    constructor(args2) {
+    constructor(args2, debug) {
       super();
       __publicField(this, "action");
       __publicField(this, "entity");
       __publicField(this, "target_geometry");
       this.action = "SET_ENTITY_DIRECTION_TARGET_GEOMETRY";
-      this.entity = breakIfNotString(args2.entity);
-      this.target_geometry = breakIfNotString(args2.target_geometry);
+      this.entity = tryString(args2.entity, `${this.action} param "entity"`, debug);
+      this.target_geometry = tryString(
+        args2.target_geometry,
+        `${this.action} param "target_geometry"`,
+        debug
+      );
     }
     static quick(entity, target_geometry) {
       return new SET_ENTITY_DIRECTION_TARGET_GEOMETRY({ entity, target_geometry });
@@ -10887,14 +10929,14 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
     }
   }
   class SET_ENTITY_GLITCHED extends ActionSetBool {
-    constructor(args2) {
+    constructor(args2, debug) {
       super();
       __publicField(this, "action");
       __publicField(this, "entity");
       __publicField(this, "bool_value");
       this.action = "SET_ENTITY_GLITCHED";
-      this.entity = breakIfNotString(args2.entity);
-      this.bool_value = breakIfNotBool(args2.bool_value);
+      this.entity = tryString(args2.entity, `${this.action} param "entity"`, debug);
+      this.bool_value = tryBool(args2.bool_value, `${this.action} param "bool_value"`, debug);
     }
     updateProp(v) {
       this.bool_value = v;
@@ -10914,14 +10956,14 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
     }
   }
   class SET_ENTITY_PATH extends Action {
-    constructor(args2) {
+    constructor(args2, debug) {
       super();
       __publicField(this, "action");
       __publicField(this, "entity");
       __publicField(this, "geometry");
       this.action = "SET_ENTITY_PATH";
-      this.entity = breakIfNotString(args2.entity);
-      this.geometry = breakIfNotString(args2.geometry);
+      this.entity = tryString(args2.entity, `${this.action} param "entity"`, debug);
+      this.geometry = tryString(args2.geometry, `${this.action} param "geometry"`, debug);
     }
     static quick(entity, geometry) {
       return new SET_ENTITY_PATH({ entity, geometry });
@@ -10931,13 +10973,13 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
     }
   }
   class COPY_SCRIPT extends Action {
-    constructor(args2) {
+    constructor(args2, debug) {
       super();
       __publicField(this, "action");
       __publicField(this, "script");
       __publicField(this, "search_and_replace");
       this.action = "COPY_SCRIPT";
-      this.script = breakIfNotString(args2.script);
+      this.script = tryString(args2.script, `${this.action} param "script"`, debug);
       if (args2.search_and_replace) {
         const search_and_replace = {};
         Object.entries(args2.search_and_replace).forEach(([k, v]) => {
@@ -10972,14 +11014,14 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
     }
   }
   class SET_SAVE_FLAG extends ActionSetBool {
-    constructor(args2) {
+    constructor(args2, debug) {
       super();
       __publicField(this, "action");
       __publicField(this, "save_flag");
       __publicField(this, "bool_value");
       this.action = "SET_SAVE_FLAG";
-      this.save_flag = breakIfNotString(args2.save_flag);
-      this.bool_value = breakIfNotBool(args2.bool_value);
+      this.save_flag = tryString(args2.save_flag, `${this.action} param "save_flag"`, debug);
+      this.bool_value = tryBool(args2.bool_value, `${this.action} param "bool_value"`, debug);
     }
     updateProp(v) {
       this.bool_value = v;
@@ -11010,12 +11052,12 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
     }
   }
   class SET_PLAYER_CONTROL extends ActionSetBool {
-    constructor(args2) {
+    constructor(args2, debug) {
       super();
       __publicField(this, "action");
       __publicField(this, "bool_value");
       this.action = "SET_PLAYER_CONTROL";
-      this.bool_value = breakIfNotBool(args2.bool_value);
+      this.bool_value = tryBool(args2.bool_value, `${this.action} param "bool_value"`, debug);
     }
     updateProp(v) {
       this.bool_value = v;
@@ -11035,8 +11077,8 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
     }
   }
   class SET_MAP_TICK_SCRIPT extends ActionSetScript {
-    constructor(args2) {
-      super(args2);
+    constructor(args2, debug) {
+      super(args2, debug);
       __publicField(this, "action");
       this.action = "SET_MAP_TICK_SCRIPT";
     }
@@ -11048,34 +11090,34 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
     }
   }
   class SET_HEX_CURSOR_LOCATION extends Action {
-    constructor(args2) {
+    constructor(args2, debug) {
       super();
       __publicField(this, "action");
       __publicField(this, "address");
       this.action = "SET_HEX_CURSOR_LOCATION";
-      this.address = breakIfNotNumber(args2.address);
+      this.address = tryNumber(args2.address, `${this.action} param "address"`, debug);
     }
     // todo print?
   }
   class SET_WARP_STATE extends Action {
-    constructor(args2) {
+    constructor(args2, debug) {
       super();
       __publicField(this, "action");
       __publicField(this, "string");
       this.action = "SET_WARP_STATE";
-      this.string = breakIfNotString(args2.string);
+      this.string = tryString(args2.string, `${this.action} param "string"`, debug);
     }
     print() {
       return `warp_state = "${this.string}";`;
     }
   }
   class SET_HEX_EDITOR_STATE extends ActionSetBool {
-    constructor(args2) {
+    constructor(args2, debug) {
       super();
       __publicField(this, "action");
       __publicField(this, "bool_value");
       this.action = "SET_HEX_EDITOR_STATE";
-      this.bool_value = breakIfNotBool(args2.bool_value);
+      this.bool_value = tryBool(args2.bool_value, `${this.action} param "bool_value"`, debug);
     }
     updateProp(v) {
       this.bool_value = v;
@@ -11095,12 +11137,12 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
     }
   }
   class SET_HEX_EDITOR_DIALOG_MODE extends ActionSetBool {
-    constructor(args2) {
+    constructor(args2, debug) {
       super();
       __publicField(this, "action");
       __publicField(this, "bool_value");
       this.action = "SET_HEX_EDITOR_DIALOG_MODE";
-      this.bool_value = breakIfNotBool(args2.bool_value);
+      this.bool_value = tryBool(args2.bool_value, `${this.action} param "bool_value"`, debug);
     }
     updateProp(v) {
       this.bool_value = v;
@@ -11120,12 +11162,12 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
     }
   }
   class SET_HEX_EDITOR_CONTROL extends ActionSetBool {
-    constructor(args2) {
+    constructor(args2, debug) {
       super();
       __publicField(this, "action");
       __publicField(this, "bool_value");
       this.action = "SET_HEX_EDITOR_CONTROL";
-      this.bool_value = breakIfNotBool(args2.bool_value);
+      this.bool_value = tryBool(args2.bool_value, `${this.action} param "bool_value"`, debug);
     }
     updateProp(v) {
       this.bool_value = v;
@@ -11145,12 +11187,12 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
     }
   }
   class SET_HEX_EDITOR_CONTROL_CLIPBOARD extends ActionSetBool {
-    constructor(args2) {
+    constructor(args2, debug) {
       super();
       __publicField(this, "action");
       __publicField(this, "bool_value");
       this.action = "SET_HEX_EDITOR_CONTROL_CLIPBOARD";
-      this.bool_value = breakIfNotBool(args2.bool_value);
+      this.bool_value = tryBool(args2.bool_value, `${this.action} param "bool_value"`, debug);
     }
     updateProp(v) {
       this.bool_value = v;
@@ -11170,12 +11212,12 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
     }
   }
   class LOAD_MAP extends Action {
-    constructor(args2) {
+    constructor(args2, debug) {
       super();
       __publicField(this, "action");
       __publicField(this, "map");
       this.action = "LOAD_MAP";
-      this.map = breakIfNotString(args2.map);
+      this.map = tryString(args2.map, `${this.action} param "map"`, debug);
     }
     static quick(map) {
       return new LOAD_MAP({ map });
@@ -11185,12 +11227,12 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
     }
   }
   class SHOW_DIALOG extends Action {
-    constructor(args2) {
+    constructor(args2, debug) {
       super();
       __publicField(this, "action");
       __publicField(this, "dialog");
       this.action = "SHOW_DIALOG";
-      this.dialog = breakIfNotString(args2.dialog);
+      this.dialog = tryString(args2.dialog, `${this.action} param "dialog"`, debug);
     }
     static quick(dialog) {
       return new SHOW_DIALOG({ dialog });
@@ -11200,30 +11242,30 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
     }
   }
   class PLAY_ENTITY_ANIMATION extends Action {
-    constructor(args2) {
+    constructor(args2, debug) {
       super();
       __publicField(this, "action");
       __publicField(this, "entity");
       __publicField(this, "animation");
       __publicField(this, "play_count");
       this.action = "PLAY_ENTITY_ANIMATION";
-      this.entity = breakIfNotString(args2.entity);
-      this.animation = breakIfNotNumber(args2.animation);
-      this.play_count = breakIfNotNumber(args2.play_count);
+      this.entity = tryString(args2.entity, `${this.action} param "entity"`, debug);
+      this.animation = tryNumber(args2.animation, `${this.action} param "animation"`, debug);
+      this.play_count = tryNumber(args2.play_count, `${this.action} param "play_count"`, debug);
     }
     print() {
       return `${printEntityIdentifier(this.entity)} animation -> ${this.animation} ${this.play_count}x;`;
     }
   }
   class TELEPORT_ENTITY_TO_GEOMETRY extends Action {
-    constructor(args2) {
+    constructor(args2, debug) {
       super();
       __publicField(this, "action");
       __publicField(this, "geometry");
       __publicField(this, "entity");
       this.action = "TELEPORT_ENTITY_TO_GEOMETRY";
-      this.entity = breakIfNotString(args2.entity);
-      this.geometry = breakIfNotString(args2.geometry);
+      this.entity = tryString(args2.entity, `${this.action} param "entity"`, debug);
+      this.geometry = tryString(args2.geometry, `${this.action} param "geometry"`, debug);
     }
     static quick(entity, geometry) {
       return new TELEPORT_ENTITY_TO_GEOMETRY({ entity, geometry });
@@ -11233,16 +11275,16 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
     }
   }
   class WALK_ENTITY_TO_GEOMETRY extends Action {
-    constructor(args2) {
+    constructor(args2, debug) {
       super();
       __publicField(this, "action");
       __publicField(this, "geometry");
       __publicField(this, "entity");
       __publicField(this, "duration");
       this.action = "WALK_ENTITY_TO_GEOMETRY";
-      this.geometry = breakIfNotString(args2.geometry);
-      this.entity = breakIfNotString(args2.entity);
-      this.duration = breakIfNotNumber(args2.duration);
+      this.geometry = tryString(args2.geometry, `${this.action} param "geometry"`, debug);
+      this.entity = tryString(args2.entity, `${this.action} param "entity"`, debug);
+      this.duration = tryNumber(args2.duration, `${this.action} param "duration"`, debug);
     }
     static quick(entity, geometry, duration) {
       return new WALK_ENTITY_TO_GEOMETRY({ entity, geometry, duration });
@@ -11252,16 +11294,16 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
     }
   }
   class WALK_ENTITY_ALONG_GEOMETRY extends Action {
-    constructor(args2) {
+    constructor(args2, debug) {
       super();
       __publicField(this, "action");
       __publicField(this, "geometry");
       __publicField(this, "entity");
       __publicField(this, "duration");
       this.action = "WALK_ENTITY_ALONG_GEOMETRY";
-      this.geometry = breakIfNotString(args2.geometry);
-      this.entity = breakIfNotString(args2.entity);
-      this.duration = breakIfNotNumber(args2.duration);
+      this.geometry = tryString(args2.geometry, `${this.action} param "geometry"`, debug);
+      this.entity = tryString(args2.entity, `${this.action} param "entity"`, debug);
+      this.duration = tryNumber(args2.duration, `${this.action} param "duration"`, debug);
     }
     static quick(entity, geometry, duration) {
       return new WALK_ENTITY_ALONG_GEOMETRY({ entity, geometry, duration });
@@ -11271,16 +11313,16 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
     }
   }
   class LOOP_ENTITY_ALONG_GEOMETRY extends Action {
-    constructor(args2) {
+    constructor(args2, debug) {
       super();
       __publicField(this, "action");
       __publicField(this, "geometry");
       __publicField(this, "entity");
       __publicField(this, "duration");
       this.action = "LOOP_ENTITY_ALONG_GEOMETRY";
-      this.geometry = breakIfNotString(args2.geometry);
-      this.entity = breakIfNotString(args2.entity);
-      this.duration = breakIfNotNumber(args2.duration);
+      this.geometry = tryString(args2.geometry, `${this.action} param "geometry"`, debug);
+      this.entity = tryString(args2.entity, `${this.action} param "entity"`, debug);
+      this.duration = tryNumber(args2.duration, `${this.action} param "duration"`, debug);
     }
     static quick(entity, geometry, duration) {
       return new LOOP_ENTITY_ALONG_GEOMETRY({ entity, geometry, duration });
@@ -11290,12 +11332,12 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
     }
   }
   class SET_CAMERA_TO_FOLLOW_ENTITY extends Action {
-    constructor(args2) {
+    constructor(args2, debug) {
       super();
       __publicField(this, "action");
       __publicField(this, "entity");
       this.action = "SET_CAMERA_TO_FOLLOW_ENTITY";
-      this.entity = breakIfNotString(args2.entity);
+      this.entity = tryString(args2.entity, `${this.action} param "entity"`, debug);
     }
     static quick(entity) {
       return new SET_CAMERA_TO_FOLLOW_ENTITY({ entity });
@@ -11305,12 +11347,12 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
     }
   }
   class TELEPORT_CAMERA_TO_GEOMETRY extends Action {
-    constructor(args2) {
+    constructor(args2, debug) {
       super();
       __publicField(this, "action");
       __publicField(this, "geometry");
       this.action = "TELEPORT_CAMERA_TO_GEOMETRY";
-      this.geometry = breakIfNotString(args2.geometry);
+      this.geometry = tryString(args2.geometry, `${this.action} param "geometry"`, debug);
     }
     static quick(geometry) {
       return new TELEPORT_CAMERA_TO_GEOMETRY({ geometry });
@@ -11320,14 +11362,14 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
     }
   }
   class PAN_CAMERA_TO_ENTITY extends Action {
-    constructor(args2) {
+    constructor(args2, debug) {
       super();
       __publicField(this, "action");
       __publicField(this, "entity");
       __publicField(this, "duration");
       this.action = "PAN_CAMERA_TO_ENTITY";
-      this.entity = breakIfNotString(args2.entity);
-      this.duration = breakIfNotNumber(args2.duration);
+      this.entity = tryString(args2.entity, `${this.action} param "entity"`, debug);
+      this.duration = tryNumber(args2.duration, `${this.action} param "duration"`, debug);
     }
     static quick(entity, duration) {
       return new PAN_CAMERA_TO_ENTITY({ duration, entity });
@@ -11337,14 +11379,14 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
     }
   }
   class PAN_CAMERA_TO_GEOMETRY extends Action {
-    constructor(args2) {
+    constructor(args2, debug) {
       super();
       __publicField(this, "action");
       __publicField(this, "geometry");
       __publicField(this, "duration");
       this.action = "PAN_CAMERA_TO_GEOMETRY";
-      this.geometry = breakIfNotString(args2.geometry);
-      this.duration = breakIfNotNumber(args2.duration);
+      this.geometry = tryString(args2.geometry, `${this.action} param "geometry"`, debug);
+      this.duration = tryNumber(args2.duration, `${this.action} param "duration"`, debug);
     }
     static quick(geometry, duration) {
       return new PAN_CAMERA_TO_GEOMETRY({ geometry, duration });
@@ -11354,14 +11396,14 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
     }
   }
   class PAN_CAMERA_ALONG_GEOMETRY extends Action {
-    constructor(args2) {
+    constructor(args2, debug) {
       super();
       __publicField(this, "action");
       __publicField(this, "geometry");
       __publicField(this, "duration");
       this.action = "PAN_CAMERA_ALONG_GEOMETRY";
-      this.geometry = breakIfNotString(args2.geometry);
-      this.duration = breakIfNotNumber(args2.duration);
+      this.geometry = tryString(args2.geometry, `${this.action} param "geometry"`, debug);
+      this.duration = tryNumber(args2.duration, `${this.action} param "duration"`, debug);
     }
     static quick(geometry, duration) {
       return new PAN_CAMERA_ALONG_GEOMETRY({ geometry, duration });
@@ -11371,14 +11413,14 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
     }
   }
   class LOOP_CAMERA_ALONG_GEOMETRY extends Action {
-    constructor(args2) {
+    constructor(args2, debug) {
       super();
       __publicField(this, "action");
       __publicField(this, "geometry");
       __publicField(this, "duration");
       this.action = "LOOP_CAMERA_ALONG_GEOMETRY";
-      this.geometry = breakIfNotString(args2.geometry);
-      this.duration = breakIfNotNumber(args2.duration);
+      this.geometry = tryString(args2.geometry, `${this.action} param "geometry"`, debug);
+      this.duration = tryNumber(args2.duration, `${this.action} param "duration"`, debug);
     }
     static quick(geometry, duration) {
       return new LOOP_CAMERA_ALONG_GEOMETRY({ geometry, duration });
@@ -11388,60 +11430,60 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
     }
   }
   class SET_SCREEN_SHAKE extends Action {
-    constructor(args2) {
+    constructor(args2, debug) {
       super();
       __publicField(this, "action");
       __publicField(this, "duration");
       __publicField(this, "frequency");
       __publicField(this, "amplitude");
       this.action = "SET_SCREEN_SHAKE";
-      this.duration = breakIfNotNumber(args2.duration);
-      this.frequency = breakIfNotNumber(args2.frequency);
-      this.amplitude = breakIfNotNumber(args2.amplitude);
+      this.duration = tryNumber(args2.duration, `${this.action} param "duration"`, debug);
+      this.frequency = tryNumber(args2.frequency, `${this.action} param "frequency"`, debug);
+      this.amplitude = tryNumber(args2.amplitude, `${this.action} param "amplitude"`, debug);
     }
     print() {
       return `camera shake -> ${this.frequency}ms ${this.amplitude}px over ${printDuration(this.duration)};`;
     }
   }
   class SCREEN_FADE_OUT extends Action {
-    constructor(args2) {
+    constructor(args2, debug) {
       super();
       __publicField(this, "action");
       __publicField(this, "duration");
       __publicField(this, "color");
       this.action = "SCREEN_FADE_OUT";
-      this.duration = breakIfNotNumber(args2.duration);
-      this.color = breakIfNotString(args2.color);
+      this.duration = tryNumber(args2.duration, `${this.action} param "duration"`, debug);
+      this.color = tryString(args2.color, `${this.action} param "color"`, debug);
     }
     print() {
       return `camera fade out -> ${this.color} over ${printDuration(this.duration)};`;
     }
   }
   class SCREEN_FADE_IN extends Action {
-    constructor(args2) {
+    constructor(args2, debug) {
       super();
       __publicField(this, "action");
       __publicField(this, "duration");
       __publicField(this, "color");
       this.action = "SCREEN_FADE_IN";
-      this.duration = breakIfNotNumber(args2.duration);
-      this.color = breakIfNotString(args2.color);
+      this.duration = tryNumber(args2.duration, `${this.action} param "duration"`, debug);
+      this.color = tryString(args2.color, `${this.action} param "color"`, debug);
     }
     print() {
       return `camera fade in -> ${this.color} over ${printDuration(this.duration)};`;
     }
   }
   class MUTATE_VARIABLE extends Action {
-    constructor(args2) {
+    constructor(args2, debug) {
       super();
       __publicField(this, "action");
       __publicField(this, "variable");
       __publicField(this, "operation");
       __publicField(this, "value");
       this.action = "MUTATE_VARIABLE";
-      this.variable = breakIfNotString(args2.variable);
-      this.operation = breakIfNotString(args2.operation);
-      this.value = breakIfNotNumber(args2.value);
+      this.variable = tryString(args2.variable, `${this.action} param "variable"`, debug);
+      this.operation = tryString(args2.operation, `${this.action} param "operation"`, debug);
+      this.value = tryNumber(args2.value, `${this.action} param "value"`, debug);
     }
     static set(variable, value) {
       return new MUTATE_VARIABLE({ operation: "SET", value, variable });
@@ -11473,16 +11515,16 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
     }
   }
   class MUTATE_VARIABLES extends Action {
-    constructor(args2) {
+    constructor(args2, debug) {
       super();
       __publicField(this, "action");
       __publicField(this, "variable");
       __publicField(this, "operation");
       __publicField(this, "source");
       this.action = "MUTATE_VARIABLES";
-      this.variable = breakIfNotString(args2.variable);
-      this.operation = breakIfNotString(args2.operation);
-      this.source = breakIfNotString(args2.source);
+      this.variable = tryString(args2.variable, `${this.action} param "variable"`, debug);
+      this.operation = tryString(args2.operation, `${this.action} param "operation"`, debug);
+      this.source = tryString(args2.source, `${this.action} param "source"`, debug);
     }
     static set(debug, variable, source) {
       if (variable === source) {
@@ -11514,7 +11556,7 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
     }
   }
   class COPY_VARIABLE extends Action {
-    constructor(args2) {
+    constructor(args2, debug) {
       super();
       __publicField(this, "action");
       __publicField(this, "variable");
@@ -11522,10 +11564,10 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       __publicField(this, "field");
       __publicField(this, "inbound");
       this.action = "COPY_VARIABLE";
-      this.variable = breakIfNotString(args2.variable);
-      this.entity = breakIfNotString(args2.entity);
-      this.field = breakIfNotString(args2.field);
-      this.inbound = breakIfNotBool(args2.inbound);
+      this.variable = tryString(args2.variable, `${this.action} param "variable"`, debug);
+      this.entity = tryString(args2.entity, `${this.action} param "entity"`, debug);
+      this.field = tryString(args2.field, `${this.action} param "field"`, debug);
+      this.inbound = tryBool(args2.inbound, `${this.action} param "inbound"`, debug);
     }
     static intoField(variable, entity, field) {
       return new COPY_VARIABLE({ entity, field, inbound: false, variable });
@@ -11555,36 +11597,40 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
     }
   }
   class SLOT_LOAD extends Action {
-    constructor(args2) {
+    constructor(args2, debug) {
       super();
       __publicField(this, "action");
       __publicField(this, "slot");
       this.action = "SLOT_LOAD";
-      this.slot = breakIfNotNumber(args2.slot);
+      this.slot = tryNumber(args2.slot, `${this.action} param "slot"`, debug);
     }
     print() {
       return `load slot ${this.slot};`;
     }
   }
   class SLOT_ERASE extends Action {
-    constructor(args2) {
+    constructor(args2, debug) {
       super();
       __publicField(this, "action");
       __publicField(this, "slot");
       this.action = "SLOT_ERASE";
-      this.slot = breakIfNotNumber(args2.slot);
+      this.slot = tryNumber(args2.slot, `${this.action} param "slot"`, debug);
     }
     print() {
       return `erase slot ${this.slot};`;
     }
   }
   class SET_CONNECT_SERIAL_DIALOG extends Action {
-    constructor(args2) {
+    constructor(args2, debug) {
       super();
       __publicField(this, "action");
       __publicField(this, "serial_dialog");
       this.action = "SET_CONNECT_SERIAL_DIALOG";
-      this.serial_dialog = breakIfNotString(args2.serial_dialog);
+      this.serial_dialog = tryString(
+        args2.serial_dialog,
+        `${this.action} param "serial_dialog"`,
+        debug
+      );
     }
     print() {
       return `serial_connect = "${this.serial_dialog}";`;
@@ -11592,13 +11638,17 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
   }
   class SHOW_SERIAL_DIALOG extends Action {
     // might be absent on old stuff
-    constructor(args2) {
+    constructor(args2, debug) {
       super();
       __publicField(this, "action");
       __publicField(this, "serial_dialog");
       __publicField(this, "disable_newline");
       this.action = "SHOW_SERIAL_DIALOG";
-      this.serial_dialog = breakIfNotString(args2.serial_dialog);
+      this.serial_dialog = tryString(
+        args2.serial_dialog,
+        `${this.action} param "serial_dialog"`,
+        debug
+      );
       if (args2.disable_newline) {
         this.disable_newline = true;
       }
@@ -11612,8 +11662,8 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
     }
   }
   class SET_MAP_LOOK_SCRIPT extends ActionSetScript {
-    constructor(args2) {
-      super(args2);
+    constructor(args2, debug) {
+      super(args2, debug);
       __publicField(this, "action");
       this.action = "SET_MAP_LOOK_SCRIPT";
     }
@@ -11625,12 +11675,12 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
     }
   }
   class SET_ENTITY_LOOK_SCRIPT extends ActionSetScript {
-    constructor(args2) {
-      super(args2);
+    constructor(args2, debug) {
+      super(args2, debug);
       __publicField(this, "action");
       __publicField(this, "entity");
       this.action = "SET_ENTITY_LOOK_SCRIPT";
-      this.entity = breakIfNotString(args2.entity);
+      this.entity = tryString(args2.entity, `${this.action} param "entity"`, debug);
     }
     static quick(entity, script) {
       return new SET_ENTITY_LOOK_SCRIPT({ entity, script });
@@ -11640,12 +11690,12 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
     }
   }
   class SET_TELEPORT_ENABLED extends Action {
-    constructor(args2) {
+    constructor(args2, debug) {
       super();
       __publicField(this, "action");
       __publicField(this, "bool_value");
       this.action = "SET_TELEPORT_ENABLED";
-      this.bool_value = breakIfNotBool(args2.bool_value);
+      this.bool_value = tryBool(args2.bool_value, `${this.action} param "bool_value"`, debug);
     }
     updateProp(v) {
       this.bool_value = v;
@@ -11660,14 +11710,14 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
     // todo print?
   }
   class SET_BLE_FLAG extends Action {
-    constructor(args2) {
+    constructor(args2, debug) {
       super();
       __publicField(this, "action");
       __publicField(this, "ble_flag");
       __publicField(this, "bool_value");
       this.action = "SET_BLE_FLAG";
-      this.ble_flag = breakIfNotString(args2.ble_flag);
-      this.bool_value = breakIfNotBool(args2.bool_value);
+      this.ble_flag = tryString(args2.ble_flag, `${this.action} param "ble_flag"`, debug);
+      this.bool_value = tryBool(args2.bool_value, `${this.action} param "bool_value"`, debug);
     }
     updateProp(v) {
       this.bool_value = v;
@@ -11681,12 +11731,12 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
     }
   }
   class SET_SERIAL_DIALOG_CONTROL extends ActionSetBool {
-    constructor(args2) {
+    constructor(args2, debug) {
       super();
       __publicField(this, "action");
       __publicField(this, "bool_value");
       this.action = "SET_SERIAL_DIALOG_CONTROL";
-      this.bool_value = breakIfNotBool(args2.bool_value);
+      this.bool_value = tryBool(args2.bool_value, `${this.action} param "bool_value"`, debug);
     }
     updateProp(v) {
       this.bool_value = v;
@@ -11706,15 +11756,15 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
     }
   }
   class REGISTER_SERIAL_DIALOG_COMMAND extends Action {
-    constructor(args2) {
+    constructor(args2, debug) {
       super();
       __publicField(this, "action");
       __publicField(this, "command");
       __publicField(this, "script");
       __publicField(this, "is_fail");
       this.action = "REGISTER_SERIAL_DIALOG_COMMAND";
-      this.command = breakIfNotString(args2.command);
-      this.script = breakIfNotString(args2.script);
+      this.command = tryString(args2.command, `${this.action} param "command"`, debug);
+      this.script = tryString(args2.script, `${this.action} param "script"`, debug);
       if (args2.is_fail) this.is_fail = true;
     }
     getScript() {
@@ -11728,16 +11778,16 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
     }
   }
   class REGISTER_SERIAL_DIALOG_COMMAND_ARGUMENT extends Action {
-    constructor(args2) {
+    constructor(args2, debug) {
       super();
       __publicField(this, "action");
       __publicField(this, "command");
       __publicField(this, "script");
       __publicField(this, "argument");
       this.action = "REGISTER_SERIAL_DIALOG_COMMAND_ARGUMENT";
-      this.command = breakIfNotString(args2.command);
-      this.script = breakIfNotString(args2.script);
-      this.argument = breakIfNotString(args2.argument);
+      this.command = tryString(args2.command, `${this.action} param "command"`, debug);
+      this.script = tryString(args2.script, `${this.action} param "script"`, debug);
+      this.argument = tryString(args2.argument, `${this.action} param "argument"`, debug);
     }
     getScript() {
       return this.script;
@@ -11750,15 +11800,15 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
     }
   }
   class UNREGISTER_SERIAL_DIALOG_COMMAND extends Action {
-    constructor(args2) {
+    constructor(args2, debug) {
       super();
       __publicField(this, "action");
       __publicField(this, "command");
       __publicField(this, "is_fail");
       this.action = "UNREGISTER_SERIAL_DIALOG_COMMAND";
-      this.command = breakIfNotString(args2.command);
+      this.command = tryString(args2.command, `${this.action} param "command"`, debug);
       if (args2.is_fail !== void 0) {
-        this.is_fail = breakIfNotBool(args2.is_fail);
+        this.is_fail = tryBool(args2.is_fail, `${this.action} param "is_fail"`, debug);
       }
     }
     print() {
@@ -11769,28 +11819,32 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
     }
   }
   class UNREGISTER_SERIAL_DIALOG_COMMAND_ARGUMENT extends Action {
-    constructor(args2) {
+    constructor(args2, debug) {
       super();
       __publicField(this, "action");
       __publicField(this, "command");
       __publicField(this, "argument");
       this.action = "UNREGISTER_SERIAL_DIALOG_COMMAND_ARGUMENT";
-      this.command = breakIfNotString(args2.command);
-      this.argument = breakIfNotString(args2.argument);
+      this.command = tryString(args2.command, `${this.action} param "command"`, debug);
+      this.argument = tryString(args2.argument, `${this.action} param "argument"`, debug);
     }
     print() {
       return `delete command "${this.command}" + "${this.argument}";`;
     }
   }
   class SET_ENTITY_MOVEMENT_RELATIVE extends Action {
-    constructor(args2) {
+    constructor(args2, debug) {
       super();
       __publicField(this, "action");
       __publicField(this, "relative_direction");
       __publicField(this, "entity");
       this.action = "SET_ENTITY_MOVEMENT_RELATIVE";
-      this.relative_direction = breakIfNotNumber(args2.relative_direction);
-      this.entity = breakIfNotString(args2.entity);
+      this.relative_direction = tryNumber(
+        args2.relative_direction,
+        `${this.action} param "relative_direction"`,
+        debug
+      );
+      this.entity = tryString(args2.entity, `${this.action} param "entity"`, debug);
     }
     static quick(entity, relative_direction) {
       return new SET_ENTITY_MOVEMENT_RELATIVE({ entity, relative_direction });
@@ -11820,12 +11874,12 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
     }
   }
   class SET_LIGHTS_CONTROL extends ActionSetBool {
-    constructor(args2) {
+    constructor(args2, debug) {
       super();
       __publicField(this, "action");
       __publicField(this, "enabled");
       this.action = "SET_LIGHTS_CONTROL";
-      this.enabled = breakIfNotBool(args2.enabled);
+      this.enabled = tryBool(args2.enabled, `${this.action} param "enabled"`, debug);
     }
     updateProp(v) {
       this.enabled = v;
@@ -11845,14 +11899,14 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
     }
   }
   class SET_LIGHTS_STATE extends ActionSetBool {
-    constructor(args2) {
+    constructor(args2, debug) {
       super();
       __publicField(this, "action");
       __publicField(this, "lights");
       __publicField(this, "enabled");
       this.action = "SET_LIGHTS_STATE";
-      this.enabled = breakIfNotBool(args2.enabled);
-      this.lights = breakIfNotStringOrStringArray(args2.lights);
+      this.enabled = tryBool(args2.enabled, `${this.action} param "enabled"`, debug);
+      this.lights = tryStringOrStringArray(args2.lights, `${this.action} param "lights"`, debug);
     }
     updateProp(v) {
       this.enabled = v;
@@ -11872,12 +11926,16 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
     }
   }
   class GOTO_ACTION_INDEX extends Action {
-    constructor(args2) {
+    constructor(args2, debug) {
       super();
       __publicField(this, "action");
       __publicField(this, "action_index");
       this.action = "GOTO_ACTION_INDEX";
-      this.action_index = breakIfNotStringOrNumber(args2.action_index);
+      this.action_index = tryStringOrNumber(
+        args2.action_index,
+        `${this.action} param "action_index"`,
+        debug
+      );
     }
     static quick(action_index) {
       return new GOTO_ACTION_INDEX({ action_index });
@@ -11896,16 +11954,16 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
     }
   }
   class SET_SCRIPT_PAUSE extends Action {
-    constructor(args2) {
+    constructor(args2, debug) {
       super();
       __publicField(this, "action");
       __publicField(this, "entity");
       __publicField(this, "script_slot");
       __publicField(this, "bool_value");
       this.action = "SET_SCRIPT_PAUSE";
-      this.entity = breakIfNotString(args2.entity);
-      this.script_slot = breakIfNotString(args2.script_slot);
-      this.bool_value = breakIfNotBool(args2.bool_value);
+      this.entity = tryString(args2.entity, `${this.action} param "entity"`, debug);
+      this.script_slot = tryString(args2.script_slot, `${this.action} param "script_slot"`, debug);
+      this.bool_value = tryBool(args2.bool_value, `${this.action} param "bool_value"`, debug);
     }
     updateProp(v) {
       this.bool_value = v;
@@ -11922,40 +11980,40 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
     }
   }
   class REGISTER_SERIAL_DIALOG_COMMAND_ALIAS extends Action {
-    constructor(args2) {
+    constructor(args2, debug) {
       super();
       __publicField(this, "action");
       __publicField(this, "command");
       __publicField(this, "alias");
       this.action = "REGISTER_SERIAL_DIALOG_COMMAND_ALIAS";
-      this.command = breakIfNotString(args2.command);
-      this.alias = breakIfNotString(args2.alias);
+      this.command = tryString(args2.command, `${this.action} param "command"`, debug);
+      this.alias = tryString(args2.alias, `${this.action} param "alias"`, debug);
     }
     print() {
       return `alias "${this.alias}" = "${this.command}";`;
     }
   }
   class UNREGISTER_SERIAL_DIALOG_COMMAND_ALIAS extends Action {
-    constructor(args2) {
+    constructor(args2, debug) {
       super();
       __publicField(this, "action");
       __publicField(this, "alias");
       this.action = "UNREGISTER_SERIAL_DIALOG_COMMAND_ALIAS";
-      this.alias = breakIfNotString(args2.alias);
+      this.alias = tryString(args2.alias, `${this.action} param "alias"`, debug);
     }
     print() {
       return `delete alias "${this.alias}";`;
     }
   }
   class SET_SERIAL_DIALOG_COMMAND_VISIBILITY extends Action {
-    constructor(args2) {
+    constructor(args2, debug) {
       super();
       __publicField(this, "action");
       __publicField(this, "command");
       __publicField(this, "is_visible");
       this.action = "SET_SERIAL_DIALOG_COMMAND_VISIBILITY";
-      this.command = breakIfNotString(args2.command);
-      this.is_visible = breakIfNotBool(args2.is_visible);
+      this.command = tryString(args2.command, `${this.action} param "command"`, debug);
+      this.is_visible = tryBool(args2.is_visible, `${this.action} param "is_visible"`, debug);
     }
     updateProp(v) {
       this.is_visible = v;
@@ -11972,22 +12030,34 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
     }
   }
   class CHECK_ENTITY_NAME extends ActionStringCheckable {
-    constructor(args2) {
+    constructor(args2, debug) {
       super();
       __publicField(this, "action");
       __publicField(this, "entity");
       __publicField(this, "string");
       this.action = "CHECK_ENTITY_NAME";
       if (args2.success_script) {
-        this.success_script = breakIfNotString(args2.success_script);
+        this.success_script = tryString(
+          args2.success_script,
+          `${this.action} param "success_script"`,
+          debug
+        );
       } else if (args2.label) {
-        this.label = breakIfNotString(args2.label);
+        this.label = tryString(args2.label, `${this.action} param "label"`, debug);
       } else if (args2.jump_index) {
-        this.jump_index = breakIfNotStringOrNumber(args2.jump_index);
+        this.jump_index = tryStringOrNumber(
+          args2.jump_index,
+          `${this.action} param "jump_index"`,
+          debug
+        );
       }
-      this.entity = breakIfNotString(args2.entity);
-      this.string = breakIfNotString(args2.string);
-      this.expected_bool = breakIfNotBool(args2.expected_bool);
+      this.entity = tryString(args2.entity, `${this.action} param "entity"`, debug);
+      this.string = tryString(args2.string, `${this.action} param "string"`, debug);
+      this.expected_bool = tryBool(
+        args2.expected_bool,
+        `${this.action} param "expected_bool"`,
+        debug
+      );
     }
     updateProp(value) {
       this.string = value;
@@ -12004,22 +12074,34 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
     }
   }
   class CHECK_ENTITY_X extends ActionNumberCheckableEquality {
-    constructor(args2) {
+    constructor(args2, debug) {
       super();
       __publicField(this, "action");
       __publicField(this, "entity");
       __publicField(this, "expected_u2");
       this.action = "CHECK_ENTITY_X";
       if (args2.success_script) {
-        this.success_script = breakIfNotString(args2.success_script);
+        this.success_script = tryString(
+          args2.success_script,
+          `${this.action} param "success_script"`,
+          debug
+        );
       } else if (args2.label) {
-        this.label = breakIfNotString(args2.label);
+        this.label = tryString(args2.label, `${this.action} param "label"`, debug);
       } else if (args2.jump_index) {
-        this.jump_index = breakIfNotStringOrNumber(args2.jump_index);
+        this.jump_index = tryStringOrNumber(
+          args2.jump_index,
+          `${this.action} param "jump_index"`,
+          debug
+        );
       }
-      this.entity = breakIfNotString(args2.entity);
-      this.expected_u2 = breakIfNotNumber(args2.expected_u2);
-      this.expected_bool = breakIfNotBool(args2.expected_bool);
+      this.entity = tryString(args2.entity, `${this.action} param "entity"`, debug);
+      this.expected_u2 = tryNumber(args2.expected_u2, `${this.action} param "expected_u2"`, debug);
+      this.expected_bool = tryBool(
+        args2.expected_bool,
+        `${this.action} param "expected_bool"`,
+        debug
+      );
     }
     updateProp(value) {
       this.expected_u2 = value;
@@ -12040,22 +12122,34 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
     }
   }
   class CHECK_ENTITY_Y extends ActionNumberCheckableEquality {
-    constructor(args2) {
+    constructor(args2, debug) {
       super();
       __publicField(this, "action");
       __publicField(this, "entity");
       __publicField(this, "expected_u2");
       this.action = "CHECK_ENTITY_Y";
       if (args2.success_script) {
-        this.success_script = breakIfNotString(args2.success_script);
+        this.success_script = tryString(
+          args2.success_script,
+          `${this.action} param "success_script"`,
+          debug
+        );
       } else if (args2.label) {
-        this.label = breakIfNotString(args2.label);
+        this.label = tryString(args2.label, `${this.action} param "label"`, debug);
       } else if (args2.jump_index) {
-        this.jump_index = breakIfNotStringOrNumber(args2.jump_index);
+        this.jump_index = tryStringOrNumber(
+          args2.jump_index,
+          `${this.action} param "jump_index"`,
+          debug
+        );
       }
-      this.entity = breakIfNotString(args2.entity);
-      this.expected_u2 = breakIfNotNumber(args2.expected_u2);
-      this.expected_bool = breakIfNotBool(args2.expected_bool);
+      this.entity = tryString(args2.entity, `${this.action} param "entity"`, debug);
+      this.expected_u2 = tryNumber(args2.expected_u2, `${this.action} param "expected_u2"`, debug);
+      this.expected_bool = tryBool(
+        args2.expected_bool,
+        `${this.action} param "expected_bool"`,
+        debug
+      );
     }
     updateProp(value) {
       this.expected_u2 = value;
@@ -12076,22 +12170,38 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
     }
   }
   class CHECK_ENTITY_INTERACT_SCRIPT extends ActionStringCheckable {
-    constructor(args2) {
+    constructor(args2, debug) {
       super();
       __publicField(this, "action");
       __publicField(this, "entity");
       __publicField(this, "expected_script");
       this.action = "CHECK_ENTITY_INTERACT_SCRIPT";
       if (args2.success_script) {
-        this.success_script = breakIfNotString(args2.success_script);
+        this.success_script = tryString(
+          args2.success_script,
+          `${this.action} param "success_script"`,
+          debug
+        );
       } else if (args2.label) {
-        this.label = breakIfNotString(args2.label);
+        this.label = tryString(args2.label, `${this.action} param "label"`, debug);
       } else if (args2.jump_index) {
-        this.jump_index = breakIfNotStringOrNumber(args2.jump_index);
+        this.jump_index = tryStringOrNumber(
+          args2.jump_index,
+          `${this.action} param "jump_index"`,
+          debug
+        );
       }
-      this.entity = breakIfNotString(args2.entity);
-      this.expected_script = breakIfNotString(args2.expected_script);
-      this.expected_bool = breakIfNotBool(args2.expected_bool);
+      this.entity = tryString(args2.entity, `${this.action} param "entity"`, debug);
+      this.expected_script = tryString(
+        args2.expected_script,
+        `${this.action} param "expected_script"`,
+        debug
+      );
+      this.expected_bool = tryBool(
+        args2.expected_bool,
+        `${this.action} param "expected_bool"`,
+        debug
+      );
     }
     updateProp(value) {
       this.expected_script = value;
@@ -12108,22 +12218,38 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
     }
   }
   class CHECK_ENTITY_TICK_SCRIPT extends ActionStringCheckable {
-    constructor(args2) {
+    constructor(args2, debug) {
       super();
       __publicField(this, "action");
       __publicField(this, "entity");
       __publicField(this, "expected_script");
       this.action = "CHECK_ENTITY_TICK_SCRIPT";
       if (args2.success_script) {
-        this.success_script = breakIfNotString(args2.success_script);
+        this.success_script = tryString(
+          args2.success_script,
+          `${this.action} param "success_script"`,
+          debug
+        );
       } else if (args2.label) {
-        this.label = breakIfNotString(args2.label);
+        this.label = tryString(args2.label, `${this.action} param "label"`, debug);
       } else if (args2.jump_index) {
-        this.jump_index = breakIfNotStringOrNumber(args2.jump_index);
+        this.jump_index = tryStringOrNumber(
+          args2.jump_index,
+          `${this.action} param "jump_index"`,
+          debug
+        );
       }
-      this.entity = breakIfNotString(args2.entity);
-      this.expected_script = breakIfNotString(args2.expected_script);
-      this.expected_bool = breakIfNotBool(args2.expected_bool);
+      this.entity = tryString(args2.entity, `${this.action} param "entity"`, debug);
+      this.expected_script = tryString(
+        args2.expected_script,
+        `${this.action} param "expected_script"`,
+        debug
+      );
+      this.expected_bool = tryBool(
+        args2.expected_bool,
+        `${this.action} param "expected_bool"`,
+        debug
+      );
     }
     updateProp(value) {
       this.expected_script = value;
@@ -12140,22 +12266,38 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
     }
   }
   class CHECK_ENTITY_LOOK_SCRIPT extends ActionStringCheckable {
-    constructor(args2) {
+    constructor(args2, debug) {
       super();
       __publicField(this, "action");
       __publicField(this, "entity");
       __publicField(this, "expected_script");
       this.action = "CHECK_ENTITY_LOOK_SCRIPT";
       if (args2.success_script) {
-        this.success_script = breakIfNotString(args2.success_script);
+        this.success_script = tryString(
+          args2.success_script,
+          `${this.action} param "success_script"`,
+          debug
+        );
       } else if (args2.label) {
-        this.label = breakIfNotString(args2.label);
+        this.label = tryString(args2.label, `${this.action} param "label"`, debug);
       } else if (args2.jump_index) {
-        this.jump_index = breakIfNotStringOrNumber(args2.jump_index);
+        this.jump_index = tryStringOrNumber(
+          args2.jump_index,
+          `${this.action} param "jump_index"`,
+          debug
+        );
       }
-      this.entity = breakIfNotString(args2.entity);
-      this.expected_script = breakIfNotString(args2.expected_script);
-      this.expected_bool = breakIfNotBool(args2.expected_bool);
+      this.entity = tryString(args2.entity, `${this.action} param "entity"`, debug);
+      this.expected_script = tryString(
+        args2.expected_script,
+        `${this.action} param "expected_script"`,
+        debug
+      );
+      this.expected_bool = tryBool(
+        args2.expected_bool,
+        `${this.action} param "expected_bool"`,
+        debug
+      );
     }
     updateProp(value) {
       this.expected_script = value;
@@ -12172,22 +12314,34 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
     }
   }
   class CHECK_ENTITY_TYPE extends ActionStringCheckable {
-    constructor(args2) {
+    constructor(args2, debug) {
       super();
       __publicField(this, "action");
       __publicField(this, "entity");
       __publicField(this, "entity_type");
       this.action = "CHECK_ENTITY_TYPE";
       if (args2.success_script) {
-        this.success_script = breakIfNotString(args2.success_script);
+        this.success_script = tryString(
+          args2.success_script,
+          `${this.action} param "success_script"`,
+          debug
+        );
       } else if (args2.label) {
-        this.label = breakIfNotString(args2.label);
+        this.label = tryString(args2.label, `${this.action} param "label"`, debug);
       } else if (args2.jump_index) {
-        this.jump_index = breakIfNotStringOrNumber(args2.jump_index);
+        this.jump_index = tryStringOrNumber(
+          args2.jump_index,
+          `${this.action} param "jump_index"`,
+          debug
+        );
       }
-      this.entity = breakIfNotString(args2.entity);
-      this.entity_type = breakIfNotString(args2.entity_type);
-      this.expected_bool = breakIfNotBool(args2.expected_bool);
+      this.entity = tryString(args2.entity, `${this.action} param "entity"`, debug);
+      this.entity_type = tryString(args2.entity_type, `${this.action} param "entity_type"`, debug);
+      this.expected_bool = tryBool(
+        args2.expected_bool,
+        `${this.action} param "expected_bool"`,
+        debug
+      );
     }
     updateProp(value) {
       this.entity_type = value;
@@ -12204,22 +12358,34 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
     }
   }
   class CHECK_ENTITY_PRIMARY_ID extends ActionNumberCheckableEquality {
-    constructor(args2) {
+    constructor(args2, debug) {
       super();
       __publicField(this, "action");
       __publicField(this, "entity");
       __publicField(this, "expected_u2");
       this.action = "CHECK_ENTITY_PRIMARY_ID";
       if (args2.success_script) {
-        this.success_script = breakIfNotString(args2.success_script);
+        this.success_script = tryString(
+          args2.success_script,
+          `${this.action} param "success_script"`,
+          debug
+        );
       } else if (args2.label) {
-        this.label = breakIfNotString(args2.label);
+        this.label = tryString(args2.label, `${this.action} param "label"`, debug);
       } else if (args2.jump_index) {
-        this.jump_index = breakIfNotStringOrNumber(args2.jump_index);
+        this.jump_index = tryStringOrNumber(
+          args2.jump_index,
+          `${this.action} param "jump_index"`,
+          debug
+        );
       }
-      this.entity = breakIfNotString(args2.entity);
-      this.expected_u2 = breakIfNotNumber(args2.expected_u2);
-      this.expected_bool = breakIfNotBool(args2.expected_bool);
+      this.entity = tryString(args2.entity, `${this.action} param "entity"`, debug);
+      this.expected_u2 = tryNumber(args2.expected_u2, `${this.action} param "expected_u2"`, debug);
+      this.expected_bool = tryBool(
+        args2.expected_bool,
+        `${this.action} param "expected_bool"`,
+        debug
+      );
     }
     updateProp(value) {
       this.expected_u2 = value;
@@ -12240,22 +12406,34 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
     }
   }
   class CHECK_ENTITY_SECONDARY_ID extends ActionNumberCheckableEquality {
-    constructor(args2) {
+    constructor(args2, debug) {
       super();
       __publicField(this, "action");
       __publicField(this, "entity");
       __publicField(this, "expected_u2");
       this.action = "CHECK_ENTITY_SECONDARY_ID";
       if (args2.success_script) {
-        this.success_script = breakIfNotString(args2.success_script);
+        this.success_script = tryString(
+          args2.success_script,
+          `${this.action} param "success_script"`,
+          debug
+        );
       } else if (args2.label) {
-        this.label = breakIfNotString(args2.label);
+        this.label = tryString(args2.label, `${this.action} param "label"`, debug);
       } else if (args2.jump_index) {
-        this.jump_index = breakIfNotStringOrNumber(args2.jump_index);
+        this.jump_index = tryStringOrNumber(
+          args2.jump_index,
+          `${this.action} param "jump_index"`,
+          debug
+        );
       }
-      this.entity = breakIfNotString(args2.entity);
-      this.expected_u2 = breakIfNotNumber(args2.expected_u2);
-      this.expected_bool = breakIfNotBool(args2.expected_bool);
+      this.entity = tryString(args2.entity, `${this.action} param "entity"`, debug);
+      this.expected_u2 = tryNumber(args2.expected_u2, `${this.action} param "expected_u2"`, debug);
+      this.expected_bool = tryBool(
+        args2.expected_bool,
+        `${this.action} param "expected_bool"`,
+        debug
+      );
     }
     updateProp(value) {
       this.expected_u2 = value;
@@ -12276,22 +12454,38 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
     }
   }
   class CHECK_ENTITY_PRIMARY_ID_TYPE extends ActionNumberCheckableEquality {
-    constructor(args2) {
+    constructor(args2, debug) {
       super();
       __publicField(this, "action");
       __publicField(this, "entity");
       __publicField(this, "expected_byte");
       this.action = "CHECK_ENTITY_PRIMARY_ID_TYPE";
       if (args2.success_script) {
-        this.success_script = breakIfNotString(args2.success_script);
+        this.success_script = tryString(
+          args2.success_script,
+          `${this.action} param "success_script"`,
+          debug
+        );
       } else if (args2.label) {
-        this.label = breakIfNotString(args2.label);
+        this.label = tryString(args2.label, `${this.action} param "label"`, debug);
       } else if (args2.jump_index) {
-        this.jump_index = breakIfNotStringOrNumber(args2.jump_index);
+        this.jump_index = tryStringOrNumber(
+          args2.jump_index,
+          `${this.action} param "jump_index"`,
+          debug
+        );
       }
-      this.entity = breakIfNotString(args2.entity);
-      this.expected_byte = breakIfNotNumber(args2.expected_byte);
-      this.expected_bool = breakIfNotBool(args2.expected_bool);
+      this.entity = tryString(args2.entity, `${this.action} param "entity"`, debug);
+      this.expected_byte = tryNumber(
+        args2.expected_byte,
+        `${this.action} param "expected_byte"`,
+        debug
+      );
+      this.expected_bool = tryBool(
+        args2.expected_bool,
+        `${this.action} param "expected_bool"`,
+        debug
+      );
     }
     updateProp(value) {
       this.expected_byte = value;
@@ -12312,22 +12506,38 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
     }
   }
   class CHECK_ENTITY_CURRENT_ANIMATION extends ActionNumberCheckableEquality {
-    constructor(args2) {
+    constructor(args2, debug) {
       super();
       __publicField(this, "action");
       __publicField(this, "entity");
       __publicField(this, "expected_byte");
       this.action = "CHECK_ENTITY_CURRENT_ANIMATION";
       if (args2.success_script) {
-        this.success_script = breakIfNotString(args2.success_script);
+        this.success_script = tryString(
+          args2.success_script,
+          `${this.action} param "success_script"`,
+          debug
+        );
       } else if (args2.label) {
-        this.label = breakIfNotString(args2.label);
+        this.label = tryString(args2.label, `${this.action} param "label"`, debug);
       } else if (args2.jump_index) {
-        this.jump_index = breakIfNotStringOrNumber(args2.jump_index);
+        this.jump_index = tryStringOrNumber(
+          args2.jump_index,
+          `${this.action} param "jump_index"`,
+          debug
+        );
       }
-      this.entity = breakIfNotString(args2.entity);
-      this.expected_byte = breakIfNotNumber(args2.expected_byte);
-      this.expected_bool = breakIfNotBool(args2.expected_bool);
+      this.entity = tryString(args2.entity, `${this.action} param "entity"`, debug);
+      this.expected_byte = tryNumber(
+        args2.expected_byte,
+        `${this.action} param "expected_byte"`,
+        debug
+      );
+      this.expected_bool = tryBool(
+        args2.expected_bool,
+        `${this.action} param "expected_bool"`,
+        debug
+      );
     }
     updateProp(value) {
       this.expected_byte = value;
@@ -12348,7 +12558,7 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
     }
   }
   class CHECK_ENTITY_CURRENT_FRAME extends ActionNumberCheckableEquality {
-    constructor(args2) {
+    constructor(args2, debug) {
       super();
       __publicField(this, "action");
       __publicField(this, "entity");
@@ -12356,15 +12566,31 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       __publicField(this, "expected_bool");
       this.action = "CHECK_ENTITY_CURRENT_FRAME";
       if (args2.success_script) {
-        this.success_script = breakIfNotString(args2.success_script);
+        this.success_script = tryString(
+          args2.success_script,
+          `${this.action} param "success_script"`,
+          debug
+        );
       } else if (args2.label) {
-        this.label = breakIfNotString(args2.label);
+        this.label = tryString(args2.label, `${this.action} param "label"`, debug);
       } else if (args2.jump_index) {
-        this.jump_index = breakIfNotStringOrNumber(args2.jump_index);
+        this.jump_index = tryStringOrNumber(
+          args2.jump_index,
+          `${this.action} param "jump_index"`,
+          debug
+        );
       }
-      this.entity = breakIfNotString(args2.entity);
-      this.expected_byte = breakIfNotNumber(args2.expected_byte);
-      this.expected_bool = breakIfNotBool(args2.expected_bool);
+      this.entity = tryString(args2.entity, `${this.action} param "entity"`, debug);
+      this.expected_byte = tryNumber(
+        args2.expected_byte,
+        `${this.action} param "expected_byte"`,
+        debug
+      );
+      this.expected_bool = tryBool(
+        args2.expected_bool,
+        `${this.action} param "expected_bool"`,
+        debug
+      );
     }
     updateProp(value) {
       this.expected_byte = value;
@@ -12386,22 +12612,34 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
   }
   class CHECK_ENTITY_DIRECTION extends ActionStringCheckable {
     // north, south, east, west
-    constructor(args2) {
+    constructor(args2, debug) {
       super();
       __publicField(this, "action");
       __publicField(this, "entity");
       __publicField(this, "direction");
       this.action = "CHECK_ENTITY_DIRECTION";
       if (args2.success_script) {
-        this.success_script = breakIfNotString(args2.success_script);
+        this.success_script = tryString(
+          args2.success_script,
+          `${this.action} param "success_script"`,
+          debug
+        );
       } else if (args2.label) {
-        this.label = breakIfNotString(args2.label);
+        this.label = tryString(args2.label, `${this.action} param "label"`, debug);
       } else if (args2.jump_index) {
-        this.jump_index = breakIfNotStringOrNumber(args2.jump_index);
+        this.jump_index = tryStringOrNumber(
+          args2.jump_index,
+          `${this.action} param "jump_index"`,
+          debug
+        );
       }
-      this.entity = breakIfNotString(args2.entity);
-      this.direction = breakIfNotString(args2.direction);
-      this.expected_bool = breakIfNotBool(args2.expected_bool);
+      this.entity = tryString(args2.entity, `${this.action} param "entity"`, debug);
+      this.direction = tryString(args2.direction, `${this.action} param "direction"`, debug);
+      this.expected_bool = tryBool(
+        args2.expected_bool,
+        `${this.action} param "expected_bool"`,
+        debug
+      );
     }
     updateProp(value) {
       this.direction = value;
@@ -12418,20 +12656,32 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
     }
   }
   class CHECK_ENTITY_GLITCHED extends ActionBoolGetable {
-    constructor(args2) {
+    constructor(args2, debug) {
       super();
       __publicField(this, "action");
       __publicField(this, "entity");
       this.action = "CHECK_ENTITY_GLITCHED";
       if (args2.success_script) {
-        this.success_script = breakIfNotString(args2.success_script);
+        this.success_script = tryString(
+          args2.success_script,
+          `${this.action} param "success_script"`,
+          debug
+        );
       } else if (args2.label) {
-        this.label = breakIfNotString(args2.label);
+        this.label = tryString(args2.label, `${this.action} param "label"`, debug);
       } else if (args2.jump_index) {
-        this.jump_index = breakIfNotStringOrNumber(args2.jump_index);
+        this.jump_index = tryStringOrNumber(
+          args2.jump_index,
+          `${this.action} param "jump_index"`,
+          debug
+        );
       }
-      this.entity = breakIfNotString(args2.entity);
-      this.expected_bool = breakIfNotBool(args2.expected_bool);
+      this.entity = tryString(args2.entity, `${this.action} param "entity"`, debug);
+      this.expected_bool = tryBool(
+        args2.expected_bool,
+        `${this.action} param "expected_bool"`,
+        debug
+      );
     }
     static quick(entity, provided_bool) {
       const expected_bool = provided_bool === void 0 ? true : provided_bool;
@@ -12442,22 +12692,34 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
     }
   }
   class CHECK_ENTITY_PATH extends ActionStringCheckable {
-    constructor(args2) {
+    constructor(args2, debug) {
       super();
       __publicField(this, "action");
       __publicField(this, "geometry");
       __publicField(this, "entity");
       this.action = "CHECK_ENTITY_PATH";
       if (args2.success_script) {
-        this.success_script = breakIfNotString(args2.success_script);
+        this.success_script = tryString(
+          args2.success_script,
+          `${this.action} param "success_script"`,
+          debug
+        );
       } else if (args2.label) {
-        this.label = breakIfNotString(args2.label);
+        this.label = tryString(args2.label, `${this.action} param "label"`, debug);
       } else if (args2.jump_index) {
-        this.jump_index = breakIfNotStringOrNumber(args2.jump_index);
+        this.jump_index = tryStringOrNumber(
+          args2.jump_index,
+          `${this.action} param "jump_index"`,
+          debug
+        );
       }
-      this.entity = breakIfNotString(args2.entity);
-      this.geometry = breakIfNotString(args2.geometry);
-      this.expected_bool = breakIfNotBool(args2.expected_bool);
+      this.entity = tryString(args2.entity, `${this.action} param "entity"`, debug);
+      this.geometry = tryString(args2.geometry, `${this.action} param "geometry"`, debug);
+      this.expected_bool = tryBool(
+        args2.expected_bool,
+        `${this.action} param "expected_bool"`,
+        debug
+      );
     }
     updateProp(value) {
       this.geometry = value;
@@ -12474,20 +12736,32 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
     }
   }
   class CHECK_SAVE_FLAG extends ActionBoolGetable {
-    constructor(args2) {
+    constructor(args2, debug) {
       super();
       __publicField(this, "action");
       __publicField(this, "save_flag");
       this.action = "CHECK_SAVE_FLAG";
       if (args2.success_script) {
-        this.success_script = breakIfNotString(args2.success_script);
+        this.success_script = tryString(
+          args2.success_script,
+          `${this.action} param "success_script"`,
+          debug
+        );
       } else if (args2.label) {
-        this.label = breakIfNotString(args2.label);
+        this.label = tryString(args2.label, `${this.action} param "label"`, debug);
       } else if (args2.jump_index) {
-        this.jump_index = breakIfNotStringOrNumber(args2.jump_index);
+        this.jump_index = tryStringOrNumber(
+          args2.jump_index,
+          `${this.action} param "jump_index"`,
+          debug
+        );
       }
-      this.save_flag = breakIfNotString(args2.save_flag);
-      this.expected_bool = breakIfNotBool(args2.expected_bool);
+      this.save_flag = tryString(args2.save_flag, `${this.action} param "save_flag"`, debug);
+      this.expected_bool = tryBool(
+        args2.expected_bool,
+        `${this.action} param "expected_bool"`,
+        debug
+      );
     }
     static quick(save_flag, provided_bool, provided_label) {
       const expected_bool = provided_bool === void 0 ? true : provided_bool;
@@ -12500,22 +12774,34 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
     }
   }
   class CHECK_IF_ENTITY_IS_IN_GEOMETRY extends ActionBoolGetable {
-    constructor(args2) {
+    constructor(args2, debug) {
       super();
       __publicField(this, "action");
       __publicField(this, "geometry");
       __publicField(this, "entity");
       this.action = "CHECK_IF_ENTITY_IS_IN_GEOMETRY";
       if (args2.success_script) {
-        this.success_script = breakIfNotString(args2.success_script);
+        this.success_script = tryString(
+          args2.success_script,
+          `${this.action} param "success_script"`,
+          debug
+        );
       } else if (args2.label) {
-        this.label = breakIfNotString(args2.label);
+        this.label = tryString(args2.label, `${this.action} param "label"`, debug);
       } else if (args2.jump_index) {
-        this.jump_index = breakIfNotStringOrNumber(args2.jump_index);
+        this.jump_index = tryStringOrNumber(
+          args2.jump_index,
+          `${this.action} param "jump_index"`,
+          debug
+        );
       }
-      this.geometry = breakIfNotString(args2.geometry);
-      this.entity = breakIfNotString(args2.entity);
-      this.expected_bool = breakIfNotBool(args2.expected_bool);
+      this.geometry = tryString(args2.geometry, `${this.action} param "geometry"`, debug);
+      this.entity = tryString(args2.entity, `${this.action} param "entity"`, debug);
+      this.expected_bool = tryBool(
+        args2.expected_bool,
+        `${this.action} param "expected_bool"`,
+        debug
+      );
     }
     static quick(entity, geometry, provided_bool) {
       const expected_bool = provided_bool === void 0 ? true : provided_bool;
@@ -12530,20 +12816,32 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
     }
   }
   class CHECK_FOR_BUTTON_PRESS extends ActionBoolGetable {
-    constructor(args2) {
+    constructor(args2, debug) {
       super();
       __publicField(this, "action");
       __publicField(this, "button_id");
       this.action = "CHECK_FOR_BUTTON_PRESS";
       if (args2.success_script) {
-        this.success_script = breakIfNotString(args2.success_script);
+        this.success_script = tryString(
+          args2.success_script,
+          `${this.action} param "success_script"`,
+          debug
+        );
       } else if (args2.label) {
-        this.label = breakIfNotString(args2.label);
+        this.label = tryString(args2.label, `${this.action} param "label"`, debug);
       } else if (args2.jump_index) {
-        this.jump_index = breakIfNotStringOrNumber(args2.jump_index);
+        this.jump_index = tryStringOrNumber(
+          args2.jump_index,
+          `${this.action} param "jump_index"`,
+          debug
+        );
       }
-      this.button_id = breakIfNotString(args2.button_id);
-      this.expected_bool = breakIfNotBool(args2.expected_bool);
+      this.button_id = tryString(args2.button_id, `${this.action} param "button_id"`, debug);
+      this.expected_bool = tryBool(
+        args2.expected_bool,
+        `${this.action} param "expected_bool"`,
+        debug
+      );
     }
     static quick(button_id, provided_bool) {
       const expected_bool = provided_bool === void 0 ? true : provided_bool;
@@ -12554,20 +12852,32 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
     }
   }
   class CHECK_FOR_BUTTON_STATE extends ActionBoolGetable {
-    constructor(args2) {
+    constructor(args2, debug) {
       super();
       __publicField(this, "action");
       __publicField(this, "button_id");
       this.action = "CHECK_FOR_BUTTON_STATE";
       if (args2.success_script) {
-        this.success_script = breakIfNotString(args2.success_script);
+        this.success_script = tryString(
+          args2.success_script,
+          `${this.action} param "success_script"`,
+          debug
+        );
       } else if (args2.label) {
-        this.label = breakIfNotString(args2.label);
+        this.label = tryString(args2.label, `${this.action} param "label"`, debug);
       } else if (args2.jump_index) {
-        this.jump_index = breakIfNotStringOrNumber(args2.jump_index);
+        this.jump_index = tryStringOrNumber(
+          args2.jump_index,
+          `${this.action} param "jump_index"`,
+          debug
+        );
       }
-      this.button_id = breakIfNotString(args2.button_id);
-      this.expected_bool = breakIfNotBool(args2.expected_bool);
+      this.button_id = tryString(args2.button_id, `${this.action} param "button_id"`, debug);
+      this.expected_bool = tryBool(
+        args2.expected_bool,
+        `${this.action} param "expected_bool"`,
+        debug
+      );
     }
     static quick(button_id, provided_bool) {
       const expected_bool = provided_bool === void 0 ? true : provided_bool;
@@ -12582,20 +12892,32 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
     }
   }
   class CHECK_WARP_STATE extends ActionStringCheckable {
-    constructor(args2) {
+    constructor(args2, debug) {
       super();
       __publicField(this, "action");
       __publicField(this, "string");
       this.action = "CHECK_WARP_STATE";
       if (args2.success_script) {
-        this.success_script = breakIfNotString(args2.success_script);
+        this.success_script = tryString(
+          args2.success_script,
+          `${this.action} param "success_script"`,
+          debug
+        );
       } else if (args2.label) {
-        this.label = breakIfNotString(args2.label);
+        this.label = tryString(args2.label, `${this.action} param "label"`, debug);
       } else if (args2.jump_index) {
-        this.jump_index = breakIfNotStringOrNumber(args2.jump_index);
+        this.jump_index = tryStringOrNumber(
+          args2.jump_index,
+          `${this.action} param "jump_index"`,
+          debug
+        );
       }
-      this.string = breakIfNotString(args2.string);
-      this.expected_bool = breakIfNotBool(args2.expected_bool);
+      this.string = tryString(args2.string, `${this.action} param "string"`, debug);
+      this.expected_bool = tryBool(
+        args2.expected_bool,
+        `${this.action} param "expected_bool"`,
+        debug
+      );
     }
     updateProp(value) {
       this.string = value;
@@ -12612,7 +12934,7 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
     }
   }
   class CHECK_VARIABLE extends ActionNumberComparison {
-    constructor(args2) {
+    constructor(args2, debug) {
       super();
       __publicField(this, "action");
       __publicField(this, "variable");
@@ -12620,16 +12942,28 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       __publicField(this, "value");
       this.action = "CHECK_VARIABLE";
       if (args2.success_script) {
-        this.success_script = breakIfNotString(args2.success_script);
+        this.success_script = tryString(
+          args2.success_script,
+          `${this.action} param "success_script"`,
+          debug
+        );
       } else if (args2.label) {
-        this.label = breakIfNotString(args2.label);
+        this.label = tryString(args2.label, `${this.action} param "label"`, debug);
       } else if (args2.jump_index) {
-        this.jump_index = breakIfNotStringOrNumber(args2.jump_index);
+        this.jump_index = tryStringOrNumber(
+          args2.jump_index,
+          `${this.action} param "jump_index"`,
+          debug
+        );
       }
-      this.variable = breakIfNotString(args2.variable);
-      this.comparison = breakIfNotString(args2.comparison);
-      this.value = breakIfNotNumber(args2.value);
-      this.expected_bool = breakIfNotBool(args2.expected_bool);
+      this.variable = tryString(args2.variable, `${this.action} param "variable"`, debug);
+      this.comparison = tryString(args2.comparison, `${this.action} param "comparison"`, debug);
+      this.value = tryNumber(args2.value, `${this.action} param "value"`, debug);
+      this.expected_bool = tryBool(
+        args2.expected_bool,
+        `${this.action} param "expected_bool"`,
+        debug
+      );
       if (this.comparison === "!=") {
         this.comparison = "==";
         this.expected_bool = !this.expected_bool;
@@ -12657,7 +12991,7 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
     }
   }
   class CHECK_VARIABLES extends ActionNumberComparison {
-    constructor(args2) {
+    constructor(args2, debug) {
       super();
       __publicField(this, "action");
       __publicField(this, "variable");
@@ -12665,16 +12999,28 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       __publicField(this, "source");
       this.action = "CHECK_VARIABLES";
       if (args2.success_script) {
-        this.success_script = breakIfNotString(args2.success_script);
+        this.success_script = tryString(
+          args2.success_script,
+          `${this.action} param "success_script"`,
+          debug
+        );
       } else if (args2.label) {
-        this.label = breakIfNotString(args2.label);
+        this.label = tryString(args2.label, `${this.action} param "label"`, debug);
       } else if (args2.jump_index) {
-        this.jump_index = breakIfNotStringOrNumber(args2.jump_index);
+        this.jump_index = tryStringOrNumber(
+          args2.jump_index,
+          `${this.action} param "jump_index"`,
+          debug
+        );
       }
-      this.variable = breakIfNotString(args2.variable);
-      this.comparison = breakIfNotString(args2.comparison);
-      this.source = breakIfNotString(args2.source);
-      this.expected_bool = breakIfNotBool(args2.expected_bool);
+      this.variable = tryString(args2.variable, `${this.action} param "variable"`, debug);
+      this.comparison = tryString(args2.comparison, `${this.action} param "comparison"`, debug);
+      this.source = tryString(args2.source, `${this.action} param "source"`, debug);
+      this.expected_bool = tryBool(
+        args2.expected_bool,
+        `${this.action} param "expected_bool"`,
+        debug
+      );
       if (this.comparison === "!=") {
         this.comparison = "==";
         this.expected_bool = !this.expected_bool;
@@ -12704,7 +13050,7 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
     }
   }
   class CHECK_MAP extends ActionStringCheckable {
-    constructor(args2) {
+    constructor(args2, debug) {
       super();
       // TODO: is this even in the engine? O.o
       __publicField(this, "action");
@@ -12712,14 +13058,26 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       __publicField(this, "expected_bool");
       this.action = "CHECK_MAP";
       if (args2.success_script) {
-        this.success_script = breakIfNotString(args2.success_script);
+        this.success_script = tryString(
+          args2.success_script,
+          `${this.action} param "success_script"`,
+          debug
+        );
       } else if (args2.label) {
-        this.label = breakIfNotString(args2.label);
+        this.label = tryString(args2.label, `${this.action} param "label"`, debug);
       } else if (args2.jump_index) {
-        this.jump_index = breakIfNotStringOrNumber(args2.jump_index);
+        this.jump_index = tryStringOrNumber(
+          args2.jump_index,
+          `${this.action} param "jump_index"`,
+          debug
+        );
       }
-      this.map = breakIfNotString(args2.map);
-      this.expected_bool = breakIfNotBool(args2.expected_bool);
+      this.map = tryString(args2.map, `${this.action} param "map"`, debug);
+      this.expected_bool = tryBool(
+        args2.expected_bool,
+        `${this.action} param "expected_bool"`,
+        debug
+      );
     }
     updateProp(value) {
       this.map = value;
@@ -12730,20 +13088,32 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
     // todo print fn?
   }
   class CHECK_BLE_FLAG extends ActionStringCheckable {
-    constructor(args2) {
+    constructor(args2, debug) {
       super();
       __publicField(this, "action");
       __publicField(this, "ble_flag");
       this.action = "CHECK_BLE_FLAG";
       if (args2.success_script) {
-        this.success_script = breakIfNotString(args2.success_script);
+        this.success_script = tryString(
+          args2.success_script,
+          `${this.action} param "success_script"`,
+          debug
+        );
       } else if (args2.label) {
-        this.label = breakIfNotString(args2.label);
+        this.label = tryString(args2.label, `${this.action} param "label"`, debug);
       } else if (args2.jump_index) {
-        this.jump_index = breakIfNotStringOrNumber(args2.jump_index);
+        this.jump_index = tryStringOrNumber(
+          args2.jump_index,
+          `${this.action} param "jump_index"`,
+          debug
+        );
       }
-      this.ble_flag = breakIfNotString(args2.ble_flag);
-      this.expected_bool = breakIfNotBool(args2.expected_bool);
+      this.ble_flag = tryString(args2.ble_flag, `${this.action} param "ble_flag"`, debug);
+      this.expected_bool = tryBool(
+        args2.expected_bool,
+        `${this.action} param "expected_bool"`,
+        debug
+      );
     }
     updateProp(value) {
       this.ble_flag = value;
@@ -12754,18 +13124,30 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
     // todo print fn?
   }
   class CHECK_DIALOG_OPEN extends ActionBoolGetable {
-    constructor(args2) {
+    constructor(args2, debug) {
       super();
       __publicField(this, "action");
       this.action = "CHECK_DIALOG_OPEN";
       if (args2.success_script) {
-        this.success_script = breakIfNotString(args2.success_script);
+        this.success_script = tryString(
+          args2.success_script,
+          `${this.action} param "success_script"`,
+          debug
+        );
       } else if (args2.label) {
-        this.label = breakIfNotString(args2.label);
+        this.label = tryString(args2.label, `${this.action} param "label"`, debug);
       } else if (args2.jump_index) {
-        this.jump_index = breakIfNotStringOrNumber(args2.jump_index);
+        this.jump_index = tryStringOrNumber(
+          args2.jump_index,
+          `${this.action} param "jump_index"`,
+          debug
+        );
       }
-      this.expected_bool = breakIfNotBool(args2.expected_bool);
+      this.expected_bool = tryBool(
+        args2.expected_bool,
+        `${this.action} param "expected_bool"`,
+        debug
+      );
     }
     static quick(provided_bool) {
       const expected_bool = provided_bool === void 0 ? true : provided_bool;
@@ -12776,18 +13158,30 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
     }
   }
   class CHECK_SERIAL_DIALOG_OPEN extends ActionBoolGetable {
-    constructor(args2) {
+    constructor(args2, debug) {
       super();
       __publicField(this, "action");
       this.action = "CHECK_SERIAL_DIALOG_OPEN";
       if (args2.success_script) {
-        this.success_script = breakIfNotString(args2.success_script);
+        this.success_script = tryString(
+          args2.success_script,
+          `${this.action} param "success_script"`,
+          debug
+        );
       } else if (args2.label) {
-        this.label = breakIfNotString(args2.label);
+        this.label = tryString(args2.label, `${this.action} param "label"`, debug);
       } else if (args2.jump_index) {
-        this.jump_index = breakIfNotStringOrNumber(args2.jump_index);
+        this.jump_index = tryStringOrNumber(
+          args2.jump_index,
+          `${this.action} param "jump_index"`,
+          debug
+        );
       }
-      this.expected_bool = breakIfNotBool(args2.expected_bool);
+      this.expected_bool = tryBool(
+        args2.expected_bool,
+        `${this.action} param "expected_bool"`,
+        debug
+      );
     }
     static quick(provided_bool) {
       const expected_bool = provided_bool === void 0 ? true : provided_bool;
@@ -12802,18 +13196,30 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
     }
   }
   class CHECK_DEBUG_MODE extends ActionBoolGetable {
-    constructor(args2) {
+    constructor(args2, debug) {
       super();
       __publicField(this, "action");
       this.action = "CHECK_DEBUG_MODE";
       if (args2.success_script) {
-        this.success_script = breakIfNotString(args2.success_script);
+        this.success_script = tryString(
+          args2.success_script,
+          `${this.action} param "success_script"`,
+          debug
+        );
       } else if (args2.label) {
-        this.label = breakIfNotString(args2.label);
+        this.label = tryString(args2.label, `${this.action} param "label"`, debug);
       } else if (args2.jump_index) {
-        this.jump_index = breakIfNotStringOrNumber(args2.jump_index);
+        this.jump_index = tryStringOrNumber(
+          args2.jump_index,
+          `${this.action} param "jump_index"`,
+          debug
+        );
       }
-      this.expected_bool = breakIfNotBool(args2.expected_bool);
+      this.expected_bool = tryBool(
+        args2.expected_bool,
+        `${this.action} param "expected_bool"`,
+        debug
+      );
     }
     static quick(provided_bool) {
       const expected_bool = provided_bool === void 0 ? true : provided_bool;
@@ -12824,12 +13230,12 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
     }
   }
   class ARRAY_LOG extends Action {
-    constructor(args2) {
+    constructor(args2, debug) {
       super();
       __publicField(this, "action");
       __publicField(this, "array_name");
       this.action = "ARRAY_LOG";
-      this.array_name = breakIfNotString(args2.array_name);
+      this.array_name = tryString(args2.array_name, `${this.action} param "array_name"`, debug);
     }
     static quick(array_name) {
       return new ARRAY_LOG({ array_name });
@@ -12839,12 +13245,12 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
     }
   }
   class ARRAY_NEW extends Action {
-    constructor(args2) {
+    constructor(args2, debug) {
       super();
       __publicField(this, "action");
       __publicField(this, "array_name");
       this.action = "ARRAY_NEW";
-      this.array_name = breakIfNotString(args2.array_name);
+      this.array_name = tryString(args2.array_name, `${this.action} param "array_name"`, debug);
     }
     static quick(array_name) {
       return new ARRAY_NEW({ array_name });
@@ -12854,12 +13260,12 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
     }
   }
   class ARRAY_DELETE extends Action {
-    constructor(args2) {
+    constructor(args2, debug) {
       super();
       __publicField(this, "action");
       __publicField(this, "array_name");
       this.action = "ARRAY_DELETE";
-      this.array_name = breakIfNotString(args2.array_name);
+      this.array_name = tryString(args2.array_name, `${this.action} param "array_name"`, debug);
     }
     static quick(array_name) {
       return new ARRAY_DELETE({ array_name });
@@ -12869,14 +13275,14 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
     }
   }
   class ARRAY_LENGTH_INTO_VARIABLE extends Action {
-    constructor(args2) {
+    constructor(args2, debug) {
       super();
       __publicField(this, "action");
       __publicField(this, "array_name");
       __publicField(this, "variable");
       this.action = "ARRAY_LENGTH_INTO_VARIABLE";
-      this.array_name = breakIfNotString(args2.array_name);
-      this.variable = breakIfNotString(args2.variable);
+      this.array_name = tryString(args2.array_name, `${this.action} param "array_name"`, debug);
+      this.variable = tryString(args2.variable, `${this.action} param "variable"`, debug);
     }
     static quick(array_name, variable) {
       return new ARRAY_LENGTH_INTO_VARIABLE({ array_name, variable });
@@ -12886,16 +13292,16 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
     }
   }
   class ARRAY_WRITE_INTO_INDEX_FROM_VALUE extends Action {
-    constructor(args2) {
+    constructor(args2, debug) {
       super();
       __publicField(this, "action");
       __publicField(this, "array_name");
       __publicField(this, "index");
       __publicField(this, "value");
       this.action = "ARRAY_WRITE_INTO_INDEX_FROM_VALUE";
-      this.array_name = breakIfNotString(args2.array_name);
-      this.index = breakIfNotNumber(args2.index);
-      this.value = breakIfNotNumber(args2.value);
+      this.array_name = tryString(args2.array_name, `${this.action} param "array_name"`, debug);
+      this.index = tryNumber(args2.index, `${this.action} param "index"`, debug);
+      this.value = tryNumber(args2.value, `${this.action} param "value"`, debug);
     }
     static quick(array_name, index, value) {
       return new ARRAY_WRITE_INTO_INDEX_FROM_VALUE({ array_name, index, value });
@@ -12905,16 +13311,16 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
     }
   }
   class ARRAY_WRITE_INTO_INDEX_FROM_VARIABLE extends Action {
-    constructor(args2) {
+    constructor(args2, debug) {
       super();
       __publicField(this, "action");
       __publicField(this, "array_name");
       __publicField(this, "index");
       __publicField(this, "variable");
       this.action = "ARRAY_WRITE_INTO_INDEX_FROM_VARIABLE";
-      this.array_name = breakIfNotString(args2.array_name);
-      this.index = breakIfNotNumber(args2.index);
-      this.variable = breakIfNotString(args2.variable);
+      this.array_name = tryString(args2.array_name, `${this.action} param "array_name"`, debug);
+      this.index = tryNumber(args2.index, `${this.action} param "index"`, debug);
+      this.variable = tryString(args2.variable, `${this.action} param "variable"`, debug);
     }
     static quick(array_name, index, variable) {
       return new ARRAY_WRITE_INTO_INDEX_FROM_VARIABLE({ array_name, index, variable });
@@ -12924,16 +13330,20 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
     }
   }
   class ARRAY_WRITE_INTO_VARIABLE_INDEX_FROM_VALUE extends Action {
-    constructor(args2) {
+    constructor(args2, debug) {
       super();
       __publicField(this, "action");
       __publicField(this, "array_name");
       __publicField(this, "variable_index");
       __publicField(this, "value");
       this.action = "ARRAY_WRITE_INTO_VARIABLE_INDEX_FROM_VALUE";
-      this.array_name = breakIfNotString(args2.array_name);
-      this.variable_index = breakIfNotString(args2.variable_index);
-      this.value = breakIfNotNumber(args2.value);
+      this.array_name = tryString(args2.array_name, `${this.action} param "array_name"`, debug);
+      this.variable_index = tryString(
+        args2.variable_index,
+        `${this.action} param "variable_index"`,
+        debug
+      );
+      this.value = tryNumber(args2.value, `${this.action} param "value"`, debug);
     }
     static quick(array_name, variable_index, value) {
       return new ARRAY_WRITE_INTO_VARIABLE_INDEX_FROM_VALUE({
@@ -12947,16 +13357,20 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
     }
   }
   class ARRAY_WRITE_INTO_VARIABLE_INDEX_FROM_VARIABLE extends Action {
-    constructor(args2) {
+    constructor(args2, debug) {
       super();
       __publicField(this, "action");
       __publicField(this, "array_name");
       __publicField(this, "variable_index");
       __publicField(this, "variable");
       this.action = "ARRAY_WRITE_INTO_VARIABLE_INDEX_FROM_VARIABLE";
-      this.array_name = breakIfNotString(args2.array_name);
-      this.variable_index = breakIfNotString(args2.variable_index);
-      this.variable = breakIfNotString(args2.variable);
+      this.array_name = tryString(args2.array_name, `${this.action} param "array_name"`, debug);
+      this.variable_index = tryString(
+        args2.variable_index,
+        `${this.action} param "variable_index"`,
+        debug
+      );
+      this.variable = tryString(args2.variable, `${this.action} param "variable"`, debug);
     }
     static quick(array_name, variable_index, variable) {
       return new ARRAY_WRITE_INTO_VARIABLE_INDEX_FROM_VARIABLE({
@@ -12970,16 +13384,16 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
     }
   }
   class ARRAY_READ_FROM_INDEX_INTO_VARIABLE extends Action {
-    constructor(args2) {
+    constructor(args2, debug) {
       super();
       __publicField(this, "action");
       __publicField(this, "array_name");
       __publicField(this, "index");
       __publicField(this, "variable");
       this.action = "ARRAY_READ_FROM_INDEX_INTO_VARIABLE";
-      this.array_name = breakIfNotString(args2.array_name);
-      this.index = breakIfNotNumber(args2.index);
-      this.variable = breakIfNotString(args2.variable);
+      this.array_name = tryString(args2.array_name, `${this.action} param "array_name"`, debug);
+      this.index = tryNumber(args2.index, `${this.action} param "index"`, debug);
+      this.variable = tryString(args2.variable, `${this.action} param "variable"`, debug);
     }
     static quick(array_name, index, variable) {
       return new ARRAY_READ_FROM_INDEX_INTO_VARIABLE({
@@ -12993,16 +13407,20 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
     }
   }
   class ARRAY_READ_FROM_VARIABLE_INDEX_INTO_VARIABLE extends Action {
-    constructor(args2) {
+    constructor(args2, debug) {
       super();
       __publicField(this, "action");
       __publicField(this, "array_name");
       __publicField(this, "variable_index");
       __publicField(this, "variable");
       this.action = "ARRAY_READ_FROM_VARIABLE_INDEX_INTO_VARIABLE";
-      this.array_name = breakIfNotString(args2.array_name);
-      this.variable_index = breakIfNotString(args2.variable_index);
-      this.variable = breakIfNotString(args2.variable);
+      this.array_name = tryString(args2.array_name, `${this.action} param "array_name"`, debug);
+      this.variable_index = tryString(
+        args2.variable_index,
+        `${this.action} param "variable_index"`,
+        debug
+      );
+      this.variable = tryString(args2.variable, `${this.action} param "variable"`, debug);
     }
     static quick(array_name, variable_index, variable) {
       return new ARRAY_READ_FROM_VARIABLE_INDEX_INTO_VARIABLE({
@@ -13016,14 +13434,14 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
     }
   }
   class ARRAY_PUSH_FROM_VALUE extends Action {
-    constructor(args2) {
+    constructor(args2, debug) {
       super();
       __publicField(this, "action");
       __publicField(this, "array_name");
       __publicField(this, "value");
       this.action = "ARRAY_PUSH_FROM_VALUE";
-      this.array_name = breakIfNotString(args2.array_name);
-      this.value = breakIfNotNumber(args2.value);
+      this.array_name = tryString(args2.array_name, `${this.action} param "array_name"`, debug);
+      this.value = tryNumber(args2.value, `${this.action} param "value"`, debug);
     }
     static quick(array_name, value) {
       return new ARRAY_PUSH_FROM_VALUE({ array_name, value });
@@ -13033,14 +13451,22 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
     }
   }
   class ARRAY_PUSH_FROM_VARIABLE extends Action {
-    constructor(args2) {
+    constructor(args2, debug) {
       super();
       __publicField(this, "action");
       __publicField(this, "array_name");
       __publicField(this, "variable");
       this.action = "ARRAY_PUSH_FROM_VARIABLE";
-      this.array_name = breakIfNotString(args2.array_name);
-      this.variable = breakIfNotString(args2.variable);
+      this.array_name = tryString(
+        args2.array_name,
+        'ARRAY_PUSH_FROM_VARIABLE param "array_name"',
+        debug
+      );
+      this.variable = tryString(
+        args2.variable,
+        'ARRAY_PUSH_FROM_VARIABLE param "variable"',
+        debug
+      );
     }
     static quick(array_name, variable) {
       return new ARRAY_PUSH_FROM_VARIABLE({ array_name, variable });
@@ -13050,14 +13476,18 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
     }
   }
   class ARRAY_PUSH_LEFT_FROM_VALUE extends Action {
-    constructor(args2) {
+    constructor(args2, debug) {
       super();
       __publicField(this, "action");
       __publicField(this, "array_name");
       __publicField(this, "value");
       this.action = "ARRAY_PUSH_LEFT_FROM_VALUE";
-      this.array_name = breakIfNotString(args2.array_name);
-      this.value = breakIfNotNumber(args2.value);
+      this.array_name = tryString(
+        args2.array_name,
+        'ARRAY_PUSH_LEFT_FROM_VALUE param "array_name"',
+        debug
+      );
+      this.value = tryNumber(args2.value, 'ARRAY_PUSH_LEFT_FROM_VALUE param "value"', debug);
     }
     static quick(array_name, value) {
       return new ARRAY_PUSH_LEFT_FROM_VALUE({ array_name, value });
@@ -13067,14 +13497,22 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
     }
   }
   class ARRAY_PUSH_LEFT_FROM_VARIABLE extends Action {
-    constructor(args2) {
+    constructor(args2, debug) {
       super();
       __publicField(this, "action");
       __publicField(this, "array_name");
       __publicField(this, "variable");
       this.action = "ARRAY_PUSH_LEFT_FROM_VARIABLE";
-      this.array_name = breakIfNotString(args2.array_name);
-      this.variable = breakIfNotString(args2.variable);
+      this.array_name = tryString(
+        args2.array_name,
+        'ARRAY_PUSH_LEFT_FROM_VARIABLE param "array_name"',
+        debug
+      );
+      this.variable = tryString(
+        args2.variable,
+        'ARRAY_PUSH_LEFT_FROM_VARIABLE param "variable"',
+        debug
+      );
     }
     static quick(array_name, variable) {
       return new ARRAY_PUSH_LEFT_FROM_VARIABLE({ array_name, variable });
@@ -13084,14 +13522,18 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
     }
   }
   class ARRAY_POP_INTO_VARIABLE extends Action {
-    constructor(args2) {
+    constructor(args2, debug) {
       super();
       __publicField(this, "action");
       __publicField(this, "array_name");
       __publicField(this, "variable");
       this.action = "ARRAY_POP_INTO_VARIABLE";
-      this.array_name = breakIfNotString(args2.array_name);
-      this.variable = breakIfNotString(args2.variable);
+      this.array_name = tryString(
+        args2.array_name,
+        'ARRAY_POP_INTO_VARIABLE param "array_name"',
+        debug
+      );
+      this.variable = tryString(args2.variable, 'ARRAY_POP_INTO_VARIABLE param "variable"', debug);
     }
     static quick(array_name, variable) {
       return new ARRAY_POP_INTO_VARIABLE({ array_name, variable });
@@ -13101,14 +13543,22 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
     }
   }
   class ARRAY_POP_LEFT_INTO_VARIABLE extends Action {
-    constructor(args2) {
+    constructor(args2, debug) {
       super();
       __publicField(this, "action");
       __publicField(this, "array_name");
       __publicField(this, "variable");
       this.action = "ARRAY_POP_LEFT_INTO_VARIABLE";
-      this.array_name = breakIfNotString(args2.array_name);
-      this.variable = breakIfNotString(args2.variable);
+      this.array_name = tryString(
+        args2.array_name,
+        'ARRAY_POP_LEFT_INTO_VARIABLE param "array_name"',
+        debug
+      );
+      this.variable = tryString(
+        args2.variable,
+        'ARRAY_POP_LEFT_INTO_VARIABLE param "variable"',
+        debug
+      );
     }
     static quick(array_name, variable) {
       return new ARRAY_POP_LEFT_INTO_VARIABLE({ array_name, variable });
@@ -13118,16 +13568,20 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
     }
   }
   class ARRAY_SLICE extends Action {
-    constructor(args2) {
+    constructor(args2, debug) {
       super();
       __publicField(this, "action");
       __publicField(this, "array_source");
       __publicField(this, "array_destination");
       __publicField(this, "index_start");
       this.action = "ARRAY_SLICE";
-      this.array_destination = breakIfNotString(args2.array_destination);
-      this.array_source = breakIfNotString(args2.array_source);
-      this.index_start = breakIfNotNumber(args2.index_start);
+      this.array_destination = tryString(
+        args2.array_destination,
+        'ARRAY_SLICE param "array_destination"',
+        debug
+      );
+      this.array_source = tryString(args2.array_source, 'ARRAY_SLICE param "array_source"', debug);
+      this.index_start = tryNumber(args2.index_start, 'ARRAY_SLICE param "index_start"', debug);
     }
     static quick(array_source, array_destination, index_start) {
       return new ARRAY_SLICE({ array_source, array_destination, index_start });
@@ -13137,16 +13591,28 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
     }
   }
   class ARRAY_SLICE_BY_VARIABLE extends Action {
-    constructor(args2) {
+    constructor(args2, debug) {
       super();
       __publicField(this, "action");
       __publicField(this, "array_source");
       __publicField(this, "array_destination");
       __publicField(this, "variable_start");
       this.action = "ARRAY_SLICE_BY_VARIABLE";
-      this.array_source = breakIfNotString(args2.array_source);
-      this.array_destination = breakIfNotString(args2.array_destination);
-      this.variable_start = breakIfNotString(args2.variable_start);
+      this.array_source = tryString(
+        args2.array_source,
+        'ARRAY_SLICE_BY_VARIABLE param "array_source"',
+        debug
+      );
+      this.array_destination = tryString(
+        args2.array_destination,
+        'ARRAY_SLICE_BY_VARIABLE param "array_destination"',
+        debug
+      );
+      this.variable_start = tryString(
+        args2.variable_start,
+        'ARRAY_SLICE_BY_VARIABLE param "variable_start"',
+        debug
+      );
     }
     static quick(array_source, array_destination, variable_start) {
       return new ARRAY_SLICE_BY_VARIABLE({ array_source, array_destination, variable_start });
@@ -13156,7 +13622,7 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
     }
   }
   class ARRAY_SLICE_TWICE extends Action {
-    constructor(args2) {
+    constructor(args2, debug) {
       super();
       __publicField(this, "action");
       __publicField(this, "array_source");
@@ -13164,10 +13630,22 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       __publicField(this, "index_start");
       __publicField(this, "index_end");
       this.action = "ARRAY_SLICE_TWICE";
-      this.array_source = breakIfNotString(args2.array_source);
-      this.array_destination = breakIfNotString(args2.array_destination);
-      this.index_start = breakIfNotNumber(args2.index_start);
-      this.index_end = breakIfNotNumber(args2.index_end);
+      this.array_source = tryString(
+        args2.array_source,
+        'ARRAY_SLICE_TWICE param "array_source"',
+        debug
+      );
+      this.array_destination = tryString(
+        args2.array_destination,
+        'ARRAY_SLICE_TWICE param "array_destination"',
+        debug
+      );
+      this.index_start = tryNumber(
+        args2.index_start,
+        'ARRAY_SLICE_TWICE param "index_start"',
+        debug
+      );
+      this.index_end = tryNumber(args2.index_end, 'ARRAY_SLICE_TWICE param "index_end"', debug);
     }
     static quick(array_source, array_destination, index_start, index_end) {
       return new ARRAY_SLICE_TWICE({ array_source, array_destination, index_start, index_end });
@@ -13177,7 +13655,7 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
     }
   }
   class ARRAY_SLICE_TWICE_BY_VARIABLE extends Action {
-    constructor(args2) {
+    constructor(args2, debug) {
       super();
       __publicField(this, "action");
       __publicField(this, "array_source");
@@ -13185,10 +13663,26 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       __publicField(this, "variable_start");
       __publicField(this, "variable_end");
       this.action = "ARRAY_SLICE_TWICE_BY_VARIABLE";
-      this.array_source = breakIfNotString(args2.array_source);
-      this.array_destination = breakIfNotString(args2.array_destination);
-      this.variable_start = breakIfNotString(args2.variable_start);
-      this.variable_end = breakIfNotString(args2.variable_end);
+      this.array_source = tryString(
+        args2.array_source,
+        'ARRAY_SLICE_TWICE_BY_VARIABLE param "array_source"',
+        debug
+      );
+      this.array_destination = tryString(
+        args2.array_destination,
+        'ARRAY_SLICE_TWICE_BY_VARIABLE param "array_destination"',
+        debug
+      );
+      this.variable_start = tryString(
+        args2.variable_start,
+        'ARRAY_SLICE_TWICE_BY_VARIABLE param "variable_start"',
+        debug
+      );
+      this.variable_end = tryString(
+        args2.variable_end,
+        'ARRAY_SLICE_TWICE_BY_VARIABLE param "variable_end"',
+        debug
+      );
     }
     static quick(array_source, array_destination, variable_start, variable_end) {
       return new ARRAY_SLICE_TWICE_BY_VARIABLE({
@@ -13203,12 +13697,12 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
     }
   }
   class ARRAY_REVERSE extends Action {
-    constructor(args2) {
+    constructor(args2, debug) {
       super();
       __publicField(this, "action");
       __publicField(this, "array_name");
       this.action = "ARRAY_REVERSE";
-      this.array_name = breakIfNotString(args2.array_name);
+      this.array_name = tryString(args2.array_name, 'ARRAY_REVERSE param "array_name"', debug);
     }
     static quick(array_name) {
       return new ARRAY_REVERSE({ array_name });
@@ -13218,12 +13712,12 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
     }
   }
   class ARRAY_SORT extends Action {
-    constructor(args2) {
+    constructor(args2, debug) {
       super();
       __publicField(this, "action");
       __publicField(this, "array_name");
       this.action = "ARRAY_SORT";
-      this.array_name = breakIfNotString(args2.array_name);
+      this.array_name = tryString(args2.array_name, 'ARRAY_SORT param "array_name"', debug);
     }
     static quick(array_name) {
       return new ARRAY_SORT({ array_name });
@@ -13260,11 +13754,6 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
     if (Array.isArray(v) && v.every((v2) => typeof v2 === "string")) return v;
     throw new Error("not a string or a string array");
   };
-  const breakIfNotStringOrStringArray = (v) => {
-    if (typeof v === "string") return v;
-    if (Array.isArray(v) && v.every((v2) => typeof v2 === "string")) return v;
-    throw new Error("not a string or a strng array");
-  };
   const breakIfNotString = (v) => {
     if (typeof v === "string") return v;
     throw new Error("not a string");
@@ -13284,175 +13773,210 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
   };
   const actionConstructorLookup = {
     NULL_ACTION: () => new NULL_ACTION(),
-    COPY_SCRIPT: (args2) => new COPY_SCRIPT(args2),
-    LABEL: (args2) => new LABEL(args2),
-    RUN_SCRIPT: (args2) => new RUN_SCRIPT(args2),
-    BLOCKING_DELAY: (args2) => new BLOCKING_DELAY(args2),
-    NON_BLOCKING_DELAY: (args2) => new NON_BLOCKING_DELAY(args2),
-    UNREGISTER_SERIAL_DIALOG_COMMAND: (args2) => {
-      return new UNREGISTER_SERIAL_DIALOG_COMMAND(args2);
+    COPY_SCRIPT: (args2, debug) => new COPY_SCRIPT(args2, debug),
+    LABEL: (args2, debug) => new LABEL(args2, debug),
+    RUN_SCRIPT: (args2, debug) => new RUN_SCRIPT(args2, debug),
+    BLOCKING_DELAY: (args2, debug) => new BLOCKING_DELAY(args2, debug),
+    NON_BLOCKING_DELAY: (args2, debug) => new NON_BLOCKING_DELAY(args2, debug),
+    UNREGISTER_SERIAL_DIALOG_COMMAND: (args2, debug) => {
+      return new UNREGISTER_SERIAL_DIALOG_COMMAND(args2, debug);
     },
-    UNREGISTER_SERIAL_DIALOG_COMMAND_ARGUMENT: (args2) => {
-      return new UNREGISTER_SERIAL_DIALOG_COMMAND_ARGUMENT(args2);
+    UNREGISTER_SERIAL_DIALOG_COMMAND_ARGUMENT: (args2, debug) => {
+      return new UNREGISTER_SERIAL_DIALOG_COMMAND_ARGUMENT(args2, debug);
     },
-    SET_ENTITY_NAME: (args2) => new SET_ENTITY_NAME(args2),
-    SET_ENTITY_X: (args2) => new SET_ENTITY_X(args2),
-    SET_ENTITY_Y: (args2) => new SET_ENTITY_Y(args2),
-    SET_ENTITY_INTERACT_SCRIPT: (args2) => new SET_ENTITY_INTERACT_SCRIPT(args2),
-    SET_ENTITY_TICK_SCRIPT: (args2) => new SET_ENTITY_TICK_SCRIPT(args2),
-    SET_ENTITY_TYPE: (args2) => new SET_ENTITY_TYPE(args2),
-    SET_ENTITY_PRIMARY_ID: (args2) => new SET_ENTITY_PRIMARY_ID(args2),
-    SET_ENTITY_SECONDARY_ID: (args2) => new SET_ENTITY_SECONDARY_ID(args2),
-    SET_ENTITY_PRIMARY_ID_TYPE: (args2) => new SET_ENTITY_PRIMARY_ID_TYPE(args2),
-    SET_ENTITY_CURRENT_ANIMATION: (args2) => {
-      return new SET_ENTITY_CURRENT_ANIMATION(args2);
+    SET_ENTITY_NAME: (args2, debug) => new SET_ENTITY_NAME(args2, debug),
+    SET_ENTITY_X: (args2, debug) => new SET_ENTITY_X(args2, debug),
+    SET_ENTITY_Y: (args2, debug) => new SET_ENTITY_Y(args2, debug),
+    SET_ENTITY_INTERACT_SCRIPT: (args2, debug) => new SET_ENTITY_INTERACT_SCRIPT(args2, debug),
+    SET_ENTITY_TICK_SCRIPT: (args2, debug) => new SET_ENTITY_TICK_SCRIPT(args2, debug),
+    SET_ENTITY_TYPE: (args2, debug) => new SET_ENTITY_TYPE(args2, debug),
+    SET_ENTITY_PRIMARY_ID: (args2, debug) => new SET_ENTITY_PRIMARY_ID(args2, debug),
+    SET_ENTITY_SECONDARY_ID: (args2, debug) => new SET_ENTITY_SECONDARY_ID(args2, debug),
+    SET_ENTITY_PRIMARY_ID_TYPE: (args2, debug) => new SET_ENTITY_PRIMARY_ID_TYPE(args2, debug),
+    SET_ENTITY_CURRENT_ANIMATION: (args2, debug) => {
+      return new SET_ENTITY_CURRENT_ANIMATION(args2, debug);
     },
-    SET_ENTITY_CURRENT_FRAME: (args2) => new SET_ENTITY_CURRENT_FRAME(args2),
-    SET_ENTITY_DIRECTION: (args2) => new SET_ENTITY_DIRECTION(args2),
-    SET_ENTITY_DIRECTION_RELATIVE: (args2) => {
-      return new SET_ENTITY_DIRECTION_RELATIVE(args2);
+    SET_ENTITY_CURRENT_FRAME: (args2, debug) => new SET_ENTITY_CURRENT_FRAME(args2, debug),
+    SET_ENTITY_DIRECTION: (args2, debug) => new SET_ENTITY_DIRECTION(args2, debug),
+    SET_ENTITY_DIRECTION_RELATIVE: (args2, debug) => {
+      return new SET_ENTITY_DIRECTION_RELATIVE(args2, debug);
     },
-    SET_ENTITY_DIRECTION_TARGET_ENTITY: (args2) => {
-      return new SET_ENTITY_DIRECTION_TARGET_ENTITY(args2);
+    SET_ENTITY_DIRECTION_TARGET_ENTITY: (args2, debug) => {
+      return new SET_ENTITY_DIRECTION_TARGET_ENTITY(args2, debug);
     },
-    SET_ENTITY_DIRECTION_TARGET_GEOMETRY: (args2) => {
-      return new SET_ENTITY_DIRECTION_TARGET_GEOMETRY(args2);
+    SET_ENTITY_DIRECTION_TARGET_GEOMETRY: (args2, debug) => {
+      return new SET_ENTITY_DIRECTION_TARGET_GEOMETRY(args2, debug);
     },
-    SET_ENTITY_GLITCHED: (args2) => new SET_ENTITY_GLITCHED(args2),
-    SET_ENTITY_PATH: (args2) => new SET_ENTITY_PATH(args2),
-    SET_SAVE_FLAG: (args2) => new SET_SAVE_FLAG(args2),
-    SET_PLAYER_CONTROL: (args2) => new SET_PLAYER_CONTROL(args2),
-    SET_MAP_TICK_SCRIPT: (args2) => new SET_MAP_TICK_SCRIPT(args2),
-    SET_HEX_CURSOR_LOCATION: (args2) => new SET_HEX_CURSOR_LOCATION(args2),
-    SET_WARP_STATE: (args2) => new SET_WARP_STATE(args2),
-    SET_HEX_EDITOR_STATE: (args2) => new SET_HEX_EDITOR_STATE(args2),
-    SET_HEX_EDITOR_DIALOG_MODE: (args2) => new SET_HEX_EDITOR_DIALOG_MODE(args2),
-    SET_HEX_EDITOR_CONTROL: (args2) => new SET_HEX_EDITOR_CONTROL(args2),
-    SET_HEX_EDITOR_CONTROL_CLIPBOARD: (args2) => {
-      return new SET_HEX_EDITOR_CONTROL_CLIPBOARD(args2);
+    SET_ENTITY_GLITCHED: (args2, debug) => new SET_ENTITY_GLITCHED(args2, debug),
+    SET_ENTITY_PATH: (args2, debug) => new SET_ENTITY_PATH(args2, debug),
+    SET_SAVE_FLAG: (args2, debug) => new SET_SAVE_FLAG(args2, debug),
+    SET_PLAYER_CONTROL: (args2, debug) => new SET_PLAYER_CONTROL(args2, debug),
+    SET_MAP_TICK_SCRIPT: (args2, debug) => new SET_MAP_TICK_SCRIPT(args2, debug),
+    SET_HEX_CURSOR_LOCATION: (args2, debug) => new SET_HEX_CURSOR_LOCATION(args2, debug),
+    SET_WARP_STATE: (args2, debug) => new SET_WARP_STATE(args2, debug),
+    SET_HEX_EDITOR_STATE: (args2, debug) => new SET_HEX_EDITOR_STATE(args2, debug),
+    SET_HEX_EDITOR_DIALOG_MODE: (args2, debug) => new SET_HEX_EDITOR_DIALOG_MODE(args2, debug),
+    SET_HEX_EDITOR_CONTROL: (args2, debug) => new SET_HEX_EDITOR_CONTROL(args2, debug),
+    SET_HEX_EDITOR_CONTROL_CLIPBOARD: (args2, debug) => {
+      return new SET_HEX_EDITOR_CONTROL_CLIPBOARD(args2, debug);
     },
-    LOAD_MAP: (args2) => new LOAD_MAP(args2),
-    SHOW_DIALOG: (args2) => new SHOW_DIALOG(args2),
-    PLAY_ENTITY_ANIMATION: (args2) => new PLAY_ENTITY_ANIMATION(args2),
-    TELEPORT_ENTITY_TO_GEOMETRY: (args2) => new TELEPORT_ENTITY_TO_GEOMETRY(args2),
-    WALK_ENTITY_TO_GEOMETRY: (args2) => new WALK_ENTITY_TO_GEOMETRY(args2),
-    WALK_ENTITY_ALONG_GEOMETRY: (args2) => new WALK_ENTITY_ALONG_GEOMETRY(args2),
-    LOOP_ENTITY_ALONG_GEOMETRY: (args2) => new LOOP_ENTITY_ALONG_GEOMETRY(args2),
-    SET_CAMERA_TO_FOLLOW_ENTITY: (args2) => new SET_CAMERA_TO_FOLLOW_ENTITY(args2),
-    TELEPORT_CAMERA_TO_GEOMETRY: (args2) => new TELEPORT_CAMERA_TO_GEOMETRY(args2),
-    PAN_CAMERA_TO_ENTITY: (args2) => new PAN_CAMERA_TO_ENTITY(args2),
-    PAN_CAMERA_TO_GEOMETRY: (args2) => new PAN_CAMERA_TO_GEOMETRY(args2),
-    PAN_CAMERA_ALONG_GEOMETRY: (args2) => new PAN_CAMERA_ALONG_GEOMETRY(args2),
-    LOOP_CAMERA_ALONG_GEOMETRY: (args2) => new LOOP_CAMERA_ALONG_GEOMETRY(args2),
-    SET_SCREEN_SHAKE: (args2) => new SET_SCREEN_SHAKE(args2),
-    SCREEN_FADE_OUT: (args2) => new SCREEN_FADE_OUT(args2),
-    SCREEN_FADE_IN: (args2) => new SCREEN_FADE_IN(args2),
-    MUTATE_VARIABLE: (args2) => new MUTATE_VARIABLE(args2),
-    MUTATE_VARIABLES: (args2) => new MUTATE_VARIABLES(args2),
-    COPY_VARIABLE: (args2) => new COPY_VARIABLE(args2),
+    LOAD_MAP: (args2, debug) => new LOAD_MAP(args2, debug),
+    SHOW_DIALOG: (args2, debug) => new SHOW_DIALOG(args2, debug),
+    PLAY_ENTITY_ANIMATION: (args2, debug) => new PLAY_ENTITY_ANIMATION(args2, debug),
+    TELEPORT_ENTITY_TO_GEOMETRY: (args2, debug) => new TELEPORT_ENTITY_TO_GEOMETRY(args2, debug),
+    WALK_ENTITY_TO_GEOMETRY: (args2, debug) => new WALK_ENTITY_TO_GEOMETRY(args2, debug),
+    WALK_ENTITY_ALONG_GEOMETRY: (args2, debug) => new WALK_ENTITY_ALONG_GEOMETRY(args2, debug),
+    LOOP_ENTITY_ALONG_GEOMETRY: (args2, debug) => new LOOP_ENTITY_ALONG_GEOMETRY(args2, debug),
+    SET_CAMERA_TO_FOLLOW_ENTITY: (args2, debug) => new SET_CAMERA_TO_FOLLOW_ENTITY(args2, debug),
+    TELEPORT_CAMERA_TO_GEOMETRY: (args2, debug) => new TELEPORT_CAMERA_TO_GEOMETRY(args2, debug),
+    PAN_CAMERA_TO_ENTITY: (args2, debug) => new PAN_CAMERA_TO_ENTITY(args2, debug),
+    PAN_CAMERA_TO_GEOMETRY: (args2, debug) => new PAN_CAMERA_TO_GEOMETRY(args2, debug),
+    PAN_CAMERA_ALONG_GEOMETRY: (args2, debug) => new PAN_CAMERA_ALONG_GEOMETRY(args2, debug),
+    LOOP_CAMERA_ALONG_GEOMETRY: (args2, debug) => new LOOP_CAMERA_ALONG_GEOMETRY(args2, debug),
+    SET_SCREEN_SHAKE: (args2, debug) => new SET_SCREEN_SHAKE(args2, debug),
+    SCREEN_FADE_OUT: (args2, debug) => new SCREEN_FADE_OUT(args2, debug),
+    SCREEN_FADE_IN: (args2, debug) => new SCREEN_FADE_IN(args2, debug),
+    MUTATE_VARIABLE: (args2, debug) => new MUTATE_VARIABLE(args2, debug),
+    MUTATE_VARIABLES: (args2, debug) => new MUTATE_VARIABLES(args2, debug),
+    COPY_VARIABLE: (args2, debug) => new COPY_VARIABLE(args2, debug),
     SLOT_SAVE: () => new SLOT_SAVE(),
-    SLOT_LOAD: (args2) => new SLOT_LOAD(args2),
-    SLOT_ERASE: (args2) => new SLOT_ERASE(args2),
-    SET_CONNECT_SERIAL_DIALOG: (args2) => new SET_CONNECT_SERIAL_DIALOG(args2),
-    SHOW_SERIAL_DIALOG: (args2) => new SHOW_SERIAL_DIALOG(args2),
-    SET_MAP_LOOK_SCRIPT: (args2) => new SET_MAP_LOOK_SCRIPT(args2),
-    SET_ENTITY_LOOK_SCRIPT: (args2) => new SET_ENTITY_LOOK_SCRIPT(args2),
-    SET_TELEPORT_ENABLED: (args2) => new SET_TELEPORT_ENABLED(args2),
-    SET_BLE_FLAG: (args2) => new SET_BLE_FLAG(args2),
-    SET_SERIAL_DIALOG_CONTROL: (args2) => new SET_SERIAL_DIALOG_CONTROL(args2),
-    REGISTER_SERIAL_DIALOG_COMMAND: (args2) => {
-      return new REGISTER_SERIAL_DIALOG_COMMAND(args2);
+    SLOT_LOAD: (args2, debug) => new SLOT_LOAD(args2, debug),
+    SLOT_ERASE: (args2, debug) => new SLOT_ERASE(args2, debug),
+    SET_CONNECT_SERIAL_DIALOG: (args2, debug) => new SET_CONNECT_SERIAL_DIALOG(args2, debug),
+    SHOW_SERIAL_DIALOG: (args2, debug) => new SHOW_SERIAL_DIALOG(args2, debug),
+    SET_MAP_LOOK_SCRIPT: (args2, debug) => new SET_MAP_LOOK_SCRIPT(args2, debug),
+    SET_ENTITY_LOOK_SCRIPT: (args2, debug) => new SET_ENTITY_LOOK_SCRIPT(args2, debug),
+    SET_TELEPORT_ENABLED: (args2, debug) => new SET_TELEPORT_ENABLED(args2, debug),
+    SET_BLE_FLAG: (args2, debug) => new SET_BLE_FLAG(args2, debug),
+    SET_SERIAL_DIALOG_CONTROL: (args2, debug) => new SET_SERIAL_DIALOG_CONTROL(args2, debug),
+    REGISTER_SERIAL_DIALOG_COMMAND: (args2, debug) => {
+      return new REGISTER_SERIAL_DIALOG_COMMAND(args2, debug);
     },
-    REGISTER_SERIAL_DIALOG_COMMAND_ARGUMENT: (args2) => {
-      return new REGISTER_SERIAL_DIALOG_COMMAND_ARGUMENT(args2);
+    REGISTER_SERIAL_DIALOG_COMMAND_ARGUMENT: (args2, debug) => {
+      return new REGISTER_SERIAL_DIALOG_COMMAND_ARGUMENT(args2, debug);
     },
-    SET_ENTITY_MOVEMENT_RELATIVE: (args2) => {
-      return new SET_ENTITY_MOVEMENT_RELATIVE(args2);
+    SET_ENTITY_MOVEMENT_RELATIVE: (args2, debug) => {
+      return new SET_ENTITY_MOVEMENT_RELATIVE(args2, debug);
     },
     CLOSE_DIALOG: () => new CLOSE_DIALOG(),
     CLOSE_SERIAL_DIALOG: () => new CLOSE_SERIAL_DIALOG(),
-    SET_LIGHTS_CONTROL: (args2) => new SET_LIGHTS_CONTROL(args2),
-    SET_LIGHTS_STATE: (args2) => new SET_LIGHTS_STATE(args2),
-    GOTO_ACTION_INDEX: (args2) => new GOTO_ACTION_INDEX(args2),
-    SET_SCRIPT_PAUSE: (args2) => new SET_SCRIPT_PAUSE(args2),
-    REGISTER_SERIAL_DIALOG_COMMAND_ALIAS: (args2) => {
-      return new REGISTER_SERIAL_DIALOG_COMMAND_ALIAS(args2);
+    SET_LIGHTS_CONTROL: (args2, debug) => new SET_LIGHTS_CONTROL(args2, debug),
+    SET_LIGHTS_STATE: (args2, debug) => new SET_LIGHTS_STATE(args2, debug),
+    GOTO_ACTION_INDEX: (args2, debug) => new GOTO_ACTION_INDEX(args2, debug),
+    SET_SCRIPT_PAUSE: (args2, debug) => new SET_SCRIPT_PAUSE(args2, debug),
+    REGISTER_SERIAL_DIALOG_COMMAND_ALIAS: (args2, debug) => {
+      return new REGISTER_SERIAL_DIALOG_COMMAND_ALIAS(args2, debug);
     },
-    UNREGISTER_SERIAL_DIALOG_COMMAND_ALIAS: (args2) => {
-      return new UNREGISTER_SERIAL_DIALOG_COMMAND_ALIAS(args2);
+    UNREGISTER_SERIAL_DIALOG_COMMAND_ALIAS: (args2, debug) => {
+      return new UNREGISTER_SERIAL_DIALOG_COMMAND_ALIAS(args2, debug);
     },
-    SET_SERIAL_DIALOG_COMMAND_VISIBILITY: (args2) => {
-      return new SET_SERIAL_DIALOG_COMMAND_VISIBILITY(args2);
+    SET_SERIAL_DIALOG_COMMAND_VISIBILITY: (args2, debug) => {
+      return new SET_SERIAL_DIALOG_COMMAND_VISIBILITY(args2, debug);
     },
-    CHECK_ENTITY_NAME: (args2) => new CHECK_ENTITY_NAME(args2),
-    CHECK_ENTITY_X: (args2) => new CHECK_ENTITY_X(args2),
-    CHECK_ENTITY_Y: (args2) => new CHECK_ENTITY_Y(args2),
-    CHECK_ENTITY_INTERACT_SCRIPT: (args2) => {
-      return new CHECK_ENTITY_INTERACT_SCRIPT(args2);
+    CHECK_ENTITY_NAME: (args2, debug) => new CHECK_ENTITY_NAME(args2, debug),
+    CHECK_ENTITY_X: (args2, debug) => new CHECK_ENTITY_X(args2, debug),
+    CHECK_ENTITY_Y: (args2, debug) => new CHECK_ENTITY_Y(args2, debug),
+    CHECK_ENTITY_INTERACT_SCRIPT: (args2, debug) => {
+      return new CHECK_ENTITY_INTERACT_SCRIPT(args2, debug);
     },
-    CHECK_ENTITY_TICK_SCRIPT: (args2) => new CHECK_ENTITY_TICK_SCRIPT(args2),
-    CHECK_ENTITY_LOOK_SCRIPT: (args2) => new CHECK_ENTITY_LOOK_SCRIPT(args2),
-    CHECK_ENTITY_TYPE: (args2) => new CHECK_ENTITY_TYPE(args2),
-    CHECK_ENTITY_PRIMARY_ID: (args2) => new CHECK_ENTITY_PRIMARY_ID(args2),
-    CHECK_ENTITY_SECONDARY_ID: (args2) => new CHECK_ENTITY_SECONDARY_ID(args2),
-    CHECK_ENTITY_PRIMARY_ID_TYPE: (args2) => {
-      return new CHECK_ENTITY_PRIMARY_ID_TYPE(args2);
+    CHECK_ENTITY_TICK_SCRIPT: (args2, debug) => new CHECK_ENTITY_TICK_SCRIPT(args2, debug),
+    CHECK_ENTITY_LOOK_SCRIPT: (args2, debug) => new CHECK_ENTITY_LOOK_SCRIPT(args2, debug),
+    CHECK_ENTITY_TYPE: (args2, debug) => new CHECK_ENTITY_TYPE(args2, debug),
+    CHECK_ENTITY_PRIMARY_ID: (args2, debug) => new CHECK_ENTITY_PRIMARY_ID(args2, debug),
+    CHECK_ENTITY_SECONDARY_ID: (args2, debug) => new CHECK_ENTITY_SECONDARY_ID(args2, debug),
+    CHECK_ENTITY_PRIMARY_ID_TYPE: (args2, debug) => {
+      return new CHECK_ENTITY_PRIMARY_ID_TYPE(args2, debug);
     },
-    CHECK_ENTITY_CURRENT_ANIMATION: (args2) => {
-      return new CHECK_ENTITY_CURRENT_ANIMATION(args2);
+    CHECK_ENTITY_CURRENT_ANIMATION: (args2, debug) => {
+      return new CHECK_ENTITY_CURRENT_ANIMATION(args2, debug);
     },
-    CHECK_ENTITY_CURRENT_FRAME: (args2) => new CHECK_ENTITY_CURRENT_FRAME(args2),
-    CHECK_ENTITY_DIRECTION: (args2) => new CHECK_ENTITY_DIRECTION(args2),
-    CHECK_ENTITY_GLITCHED: (args2) => new CHECK_ENTITY_GLITCHED(args2),
-    CHECK_ENTITY_PATH: (args2) => new CHECK_ENTITY_PATH(args2),
-    CHECK_SAVE_FLAG: (args2) => new CHECK_SAVE_FLAG(args2),
-    CHECK_IF_ENTITY_IS_IN_GEOMETRY: (args2) => {
-      return new CHECK_IF_ENTITY_IS_IN_GEOMETRY(args2);
+    CHECK_ENTITY_CURRENT_FRAME: (args2, debug) => new CHECK_ENTITY_CURRENT_FRAME(args2, debug),
+    CHECK_ENTITY_DIRECTION: (args2, debug) => new CHECK_ENTITY_DIRECTION(args2, debug),
+    CHECK_ENTITY_GLITCHED: (args2, debug) => new CHECK_ENTITY_GLITCHED(args2, debug),
+    CHECK_ENTITY_PATH: (args2, debug) => new CHECK_ENTITY_PATH(args2, debug),
+    CHECK_SAVE_FLAG: (args2, debug) => new CHECK_SAVE_FLAG(args2, debug),
+    CHECK_IF_ENTITY_IS_IN_GEOMETRY: (args2, debug) => {
+      return new CHECK_IF_ENTITY_IS_IN_GEOMETRY(args2, debug);
     },
-    CHECK_FOR_BUTTON_PRESS: (args2) => new CHECK_FOR_BUTTON_PRESS(args2),
-    CHECK_FOR_BUTTON_STATE: (args2) => new CHECK_FOR_BUTTON_STATE(args2),
-    CHECK_WARP_STATE: (args2) => new CHECK_WARP_STATE(args2),
-    CHECK_VARIABLE: (args2) => new CHECK_VARIABLE(args2),
-    CHECK_VARIABLES: (args2) => new CHECK_VARIABLES(args2),
-    CHECK_MAP: (args2) => new CHECK_MAP(args2),
-    CHECK_BLE_FLAG: (args2) => new CHECK_BLE_FLAG(args2),
-    CHECK_DIALOG_OPEN: (args2) => new CHECK_DIALOG_OPEN(args2),
-    CHECK_SERIAL_DIALOG_OPEN: (args2) => new CHECK_SERIAL_DIALOG_OPEN(args2),
-    CHECK_DEBUG_MODE: (args2) => new CHECK_DEBUG_MODE(args2),
-    ARRAY_LOG: (args2) => new ARRAY_LOG(args2),
-    ARRAY_NEW: (args2) => new ARRAY_NEW(args2),
-    ARRAY_DELETE: (args2) => new ARRAY_DELETE(args2),
-    ARRAY_LENGTH_INTO_VARIABLE: (args2) => new ARRAY_LENGTH_INTO_VARIABLE(args2),
-    ARRAY_WRITE_INTO_INDEX_FROM_VALUE: (args2) => {
-      return new ARRAY_WRITE_INTO_INDEX_FROM_VALUE(args2);
+    CHECK_FOR_BUTTON_PRESS: (args2, debug) => new CHECK_FOR_BUTTON_PRESS(args2, debug),
+    CHECK_FOR_BUTTON_STATE: (args2, debug) => new CHECK_FOR_BUTTON_STATE(args2, debug),
+    CHECK_WARP_STATE: (args2, debug) => new CHECK_WARP_STATE(args2, debug),
+    CHECK_VARIABLE: (args2, debug) => new CHECK_VARIABLE(args2, debug),
+    CHECK_VARIABLES: (args2, debug) => new CHECK_VARIABLES(args2, debug),
+    CHECK_MAP: (args2, debug) => new CHECK_MAP(args2, debug),
+    CHECK_BLE_FLAG: (args2, debug) => new CHECK_BLE_FLAG(args2, debug),
+    CHECK_DIALOG_OPEN: (args2, debug) => new CHECK_DIALOG_OPEN(args2, debug),
+    CHECK_SERIAL_DIALOG_OPEN: (args2, debug) => new CHECK_SERIAL_DIALOG_OPEN(args2, debug),
+    CHECK_DEBUG_MODE: (args2, debug) => new CHECK_DEBUG_MODE(args2, debug),
+    ARRAY_LOG: (args2, debug) => new ARRAY_LOG(args2, debug),
+    ARRAY_NEW: (args2, debug) => new ARRAY_NEW(args2, debug),
+    ARRAY_DELETE: (args2, debug) => new ARRAY_DELETE(args2, debug),
+    ARRAY_LENGTH_INTO_VARIABLE: (args2, debug) => new ARRAY_LENGTH_INTO_VARIABLE(args2, debug),
+    ARRAY_WRITE_INTO_INDEX_FROM_VALUE: (args2, debug) => {
+      return new ARRAY_WRITE_INTO_INDEX_FROM_VALUE(args2, debug);
     },
-    ARRAY_WRITE_INTO_INDEX_FROM_VARIABLE: (args2) => {
-      return new ARRAY_WRITE_INTO_INDEX_FROM_VARIABLE(args2);
+    ARRAY_WRITE_INTO_INDEX_FROM_VARIABLE: (args2, debug) => {
+      return new ARRAY_WRITE_INTO_INDEX_FROM_VARIABLE(args2, debug);
     },
-    ARRAY_WRITE_INTO_VARIABLE_INDEX_FROM_VALUE: (args2) => {
-      return new ARRAY_WRITE_INTO_VARIABLE_INDEX_FROM_VALUE(args2);
+    ARRAY_WRITE_INTO_VARIABLE_INDEX_FROM_VALUE: (args2, debug) => {
+      return new ARRAY_WRITE_INTO_VARIABLE_INDEX_FROM_VALUE(args2, debug);
     },
-    ARRAY_WRITE_INTO_VARIABLE_INDEX_FROM_VARIABLE: (args2) => {
-      return new ARRAY_WRITE_INTO_VARIABLE_INDEX_FROM_VARIABLE(args2);
+    ARRAY_WRITE_INTO_VARIABLE_INDEX_FROM_VARIABLE: (args2, debug) => {
+      return new ARRAY_WRITE_INTO_VARIABLE_INDEX_FROM_VARIABLE(args2, debug);
     },
-    ARRAY_READ_FROM_INDEX_INTO_VARIABLE: (args2) => {
-      return new ARRAY_READ_FROM_INDEX_INTO_VARIABLE(args2);
+    ARRAY_READ_FROM_INDEX_INTO_VARIABLE: (args2, debug) => {
+      return new ARRAY_READ_FROM_INDEX_INTO_VARIABLE(args2, debug);
     },
-    ARRAY_READ_FROM_VARIABLE_INDEX_INTO_VARIABLE: (args2) => {
-      return new ARRAY_READ_FROM_VARIABLE_INDEX_INTO_VARIABLE(args2);
+    ARRAY_READ_FROM_VARIABLE_INDEX_INTO_VARIABLE: (args2, debug) => {
+      return new ARRAY_READ_FROM_VARIABLE_INDEX_INTO_VARIABLE(args2, debug);
     },
-    ARRAY_PUSH_FROM_VALUE: (args2) => new ARRAY_PUSH_FROM_VALUE(args2),
-    ARRAY_PUSH_FROM_VARIABLE: (args2) => new ARRAY_PUSH_FROM_VARIABLE(args2),
-    ARRAY_PUSH_LEFT_FROM_VALUE: (args2) => new ARRAY_PUSH_LEFT_FROM_VALUE(args2),
-    ARRAY_PUSH_LEFT_FROM_VARIABLE: (args2) => new ARRAY_PUSH_LEFT_FROM_VARIABLE(args2),
-    ARRAY_SLICE: (args2) => new ARRAY_SLICE(args2),
-    ARRAY_SLICE_BY_VARIABLE: (args2) => new ARRAY_SLICE_BY_VARIABLE(args2),
-    ARRAY_SLICE_TWICE: (args2) => new ARRAY_SLICE_TWICE(args2),
-    ARRAY_SLICE_TWICE_BY_VARIABLE: (args2) => new ARRAY_SLICE_TWICE_BY_VARIABLE(args2),
-    ARRAY_POP_INTO_VARIABLE: (args2) => new ARRAY_POP_INTO_VARIABLE(args2),
-    ARRAY_POP_LEFT_INTO_VARIABLE: (args2) => new ARRAY_POP_LEFT_INTO_VARIABLE(args2),
-    ARRAY_REVERSE: (args2) => new ARRAY_REVERSE(args2),
-    ARRAY_SORT: (args2) => new ARRAY_SORT(args2)
+    ARRAY_PUSH_FROM_VALUE: (args2, debug) => new ARRAY_PUSH_FROM_VALUE(args2, debug),
+    ARRAY_PUSH_FROM_VARIABLE: (args2, debug) => new ARRAY_PUSH_FROM_VARIABLE(args2, debug),
+    ARRAY_PUSH_LEFT_FROM_VALUE: (args2, debug) => new ARRAY_PUSH_LEFT_FROM_VALUE(args2, debug),
+    ARRAY_PUSH_LEFT_FROM_VARIABLE: (args2, debug) => new ARRAY_PUSH_LEFT_FROM_VARIABLE(args2, debug),
+    ARRAY_SLICE: (args2, debug) => new ARRAY_SLICE(args2, debug),
+    ARRAY_SLICE_BY_VARIABLE: (args2, debug) => new ARRAY_SLICE_BY_VARIABLE(args2, debug),
+    ARRAY_SLICE_TWICE: (args2, debug) => new ARRAY_SLICE_TWICE(args2, debug),
+    ARRAY_SLICE_TWICE_BY_VARIABLE: (args2, debug) => new ARRAY_SLICE_TWICE_BY_VARIABLE(args2, debug),
+    ARRAY_POP_INTO_VARIABLE: (args2, debug) => new ARRAY_POP_INTO_VARIABLE(args2, debug),
+    ARRAY_POP_LEFT_INTO_VARIABLE: (args2, debug) => new ARRAY_POP_LEFT_INTO_VARIABLE(args2, debug),
+    ARRAY_REVERSE: (args2, debug) => new ARRAY_REVERSE(args2, debug),
+    ARRAY_SORT: (args2, debug) => new ARRAY_SORT(args2, debug)
+  };
+  const tryString = (v, label, debug) => {
+    if (debug) return coerceToString(debug, v, label);
+    return breakIfNotString(v);
+  };
+  const tryStringOrStringArray = (v, label, debug) => {
+    if (Array.isArray(v)) {
+      return v.map((w, i2) => {
+        const innerLabel = label ? label + `[${i2}]` : label;
+        return tryString(w, innerLabel, debug);
+      });
+    }
+    if (debug) return coerceToString(debug, v, label);
+    return breakIfNotString(v);
+  };
+  const tryNumber = (v, label, debug) => {
+    if (debug) return coerceToNumber(debug, v, label);
+    return breakIfNotNumber(v);
+  };
+  const tryStringOrNumber = (v, label, debug) => {
+    if (typeof v === "number") return v;
+    if (typeof v === "string") return v;
+    if (debug) {
+      if (label) {
+        debug.f.newError(
+          new MathlangMessage([debug], "value wrong type", `${label} is not a number`)
+        );
+      }
+      return debug.node.text;
+    }
+    return breakIfNotStringOrNumber(v);
+  };
+  const tryBool = (v, label, debug) => {
+    if (debug) return coerceToBool(debug, v, label);
+    return breakIfNotBool(v);
   };
   const debugLog = (message) => {
   };
@@ -13926,7 +14450,7 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
             } catch {
               throw new Error("failed to parse JSON in bakeCopyScriptSingle");
             }
-            return Action.fromArgs(ret);
+            return Action.fromArgs(ret, debug);
           });
           const comment = `Copying: ${action.script} (-${labelSuffix}) with search_and_replace: ${JSON.stringify(action.search_and_replace)}`;
           finalActions.push(CommentNode.quick(debug, comment));

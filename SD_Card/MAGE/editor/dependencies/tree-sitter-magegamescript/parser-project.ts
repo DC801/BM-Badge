@@ -254,7 +254,7 @@ export class ProjectState {
 					} catch {
 						throw new Error('failed to parse JSON in bakeCopyScriptSingle');
 					}
-					return Action.fromArgs(ret);
+					return Action.fromArgs(ret, debug);
 				});
 				const comment = `Copying: ${action.script} (-${labelSuffix}) with search_and_replace: ${JSON.stringify(action.search_and_replace)}`;
 				finalActions.push(CommentNode.quick(debug, comment));
