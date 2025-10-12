@@ -2727,7 +2727,7 @@ void array_new(uint8_t * args, MageScriptState * resumeStateStruct)
 		uint8_t paddingG;
 	} ActionArrayNew;
 	auto *argStruct = (ActionArrayNew*)args;
-	MageScriptArray arrays = {
+	const MageScriptArray arrays = {
 		.arrayId = argStruct->arrayId,
 		.values = std::vector<uint16_t>()
 	};
@@ -2783,7 +2783,7 @@ void array_log(uint8_t * args, MageScriptState * resumeStateStruct)
 		if (arrayId == argStruct->arrayId) {
 			std::string message = "array_log: array " + std::to_string(argStruct->arrayId) + " = [";
 			uint8_t index = 0;
-			for (auto& value: values) {
+			for (const auto& value: values) {
 				if (index > 0) {
 					message += ", ";
 				}
@@ -2813,12 +2813,12 @@ void array_read_from_index_into_variable(uint8_t * args, MageScriptState * resum
 	auto *argStruct = (ActionArrayReadFromIndexIntoVariable*)args;
 	for (MageScriptArray& array: MageGame->scriptArrays){
 		if (array.arrayId == argStruct->arrayId) {
-			auto arrayValue = array.values[argStruct->index];
+			const auto arrayValue = array.values[argStruct->index];
 			MageCommand->debugScriptsPrintln(
 				"array_read_from_index_into_variable: array " + std::to_string(argStruct->arrayId) +
 				": Reading index " + std::to_string(argStruct->index) +
 				" with value " + std::to_string(arrayValue) +
-				" and storing into variableID " + std::to_string(argStruct->variableId)
+				" and storing into variableId " + std::to_string(argStruct->variableId)
 			);
 			MageGame->currentSave.scriptVariables[argStruct->variableId] = arrayValue;
 			return;
@@ -2826,6 +2826,47 @@ void array_read_from_index_into_variable(uint8_t * args, MageScriptState * resum
 	}
 	MageCommand->debugScriptsPrintln(
 		"array_read_from_index_into_variable: Invalid arrayId: " + std::to_string(argStruct->arrayId)
+	);
+}
+void array_read_from_variable_index_into_variable(uint8_t * args, MageScriptState * resumeStateStruct)
+{
+	typedef struct {
+		uint8_t variableId;
+		uint8_t arrayId;
+		uint8_t variableIdForIndex;
+		uint8_t paddingD;
+		uint8_t paddingE;
+		uint8_t paddingF;
+		uint8_t paddingG;
+	} ActionArrayReadFromVariableIndexIntoVariable;
+	auto *argStruct = (ActionArrayReadFromVariableIndexIntoVariable*)args;
+	for (MageScriptArray& array: MageGame->scriptArrays){
+		if (array.arrayId == argStruct->arrayId) {
+			const uint16_t arrayIndex = MageGame->currentSave.scriptVariables[argStruct->variableIdForIndex];
+			const size_t arrayLength = array.values.size();
+			if (arrayIndex >= arrayLength) {
+				MageCommand->debugScriptsPrintln(
+					"ERROR! array_read_from_variable_index_into_variable: array " + std::to_string(argStruct->arrayId) +
+					": variableIdForIndex " + std::to_string(argStruct->variableIdForIndex) +
+					": index " + std::to_string(arrayIndex) +
+					" is out of bounds of the array with length: " + std::to_string(arrayLength)
+				);
+				return;
+			}
+			const auto arrayValue = array.values[arrayIndex];
+			MageCommand->debugScriptsPrintln(
+				"array_read_from_variable_index_into_variable: array " + std::to_string(argStruct->arrayId) +
+				": variableIdForIndex " + std::to_string(argStruct->variableIdForIndex) +
+				": Reading index " + std::to_string(arrayIndex) +
+				" with value " + std::to_string(arrayValue) +
+				" and storing into variableId " + std::to_string(argStruct->variableId)
+			);
+			MageGame->currentSave.scriptVariables[argStruct->variableId] = arrayValue;
+			return;
+		}
+	}
+	MageCommand->debugScriptsPrintln(
+		"array_read_from_variable_index_into_variable: Invalid arrayId: " + std::to_string(argStruct->arrayId)
 	);
 }
 void array_push_from_value(uint8_t * args, MageScriptState * resumeStateStruct)
@@ -2869,7 +2910,7 @@ void array_push_from_variable(uint8_t * args, MageScriptState * resumeStateStruc
 	auto *argStruct = (ActionArrayPushFromVariable*)args;
 	for (MageScriptArray& array: MageGame->scriptArrays){
 		if (array.arrayId == argStruct->arrayId) {
-			uint16_t *currentValue = &MageGame->currentSave.scriptVariables[argStruct->variableId];
+			const uint16_t *currentValue = &MageGame->currentSave.scriptVariables[argStruct->variableId];
 			MageCommand->debugScriptsPrintln(
 				"array_push_from_variable: array " + std::to_string(argStruct->arrayId) +
 				": Pushing in value " + std::to_string(*currentValue) +
@@ -2997,7 +3038,7 @@ ActionFunctionPointer actionFunctions[MageScriptActionTypeId::NUM_ACTIONS] = {
 	NULL, //&array_write_into_variable_index_from_value
 	NULL, //&array_write_into_variable_index_from_variable
 	&array_read_from_index_into_variable,
-	NULL, //&array_read_from_variable_index_into_variable
+	&array_read_from_variable_index_into_variable,
 	&array_push_from_value,
 	&array_push_from_variable,
 	NULL, //&array_push_left_from_value
