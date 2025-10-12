@@ -174,7 +174,7 @@ debug_commands {
 	};
 
 	command array + basics = array_basics {
-		show serial_dialog { "---- Creating an array named 'arr'" };
+		show serial_dialog { wrap 200 "---- Creating an array named 'arr'" };
 		json[
 			{"action":"ARRAY_NEW","array_name":"arr"},
 			{"action":"ARRAY_LOG","array_name":"arr"},
@@ -183,7 +183,7 @@ debug_commands {
 			{"action":"ARRAY_PUSH_FROM_VALUE","value":99,"array_name":"arr"},
 			{"action":"ARRAY_LOG","array_name":"arr"}
 		]
-		show serial_dialog { "---- Creating another array named 'asdf'" };
+		show serial_dialog { wrap 200 "---- Creating another array named 'asdf'" };
 		json[
 			{"action":"ARRAY_NEW","array_name":"asdf"},
 			{"action":"ARRAY_LOG","array_name":"asdf"},
@@ -192,24 +192,68 @@ debug_commands {
 			{"action":"ARRAY_PUSH_FROM_VALUE","value":72,"array_name":"asdf"},
 			{"action":"ARRAY_LOG","array_name":"asdf"}
 		]
-		show serial_dialog { "---- Can both arrays be read afterward?" };
+		show serial_dialog { wrap 200 "---- Can both arrays be read afterward?" };
 		json[
 			{"action":"ARRAY_LOG","array_name":"arr"},
 			{"action":"ARRAY_LOG","array_name":"asdf"}
 		]
-		show serial_dialog { "---- Deleting array 'arr' and then trying to use it" };
+		show serial_dialog { wrap 200 "---- Deleting array 'arr' and then trying to use it" };
 		json[
 			{"action":"ARRAY_DELETE","array_name":"arr"},
 			{"action":"ARRAY_LOG","array_name":"arr"},
 			{"action":"ARRAY_PUSH_FROM_VALUE","value":5,"array_name":"arr"}
 		]
-		show serial_dialog { "---- Deleting array 'arr' twice and then trying to use it" };
+		show serial_dialog { wrap 200 "---- Deleting array 'arr' twice and then trying to use it" };
 		json[
 			{"action":"ARRAY_DELETE","array_name":"arr"},
 			{"action":"ARRAY_DELETE","array_name":"arr"},
 			{"action":"ARRAY_LOG","array_name":"arr"},
 			{"action":"ARRAY_PUSH_FROM_VALUE","value":5,"array_name":"arr"}
 		]
+		show serial_dialog { wrap 200 "---- Assigning 3840 into a variable and then pushing that variable into an array" };
+		array_read_test = 3840;
+		array_write_test = 0;
+		json[
+			{"action":"ARRAY_NEW","array_name":"arr"},
+			{"action":"ARRAY_PUSH_FROM_VARIABLE","variable":"array_read_test","array_name":"arr"},
+			{"action":"ARRAY_LOG","array_name":"arr"},
+			{"action":"ARRAY_READ_FROM_INDEX_INTO_VARIABLE","variable":"array_write_test","array_name":"arr","index":0}
+		]
+		show serial_dialog { wrap 200 "Value of array_write_test should be 3840: $array_write_test$" };
+		show serial_dialog { wrap 200 "---- array_read_from_variable_index_into_variable, starting with failure state first. You should see an error:" };
+		show serial_dialog { wrap 200 "array_read_test should be 3840, way out of bounds: $array_read_test$" };
+		array_write_test = 0;
+		json[
+			{"action":"ARRAY_READ_FROM_VARIABLE_INDEX_INTO_VARIABLE","variable":"array_write_test","array_name":"arr","variable_index":"array_read_test"}
+		]
+		show serial_dialog { wrap 200 "Value of array_write_test should still be 0: $array_write_test$" };
+		show serial_dialog { wrap 200 "---- array_read_from_variable_index_into_variable, reading indices 0, 1, 2" };
+		json[
+			{"action":"ARRAY_PUSH_FROM_VALUE","value":1920,"array_name":"arr"},
+			{"action":"ARRAY_PUSH_FROM_VALUE","value":960,"array_name":"arr"},
+			{"action":"ARRAY_LOG","array_name":"arr"}
+		]
+		array_read_test = 0;
+		json[
+			{"action":"ARRAY_READ_FROM_VARIABLE_INDEX_INTO_VARIABLE","variable":"array_write_test","array_name":"arr","variable_index":"array_read_test"}
+		]
+		show serial_dialog { wrap 200 "Value of array_write_test reading index $array_read_test$ should be 3840: $array_write_test$" };
+		array_read_test = 1;
+		json[
+			{"action":"ARRAY_READ_FROM_VARIABLE_INDEX_INTO_VARIABLE","variable":"array_write_test","array_name":"arr","variable_index":"array_read_test"}
+		]
+		show serial_dialog { wrap 200 "Value of array_write_test reading index $array_read_test$ should be 1920: $array_write_test$" };
+		array_read_test = 2;
+		json[
+			{"action":"ARRAY_READ_FROM_VARIABLE_INDEX_INTO_VARIABLE","variable":"array_write_test","array_name":"arr","variable_index":"array_read_test"}
+		]
+		show serial_dialog { wrap 200 "Value of array_write_test reading index $array_read_test$ should be 960: $array_write_test$" };
+		show serial_dialog { wrap 200 "---- array_read_from_variable_index_into_variable, should error reading index 3 on array length of 3:" };
+		array_read_test = 3;
+		json[
+			{"action":"ARRAY_READ_FROM_VARIABLE_INDEX_INTO_VARIABLE","variable":"array_write_test","array_name":"arr","variable_index":"array_read_test"}
+		]
+		show serial_dialog { wrap 200 "Value of array_write_test reading index $array_read_test$ should be the last valid value, 960: $array_write_test$" };
 	};
 }
 
