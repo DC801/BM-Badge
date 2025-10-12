@@ -297,7 +297,12 @@ export default grammar({
 
 		json_literal: ($) => seq('json', $.json_array),
 		json_array: ($) =>
-			seq('[', optional(seq($._json_item, repeat(seq(',', $._json_item)))), ']'),
+			seq(
+				'[',
+				optional(seq($._json_item, repeat(seq(',', $._json_item)))),
+				']',
+				optional(';'),
+			),
 		json_object: ($) =>
 			seq(
 				'{',
@@ -428,9 +433,14 @@ export default grammar({
 					$._serial_dialog_block,
 				),
 			),
-
+		fail: () => 'fail',
 		action_delete_command: ($) =>
-			seq('delete', 'command', field('command', $.string_expandable)),
+			seq(
+				'delete',
+				'command',
+				field('command', $.string_expandable),
+				optional(field('fail', $.fail)),
+			),
 		action_delete_command_arg: ($) =>
 			seq(
 				'delete',
@@ -1106,7 +1116,7 @@ export default grammar({
 			),
 		set_entity_string_field: () => choice('name', 'type', 'path'),
 		action_array_expression: ($) => field('array_expression', $.array_expression),
-		action_print_array: ($) => seq('print', 'array', field('array_name', $.string)),
+		action_print_array: ($) => seq('print', 'array', field('array_name', $.string_expandable)),
 		action_new_array: ($) =>
 			seq(
 				'array',

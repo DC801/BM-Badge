@@ -592,7 +592,10 @@ const nodeFns: Record<string, (debug: MathlangLocation) => AnyNode[]> = {
 			}
 			return [parsedAction];
 		} catch {
-			debug.quickError(`invalid JSON action`, `generic error; check trailing commas!`);
+			debug.quickError(
+				`invalid JSON action`,
+				`invalid JSON error, no known cause; check trailing commas and param names!`,
+			);
 		}
 		return [];
 	},

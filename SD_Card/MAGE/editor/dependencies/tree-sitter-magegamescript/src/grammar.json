@@ -2130,6 +2130,18 @@
         {
           "type": "STRING",
           "value": "]"
+        },
+        {
+          "type": "CHOICE",
+          "members": [
+            {
+              "type": "STRING",
+              "value": ";"
+            },
+            {
+              "type": "BLANK"
+            }
+          ]
         }
       ]
     },
@@ -2932,6 +2944,10 @@
         }
       ]
     },
+    "fail": {
+      "type": "STRING",
+      "value": "fail"
+    },
     "action_delete_command": {
       "type": "SEQ",
       "members": [
@@ -2950,6 +2966,22 @@
             "type": "SYMBOL",
             "name": "string_expandable"
           }
+        },
+        {
+          "type": "CHOICE",
+          "members": [
+            {
+              "type": "FIELD",
+              "name": "fail",
+              "content": {
+                "type": "SYMBOL",
+                "name": "fail"
+              }
+            },
+            {
+              "type": "BLANK"
+            }
+          ]
         }
       ]
     },
@@ -6869,7 +6901,7 @@
           "name": "array_name",
           "content": {
             "type": "SYMBOL",
-            "name": "string"
+            "name": "string_expandable"
           }
         }
       ]

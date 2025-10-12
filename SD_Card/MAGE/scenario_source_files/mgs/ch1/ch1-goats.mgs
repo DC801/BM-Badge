@@ -25,35 +25,29 @@ kid_now_unglitched {
 
 check_if_player_is_goat_high {
 	if (player intersects geometry high) {
-		goto move_goats_to_low;
+		entity Billy on_tick = move_billy_to_low {
+			entity Billy position -> geometry low1 origin over 900ms;
+			entity Billy position -> geometry low1 length over 3000ms forever;
+		};
+		entity Kid on_tick = move_kid_to_low {
+			entity Kid position -> geometry low2 origin over 1100ms;
+			entity Kid position -> geometry low2 length over 3400ms forever;
+		};
+		entity Verthandi on_tick = check_if_player_is_goat_low;
 	}
 }
 check_if_player_is_goat_low {
 	if (player intersects geometry low) {
-		goto move_goats_to_high;
+		entity Billy on_tick = move_billy_to_high {
+			entity Billy position -> geometry high1 origin over 700ms;
+			entity Billy position -> geometry high1 length over 3000ms forever;
+		};
+		entity Kid on_tick = move_kid_to_high {
+			entity Kid position -> geometry high2 origin over 800ms;
+			entity Kid position -> geometry high2 length over 3400ms forever;
+		};
+		entity Verthandi on_tick = check_if_player_is_goat_high;
 	}
-}
-move_goats_to_low {
-	entity Billy on_tick = move_billy_to_low {
-		entity Billy position -> geometry low1 origin over 900ms;
-		entity Billy position -> geometry low1 length over 3000ms forever;
-	};
-	entity Kid on_tick = move_kid_to_low {
-		entity Kid position -> geometry low2 origin over 1100ms;
-		entity Kid position -> geometry low2 length over 3400ms forever;
-	};
-	entity Verthandi on_tick = check_if_player_is_goat_low;
-}
-move_goats_to_high {
-	entity Billy on_tick = move_billy_to_high {
-		entity Billy position -> geometry high1 origin over 700ms;
-		entity Billy position -> geometry high1 length over 3000ms forever;
-	};
-	entity Kid on_tick = move_kid_to_high {
-		entity Kid position -> geometry high2 origin over 800ms;
-		entity Kid position -> geometry high2 length over 3400ms forever;
-	};
-	entity Verthandi on_tick = check_if_player_is_goat_high;
 }
 
 /* ---------- dialog: glitched lesson ---------- */

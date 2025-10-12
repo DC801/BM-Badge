@@ -196,6 +196,7 @@ const captureFns: Record<string, (debug: MathlangLocation) => AnyNode | Capture 
 	op_equals: (debug): string => debug.node.text[0],
 	plus_minus_equals: (debug): string => debug.node.text,
 	forever: () => true,
+	fail: () => true,
 	nsew: (debug) => debug.node.text,
 	entity_or_map_identifier: (debug): string => {
 		const type = optionalTextForField(debug, 'type');
@@ -843,7 +844,12 @@ export const optionalLastChild = (debug: MathlangLocation): TreeSitterNode | nul
 // Get AND process 0+ children with any name at all -> AnyNode[]
 export const handleNamedChildren = (debug: MathlangLocation): AnyNode[] => {
 	const children = namedChildren(debug);
-	return children.map((v) => handleNode(debug.using(v))).flat();
+	return children
+		.map((v) => {
+			const handled = handleNode(debug.using(v));
+			return handled;
+		})
+		.flat();
 };
 
 // Get AND process last child or die trying -> AnyNode
