@@ -282,12 +282,12 @@ export default grammar({
 		_script_item: ($) =>
 			choice(
 				seq($._action_item, $.semicolon),
-				$.fn_call,
-				$.rand_macro,
+				seq($.fn_call, optional(';')),
+				seq($.copy_macro, optional(';')),
+				seq($.rand_macro, optional(';')),
+				seq($.json_literal, optional(';')),
+				seq($.debug_macro, optional(';')),
 				$.label_definition,
-				$.json_literal,
-				$.debug_macro,
-				$.copy_macro,
 				$.if_single,
 				$.if_chain,
 				$.while_block,
@@ -302,10 +302,9 @@ export default grammar({
 				optional(seq(
 					$._json_item,
 					repeat(seq(',', $._json_item)),
-					optional(field('array_comma',','))
+					optional(field('array_comma',',')) // passes at grammar level so we can identifiy error
 				)),
 				']',
-				optional(';'),
 			),
 		json_object: ($) =>
 			seq(
@@ -313,7 +312,7 @@ export default grammar({
 				optional(seq(
 					$.json_name_value_pair,
 					repeat(seq(',', $.json_name_value_pair)),
-					optional(field('comma',','))
+					optional(field('comma',',')) // passes at grammar level so we can identifiy error
 				)),
 				'}',
 			),

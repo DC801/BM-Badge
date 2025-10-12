@@ -4,14 +4,21 @@ export type ErrorTest = {
 	expectedErrors: string[];
 };
 export const errorTests: Record<string, ErrorTest> = {
-	json_syntax_error_inner: {
+	json_known_action_wrong_param: {
+		testText: `_{
+			json[{"action":"BLOCKING_DELAY", "ddddduration":100}]
+		}`,
+		expectedWarnings: [],
+		expectedErrors: ['value wrong type'],
+	},
+	json_trailing_comma_inner: {
 		testText: `_{
 			json[{"action":"BLOCKING_DELAY", "duration":100,}]
 		}`,
 		expectedWarnings: [],
 		expectedErrors: ['unexpected token'],
 	},
-	json_syntax_error: {
+	json_trailing_comma: {
 		testText: `_{
 			json[{"action":"BLOCKING_DELAY", "duration":100},]
 		}`,
