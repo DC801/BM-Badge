@@ -447,8 +447,15 @@ const actionData: Record<string, actionDataEntry> = {
 		handle: (v) => new BLOCKING_DELAY(v),
 	},
 	action_delete_command: {
-		captures: ['command'],
-		handle: (v) => new UNREGISTER_SERIAL_DIALOG_COMMAND(v),
+		captures: ['command', 'fail'],
+		optionalCaptures: ['fail'],
+		handle: (v) => {
+			const ret = new UNREGISTER_SERIAL_DIALOG_COMMAND({
+				...v,
+				is_fail: v.fail !== undefined,
+			});
+			return ret;
+		},
 	},
 	action_delete_command_arg: {
 		captures: ['command', 'argument'],

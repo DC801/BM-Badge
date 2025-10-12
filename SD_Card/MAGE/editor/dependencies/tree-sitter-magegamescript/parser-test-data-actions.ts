@@ -1,6 +1,26 @@
 import { RETURN } from './parser-utilities.ts';
 
 export const actionTests = {
+	broken_action_test: {
+		input: [
+			`json[
+				{
+					"action": "ARRAY_PUSH_FROM_VARIABLE",
+					"variable": "array_var_test",
+					"array_name": "arr"
+				}
+			]`,
+		],
+		expected: [`"arr".push("array_var_test");`],
+	},
+	keyword_as_variable_name: {
+		input: [`"if" = 10;`],
+		expected: [`"if" = 10;`],
+	},
+	keyword_as_entity_name: {
+		input: [`entity if on_tick = null_script;`],
+		expected: [`entity if on_tick = null_script;`],
+	},
 	script_def_in_spread: {
 		input: [`command ["T", "TIPS"] = hanoi_help { hanoi_draw_help = true; };`],
 		expected: [`command "T" = "hanoi_help;`, `command "TIPS" = "hanoi_help;`],
@@ -721,8 +741,8 @@ export const actionTests = {
 			'command callGoat = goatScript;',
 			'command callGoat fail = goatScript;',
 			// UNREGISTER_SERIAL_DIALOG_COMMAND
+			'delete command callGoat fail;',
 			'delete command callGoat;',
-			// TODO: how to delete the fail though?
 			// REGISTER_SERIAL_DIALOG_COMMAND_ARGUMENT
 			'command callGoat + billy = billyScript;',
 			// UNREGISTER_SERIAL_DIALOG_COMMAND_ARGUMENT

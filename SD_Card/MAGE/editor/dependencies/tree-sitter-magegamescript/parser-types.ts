@@ -175,6 +175,8 @@ const mathlangMessageTypes: Record<string, string> = {
 	'unsupported entity field': 'this entity field is not supported in this action',
 	'misordered params': 'invalid param order',
 	'invalid action param combination': 'this action cannot have this combination of params',
+	'invalid entity script slot':
+		'entities can only have "on_tick", "on_interact", and "on_look" scripts',
 
 	// arrays
 	'array method on non-array':
@@ -3220,8 +3222,8 @@ export class CheckEntityCurrentFrame extends NumberCheckableEquality {
 	}
 	expPrint() {
 		return this.expected_bool
-			? `${printEntityName(this.entity)} current_frame == ${this.expected_byte}`
-			: `${printEntityName(this.entity)} current_frame != ${this.expected_byte}`;
+			? `${printEntityName(this.entity)} animation_frame == ${this.expected_byte}`
+			: `${printEntityName(this.entity)} animation_frame != ${this.expected_byte}`;
 	}
 	print() {
 		return `// CheckEntityCurrentFrame: ${this.expPrint()}`;

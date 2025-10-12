@@ -20,7 +20,7 @@ const actionArrayToScript = (
 };
 
 // if there are any entries in any of these, the only the listed tests will be run
-const onlyDoTheseActionTests = [];
+const onlyDoTheseActionTests = ['broken_action_test'];
 const onlyDoTheseFileTests = [];
 const doErrorTests = true;
 

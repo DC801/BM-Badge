@@ -1457,6 +1457,9 @@ export class UNREGISTER_SERIAL_DIALOG_COMMAND extends Action {
 		}
 	}
 	print() {
+		if (this.is_fail) {
+			return `delete command "${this.command}" fail;`;
+		}
 		return `delete command "${this.command}";`;
 	}
 }

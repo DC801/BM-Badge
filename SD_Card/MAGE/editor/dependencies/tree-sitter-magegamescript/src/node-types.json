@@ -410,6 +410,16 @@
             "named": true
           }
         ]
+      },
+      "fail": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "fail",
+            "named": true
+          }
+        ]
       }
     }
   },
@@ -1009,6 +1019,10 @@
           },
           {
             "type": "QUOTED_STRING",
+            "named": true
+          },
+          {
+            "type": "string_expansion",
             "named": true
           }
         ]
@@ -3922,6 +3936,11 @@
     "fields": {}
   },
   {
+    "type": "fail",
+    "named": true,
+    "fields": {}
+  },
+  {
     "type": "fn",
     "named": true,
     "fields": {
@@ -6190,6 +6209,11 @@
     }
   },
   {
+    "type": "semicolon",
+    "named": true,
+    "fields": {}
+  },
+  {
     "type": "serial_dialog",
     "named": true,
     "fields": {
@@ -6559,6 +6583,10 @@
   },
   {
     "type": ":",
+    "named": false
+  },
+  {
+    "type": ";",
     "named": false
   },
   {
@@ -7017,10 +7045,6 @@
   {
     "type": "self",
     "named": false
-  },
-  {
-    "type": "semicolon",
-    "named": true
   },
   {
     "type": "serial_connect",
