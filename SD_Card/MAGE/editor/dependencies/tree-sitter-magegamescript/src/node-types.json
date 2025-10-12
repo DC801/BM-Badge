@@ -5171,7 +5171,18 @@
   {
     "type": "json_array",
     "named": true,
-    "fields": {},
+    "fields": {
+      "array_comma": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": ",",
+            "named": false
+          }
+        ]
+      }
+    },
     "children": {
       "multiple": true,
       "required": false,
@@ -5263,7 +5274,18 @@
   {
     "type": "json_object",
     "named": true,
-    "fields": {},
+    "fields": {
+      "comma": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": ",",
+            "named": false
+          }
+        ]
+      }
+    },
     "children": {
       "multiple": true,
       "required": false,

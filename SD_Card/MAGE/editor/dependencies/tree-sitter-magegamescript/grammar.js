@@ -299,14 +299,22 @@ export default grammar({
 		json_array: ($) =>
 			seq(
 				'[',
-				optional(seq($._json_item, repeat(seq(',', $._json_item)))),
+				optional(seq(
+					$._json_item,
+					repeat(seq(',', $._json_item)),
+					optional(field('array_comma',','))
+				)),
 				']',
 				optional(';'),
 			),
 		json_object: ($) =>
 			seq(
 				'{',
-				optional(seq($.json_name_value_pair, repeat(seq(',', $.json_name_value_pair)))),
+				optional(seq(
+					$.json_name_value_pair,
+					repeat(seq(',', $.json_name_value_pair)),
+					optional(field('comma',','))
+				)),
 				'}',
 			),
 		json_name_value_pair: ($) =>

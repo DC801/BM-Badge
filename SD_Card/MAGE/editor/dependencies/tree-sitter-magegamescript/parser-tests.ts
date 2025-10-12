@@ -20,8 +20,9 @@ const actionArrayToScript = (
 };
 
 // if there are any entries in any of these, the only the listed tests will be run
-const onlyDoTheseActionTests = [];
-const onlyDoTheseFileTests = [];
+const onlyDoTheseActionTests: string[] = [];
+const onlyDoTheseFileTests: string[] = [];
+const onlyDoTheseErrorTests: string[] = [];
 const doErrorTests = true;
 
 // --------------------------- Putting action and file tests into a "project" ---------------------------
@@ -29,7 +30,10 @@ const doErrorTests = true;
 
 const fakeFileMap = {};
 
-const doAllTests = onlyDoTheseActionTests.length === 0 && onlyDoTheseFileTests.length === 0;
+const doAllTests =
+	onlyDoTheseActionTests.length === 0 &&
+	onlyDoTheseFileTests.length === 0 &&
+	onlyDoTheseErrorTests.length === 0;
 const actionTestNames = doAllTests ? Object.keys(actionTests) : onlyDoTheseActionTests;
 const fileTestNames = doAllTests ? Object.keys(fileTests) : onlyDoTheseFileTests;
 
@@ -537,12 +541,12 @@ const runTests = async () => {
 				if (result.mgsWarnings) console.warn(result.mgsWarnings);
 				if (result.mgsErrors) console.error(result.mgsErrors);
 			} else {
-				const testsRun = actionTestNames.length + fileTestNames.length;
-				if (testsRun !== 1) {
-					console.log(`All ${testsRun} basic unit tests passed!`);
+				const normalTestsRun = actionTestNames.length + fileTestNames.length;
+				if (normalTestsRun > 1) {
+					console.log(`All ${normalTestsRun} basic unit tests passed!`);
 				} else if (actionTestNames.length) {
 					console.log(`The action unit test '${actionTestNames[0]}' passed!`);
-				} else {
+				} else if (fileTestNames.length) {
 					console.log(`The file unit test '${fileTestNames[0]}' passed!`);
 				}
 			}
@@ -554,8 +558,8 @@ runTests();
 
 // --------------------------- ERROR TESTS ---------------------------
 
-const runErrorTests = async () => {
-	const promises = Object.keys(errorTests).map(async (testName) => {
+const runErrorTests = async (testNames: string[]) => {
+	const promises = testNames.map(async (testName) => {
 		const errorErrors: string[] = [];
 		const testData = errorTests[testName];
 		const errorTestFileMap = {
@@ -563,9 +567,11 @@ const runErrorTests = async () => {
 		};
 		const header = `Error test ${testName}:`;
 		await parseProject(errorTestFileMap, {}).then((p) => {
+			let printWarnings = false;
+			let printErrors = false;
 			// check warnings
 			if (p.warnings.length !== testData.expectedWarnings.length) {
-				console.warn(p.mgsWarnings);
+				printWarnings = true;
 				errorErrors.push(
 					`${header} Found ${p.warnings.length} warnings, expected ${testData.expectedWarnings.length}`,
 				);
@@ -573,15 +579,17 @@ const runErrorTests = async () => {
 				testData.expectedWarnings.forEach((expected, i) => {
 					const found = p.warnings[i].type;
 					if (found !== expected) {
+						printWarnings = true;
 						errorErrors.push(
 							`${header} Found warning '${found}', expected '${expected}'`,
 						);
 					}
 				});
 			}
+			if (printWarnings) console.warn(p.mgsWarnings);
 			// check errors
 			if (p.errors.length !== testData.expectedErrors.length) {
-				console.error(p.mgsErrors);
+				printErrors = true;
 				errorErrors.push(
 					`${header} Found ${p.errors.length} errors, expected ${testData.expectedErrors.length}`,
 				);
@@ -589,23 +597,31 @@ const runErrorTests = async () => {
 				testData.expectedErrors.forEach((expected, i) => {
 					const found = p.errors[i].type;
 					if (found !== expected) {
+						printErrors = true;
 						errorErrors.push(
 							`${header} Found error '${found}', expected '${expected}'`,
 						);
 					}
 				});
 			}
+			if (printErrors) console.error(p.mgsErrors);
 		});
 		return errorErrors;
 	});
-	const allErrorErrors = (await Promise.all(promises)).flat();
+	const allErrorErrors = (await Promise.all(promises)).filter((v) => v).flat();
 	if (allErrorErrors.length === 0) {
-		console.log(`All ${Object.keys(errorTests).length} error tests OK`);
+		if (testNames.length === 1) {
+			console.log(`Error test "${testNames[0]}" OK`);
+		} else {
+			console.log(`All ${testNames.length} error tests OK`);
+		}
 	} else {
 		allErrorErrors.forEach((v) => console.error(v));
 	}
 };
 
 if (doAllTests && doErrorTests) {
-	runErrorTests();
+	runErrorTests(Object.keys(errorTests));
+} else if (!doAllTests && onlyDoTheseErrorTests.length > 0) {
+	runErrorTests(onlyDoTheseErrorTests);
 }

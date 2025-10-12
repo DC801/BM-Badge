@@ -97,7 +97,10 @@ export const handleNode = (debug: MathlangLocation): AnyNode[] => {
 	debugLog(`handleNode: ${node.type} (${node.grammarType})`);
 
 	reportMissingChildNodes(debug);
-	reportErrorNodes(debug);
+	const errorNodes = reportErrorNodes(debug);
+	if (errorNodes.length) {
+		console.log(errorNodes);
+	}
 
 	// Actions are their own beast and are handled elsewhere
 	if (node.type.startsWith('action_')) {
@@ -580,41 +583,69 @@ const nodeFns: Record<string, (debug: MathlangLocation) => AnyNode[]> = {
 		return steps;
 	},
 	json_object: (debug): AnyNode[] => {
+		let jsonText = debug.node.text;
+		if (/,\s*\}$/.test(jsonText)) {
+			jsonText = jsonText.replace(/,\s*\}$/, '}');
+			debug.quickError('unexpected token', 'trailing commas are not allowed in JSON');
+		}
+		let parsed = {};
 		try {
-			const parsed = JSON.parse(debug.node.text);
-			try {
-				let parsedAction = Action.fromArgs(parsed, debug);
-				if (parsedAction instanceof COPY_SCRIPT) {
-					parsedAction = CopyMacro.quick(
-						debug,
-						parsedAction.script,
-						parsedAction.search_and_replace,
-					);
-				}
-				return [parsedAction];
-			} catch {
-				const actionName = parsed.action || 'UNKNOWN_ACTION';
-				debug.quickError('invalid action', `invalid parameters for "${actionName}"`);
-			}
+			parsed = JSON.parse(jsonText);
 		} catch {
 			debug.quickError(
 				`invalid JSON action`,
 				`JSON.parse() error, unknown cause; check trailing commas!`,
 			);
+			return [];
 		}
-		return [];
+		try {
+			let parsedAction = Action.fromArgs(parsed, debug);
+			if (parsedAction instanceof COPY_SCRIPT) {
+				parsedAction = CopyMacro.quick(
+					debug,
+					parsedAction.script,
+					parsedAction.search_and_replace,
+				);
+			}
+			return [parsedAction];
+		} catch {
+			const actionName = (parsed as Action).action || 'UNKNOWN_ACTION';
+			debug.quickError('invalid action', `invalid parameters for "${actionName}"`);
+			return [];
+		}
 	},
-	json_literal: (debug): AnyNode[] => {
-		const jsonNode = namedChildren(debug)[0];
+	json_literal: (orig_debug): AnyNode[] => {
+		const jsonNode = namedChildren(orig_debug)[0];
 		if (!jsonNode) throw new Error('could not find JSON node');
 		if (jsonNode.grammarType !== 'json_array') {
-			debug.quickError(
+			orig_debug.quickError(
 				'invalid JSON action',
 				'the top level structure of a JSON literal should be an array: []',
 			);
 			return [];
 		}
-		const handledChildren: AnyNode[] = handleNamedChildren(debug.using(jsonNode));
+		const debug = orig_debug.using(jsonNode); // this is the real array guts
+		const innerChildren = namedChildren(debug);
+		const last = innerChildren[innerChildren.length - 1];
+		let trailingComma = false;
+		if (last.text === ',') {
+			// it worked this way at first... then stopped working? Leaving it here
+			trailingComma = true;
+			const last = innerChildren.pop();
+			if (!last) throw new Error('we just saw this, it should exist bruh');
+			if (last.text !== ',') {
+				throw new Error("the trailing comma in a JSON wasn't the last node? BRUH");
+			}
+		}
+		if (optionalChildForField(debug, 'array_comma')) {
+			trailingComma = true;
+		}
+		if (trailingComma) {
+			debug.quickError('unexpected token', 'trailing commas are not allowed in JSON');
+		}
+		const handledChildren: AnyNode[] = innerChildren
+			.map((v) => handleNode(debug.using(v)))
+			.flat();
 		return [JSONLiteral.quick(debug, handledChildren)];
 	},
 	copy_macro: (debug): [CopyMacro] => {

@@ -291,7 +291,10 @@ export class ProjectState {
 		const f = new FileState(this, fileName);
 		const documentDebug = MathlangLocation.quick(f, document);
 		reportMissingChildNodes(documentDebug);
-		reportErrorNodes(documentDebug);
+		const errorNodes = reportErrorNodes(documentDebug);
+		if (errorNodes.length) {
+			console.log(errorNodes);
+		}
 		let catastrophicErrorReported = false;
 		const nodes = namedChildren(documentDebug)
 			.map((node) => {

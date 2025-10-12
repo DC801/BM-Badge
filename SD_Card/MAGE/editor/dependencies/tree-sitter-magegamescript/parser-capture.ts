@@ -786,7 +786,10 @@ export const optionalChildForField = (
 	const child = debug.node.childForFieldName(fieldName);
 	if (child === null) return null;
 	reportMissingChildNodes(debug.using(child));
-	reportErrorNodes(debug.using(child));
+	const errorNodes = reportErrorNodes(debug.using(child));
+	if (errorNodes.length) {
+		console.log(errorNodes);
+	}
 	return child;
 };
 
@@ -807,7 +810,10 @@ export const childrenForField = (debug: MathlangLocation, fieldName: string): Tr
 		.filter((v) => v !== null)
 		.map((v) => {
 			reportMissingChildNodes(debug.using(v));
-			reportErrorNodes(debug.using(v));
+			const errorNodes = reportErrorNodes(debug.using(v));
+			if (errorNodes.length) {
+				console.log(errorNodes);
+			}
 			return v;
 		})
 		.flat();
@@ -818,8 +824,11 @@ export const namedChildren = (debug: MathlangLocation): TreeSitterNode[] => {
 	return debug.node.namedChildren
 		.filter((v) => v !== null)
 		.map((v) => {
-			reportMissingChildNodes(debug.using(v));
-			reportErrorNodes(debug.using(v));
+			// reportMissingChildNodes(debug.using(v));
+			// const errorNodes = reportErrorNodes(debug.using(v));
+			// if (errorNodes.length) {
+			// 	console.log(errorNodes);
+			// }
 			return v;
 		})
 		.flat();
@@ -837,7 +846,10 @@ export const optionalLastChild = (debug: MathlangLocation): TreeSitterNode | nul
 	const lastChild = debug.node.lastChild;
 	if (!lastChild) return null;
 	reportMissingChildNodes(debug.using(lastChild));
-	reportErrorNodes(debug.using(lastChild));
+	const errorNodes = reportErrorNodes(debug.using(lastChild));
+	if (errorNodes.length) {
+		console.log(errorNodes);
+	}
 	return lastChild;
 };
 

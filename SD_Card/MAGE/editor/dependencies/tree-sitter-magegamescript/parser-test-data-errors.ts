@@ -4,6 +4,20 @@ export type ErrorTest = {
 	expectedErrors: string[];
 };
 export const errorTests: Record<string, ErrorTest> = {
+	json_syntax_error_inner: {
+		testText: `_{
+			json[{"action":"BLOCKING_DELAY", "duration":100,}]
+		}`,
+		expectedWarnings: [],
+		expectedErrors: ['unexpected token'],
+	},
+	json_syntax_error: {
+		testText: `_{
+			json[{"action":"BLOCKING_DELAY", "duration":100},]
+		}`,
+		expectedWarnings: [],
+		expectedErrors: ['unexpected token'],
+	},
 	wrong_spread_size: {
 		testText: `_{
 			rand!(wait [1,2,3]; block [1,2];)
@@ -91,10 +105,9 @@ export const errorTests: Record<string, ErrorTest> = {
 		expectedWarnings: ['ambiguous identifiers'],
 		expectedErrors: [],
 	},
-	// TODO doesn't work
-	// missing_semicolon: {
-	// 	testText: `_ { wait 99 }`,
-	// 	expectedWarnings: ['missing token'],
-	// 	expectedErrors: [],
-	// },
+	missing_semicolon: {
+		testText: `_ { wait 99 }`,
+		expectedWarnings: ['missing token'],
+		expectedErrors: [],
+	},
 };
