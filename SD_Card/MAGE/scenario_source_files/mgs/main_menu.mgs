@@ -210,6 +210,16 @@ debug_commands {
 			{"action":"ARRAY_LOG","array_name":"arr"},
 			{"action":"ARRAY_PUSH_FROM_VALUE","value":5,"array_name":"arr"}
 		]
+		show serial_dialog { "---- Assigning 3840 into a variable and then pushing that variable into an array" };
+		array_read_test = 3840;
+		array_write_test = 0;
+		json[
+			{"action":"ARRAY_NEW","array_name":"arr"},
+			{"action":"ARRAY_PUSH_FROM_VARIABLE","variable":"array_read_test","array_name":"arr"},
+			{"action":"ARRAY_LOG","array_name":"arr"},
+			{"action":"ARRAY_READ_FROM_INDEX_INTO_VARIABLE","variable":"array_write_test","array_name":"arr","index":0}
+		]
+		show serial_dialog { "What is the value of array_write_test after read? $array_write_test$" };
 	};
 }
 
