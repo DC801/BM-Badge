@@ -537,7 +537,7 @@ const runTests = async () => {
 		// DONE
 		if (errors.length === 0) {
 			if (result.mgsWarnings || result.mgsErrors) {
-				console.log('Action unit tests had some syntax errors:');
+				console.log('Action or file unit tests had some syntax errors:');
 				if (result.mgsWarnings) console.warn(result.mgsWarnings);
 				if (result.mgsErrors) console.error(result.mgsErrors);
 			} else {

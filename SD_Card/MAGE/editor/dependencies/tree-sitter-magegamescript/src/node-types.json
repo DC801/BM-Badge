@@ -3356,6 +3356,10 @@
           {
             "type": "CONSTANT",
             "named": true
+          },
+          {
+            "type": "QUOTED_STRING",
+            "named": true
           }
         ]
       }

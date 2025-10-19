@@ -174,12 +174,12 @@ export default grammar({
 			seq(
 				field('name', $.STRING),
 				'(',
-				field('arg', choice($._int_expression)),
-				optional(repeat(seq(',', field('arg', choice($._int_expression))))),
+				field('arg', $._fn_call_arg),
+				optional(repeat(seq(',', field('arg', $._fn_call_arg)))),
 				optional(','),
 				')',
 			),
-
+		_fn_call_arg: ($) => choice($._int_expression),
 		include_macro: ($) => seq('include', field('fileName', $.quoted_string), $.semicolon),
 		constant_assignment: ($) =>
 			seq(
@@ -299,21 +299,25 @@ export default grammar({
 		json_array: ($) =>
 			seq(
 				'[',
-				optional(seq(
-					$._json_item,
-					repeat(seq(',', $._json_item)),
-					optional(field('array_comma',',')) // passes at grammar level so we can identifiy error
-				)),
+				optional(
+					seq(
+						$._json_item,
+						repeat(seq(',', $._json_item)),
+						optional(field('array_comma', ',')), // passes at grammar level so we can identifiy error
+					),
+				),
 				']',
 			),
 		json_object: ($) =>
 			seq(
 				'{',
-				optional(seq(
-					$.json_name_value_pair,
-					repeat(seq(',', $.json_name_value_pair)),
-					optional(field('comma',',')) // passes at grammar level so we can identifiy error
-				)),
+				optional(
+					seq(
+						$.json_name_value_pair,
+						repeat(seq(',', $.json_name_value_pair)),
+						optional(field('comma', ',')), // passes at grammar level so we can identifiy error
+					),
+				),
 				'}',
 			),
 		json_name_value_pair: ($) =>
@@ -338,6 +342,7 @@ export default grammar({
 				choice(
 					field('serial_dialog', $.serial_dialog),
 					field('serial_dialog_name', $.bareword),
+					seq('serial_dialog', field('serial_dialog_name', $.string)),
 				),
 				')',
 			),

@@ -1267,13 +1267,8 @@
           "type": "FIELD",
           "name": "arg",
           "content": {
-            "type": "CHOICE",
-            "members": [
-              {
-                "type": "SYMBOL",
-                "name": "_int_expression"
-              }
-            ]
+            "type": "SYMBOL",
+            "name": "_fn_call_arg"
           }
         },
         {
@@ -1292,13 +1287,8 @@
                     "type": "FIELD",
                     "name": "arg",
                     "content": {
-                      "type": "CHOICE",
-                      "members": [
-                        {
-                          "type": "SYMBOL",
-                          "name": "_int_expression"
-                        }
-                      ]
+                      "type": "SYMBOL",
+                      "name": "_fn_call_arg"
                     }
                   }
                 ]
@@ -1324,6 +1314,15 @@
         {
           "type": "STRING",
           "value": ")"
+        }
+      ]
+    },
+    "_fn_call_arg": {
+      "type": "CHOICE",
+      "members": [
+        {
+          "type": "SYMBOL",
+          "name": "_int_expression"
         }
       ]
     },
@@ -2416,6 +2415,23 @@
                 "type": "SYMBOL",
                 "name": "bareword"
               }
+            },
+            {
+              "type": "SEQ",
+              "members": [
+                {
+                  "type": "STRING",
+                  "value": "serial_dialog"
+                },
+                {
+                  "type": "FIELD",
+                  "name": "serial_dialog_name",
+                  "content": {
+                    "type": "SYMBOL",
+                    "name": "string"
+                  }
+                }
+              ]
             }
           ]
         },

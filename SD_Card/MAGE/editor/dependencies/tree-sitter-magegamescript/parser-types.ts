@@ -171,6 +171,7 @@ const mathlangMessageTypes: Record<string, string> = {
 	'not enough fn args': 'function requires more arguments than was provided',
 	'invalid fn arg':
 		'fn args must be constants (beginning with $) in a fn definition, and MGS primitive values in a fn call',
+	'recursive fn call': `fns cannot call themselves (call stacks aren't real`,
 
 	// actions
 	'mismatched spread lengths': 'spreads must have the same count of items within each context',
@@ -197,6 +198,8 @@ const mathlangMessageTypes: Record<string, string> = {
 	'serial dialog option mismatch': 'the first option type will be used',
 	'dialog too long':
 		'dialog will wrap off the bottom of the dialog frame (or into dialog options)',
+	'recursive include': 'include recursion not allowed',
+	'recursive copy_script': 'copy_script recursion not allowed',
 };
 
 export type MathlangMessageType = keyof typeof mathlangMessageTypes;

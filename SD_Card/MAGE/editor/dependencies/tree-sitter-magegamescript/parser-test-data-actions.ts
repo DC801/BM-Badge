@@ -1,18 +1,6 @@
 import { RETURN } from './parser-utilities.ts';
 
 export const actionTests = {
-	// broken_action_test: {
-	// 	input: [
-	// 		`json[
-	// 			{
-	// 				"action": "ARRAY_PUSH_FROM_VARIABLE",
-	// 				"variable_name": "array_var_test",
-	// 				"array_name": "arr"
-	// 			}
-	// 		]`,
-	// 	],
-	// 	expected: [`"arr".push("array_var_test");`],
-	// },
 	keyword_as_variable_name: {
 		input: [`"if" = 10;`],
 		expected: [`"if" = 10;`],
@@ -393,7 +381,7 @@ export const actionTests = {
 		input: [`json[{ "action": "NEW_ACTION", "entity": "%PLAYER%"}]`],
 		expected: [`json[{`, `"action": "NEW_ACTION",`, `"entity": "%PLAYER%"`, `}]`],
 	},
-	fn_recursive: {
+	fn_deeper: {
 		pre: `
 		fn get_diff_x ($e1, $e2) {
 			if (entity $e1 x > entity $e2 x) {

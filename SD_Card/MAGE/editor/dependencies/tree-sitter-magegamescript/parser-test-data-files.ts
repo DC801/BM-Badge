@@ -15,6 +15,19 @@ type TestFileMapEntry = {
 	expected: TestExpected;
 };
 export const fileTests: Record<string, TestFileMapEntry> = {
+	'string_in_fn_call.mgs': {
+		fileText: `
+			fn store_string ($string) { warp_state = $string; }
+			string_in_args { store_string("asdf"); }
+		`,
+		expected: {
+			scripts: {
+				string_in_args: `"string_in_args" {
+					warp_state = "asdf";
+				}`,
+			},
+		},
+	},
 	'int_exp_in_fn_call.mgs': {
 		fileText: `
 			fn store_n ($a) { stored = $a*1; }

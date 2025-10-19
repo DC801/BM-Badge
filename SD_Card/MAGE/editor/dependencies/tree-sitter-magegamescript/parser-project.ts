@@ -170,7 +170,14 @@ export class ProjectState {
 		// Recursion detection
 		if (copyRecursion.includes(scriptName)) {
 			copyRecursion.push(scriptName);
-			throw new Error(`copy_macro recursion\n       ${copyRecursion.join('\n       -> ')}`);
+			const type = 'recursive copy_script';
+			const message = `copy_script recursion not allowed (script "${scriptName}")`;
+			const footer = '\n       -> ' + copyRecursion.join('\n       -> ');
+			debug.quickError(type, message, footer);
+			copyRecursion.pop();
+			// junk the whole thing
+			this.scripts[scriptName].copyScriptResolved = true;
+			this.scripts[scriptName].actions = [];
 		}
 		copyRecursion.push(scriptName);
 

@@ -113,6 +113,7 @@ export const handleNode = (debug: MathlangLocation): AnyNode[] => {
 };
 
 const includeRecursion: string[] = [];
+const fnRecursion: string[] = [];
 
 const nodeFns: Record<string, (debug: MathlangLocation) => AnyNode[]> = {
 	line_comment: () => [],
@@ -176,10 +177,24 @@ const nodeFns: Record<string, (debug: MathlangLocation) => AnyNode[]> = {
 	},
 	fn_call: (debug) => {
 		const name = stringCaptureForField(debug, 'name');
+
+		// die if recursion detected
+		if (fnRecursion.includes(name)) {
+			fnRecursion.push(name); // so the round trip is logged
+			const type = 'recursive fn call';
+			const message = `fn call recursion not allowed (fn "${name}")`;
+			const footer = '\n       -> ' + fnRecursion.join('\n       -> ');
+			debug.quickError(type, message, footer);
+			fnRecursion.pop();
+			return [];
+		}
+		fnRecursion.push(name);
+
 		const definition = debug.f.functions[name];
 		if (!definition) {
 			const nameNode = optionalChildForField(debug, 'name') || debug.node;
 			debug.using(nameNode).quickError('undefined fn', `function ${name} is undefined`);
+			fnRecursion.pop();
 			return [];
 		}
 		definition.callCount += 1;
@@ -195,6 +210,7 @@ const nodeFns: Record<string, (debug: MathlangLocation) => AnyNode[]> = {
 			);
 			// TODO: yellow squiggles when too many params are passed?
 			// What if it's inside a .map() and you're not using all of them?
+			fnRecursion.pop();
 			return [];
 		}
 
@@ -261,6 +277,7 @@ const nodeFns: Record<string, (debug: MathlangLocation) => AnyNode[]> = {
 		for (let i = 0; i < temporaryCount; i++) {
 			dropTemporary();
 		}
+		fnRecursion.pop();
 		return argSteps.concat(fnSteps);
 	},
 	script_block: (debug) => {
@@ -297,8 +314,12 @@ const nodeFns: Record<string, (debug: MathlangLocation) => AnyNode[]> = {
 		// die if recursion detected
 		if (includeRecursion.includes(f.fileName)) {
 			includeRecursion.push(f.fileName); // so the round trip is logged
-			const message = `include_macro recursion\n       ${includeRecursion.join('\n       -> ')}`;
-			throw new Error(message);
+			const type = 'recursive include';
+			const message = `include recursion not allowed (file "${f.fileName}")`;
+			const footer = '\n       -> ' + includeRecursion.join('\n       -> ');
+			debug.quickError(type, message, footer);
+			includeRecursion.pop();
+			return [];
 		}
 		includeRecursion.push(f.fileName);
 

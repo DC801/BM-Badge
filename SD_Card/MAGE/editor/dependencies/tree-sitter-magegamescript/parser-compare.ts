@@ -144,8 +144,8 @@ const compareScripts = (p: ProjectState, scriptName: string): ScriptComparison =
 	}
 
 	//both
-	oldActions = oldActions.map(Action.fromArgs);
-	newActions = newActions.map(Action.fromArgs);
+	oldActions = oldActions.map((v) => Action.fromArgs(v));
+	newActions = newActions.map((v) => Action.fromArgs(v));
 	if (!newActions) throw new Error(`missing newActions for script "${scriptName}"`);
 	if (!oldActions) throw new Error(`missing oldActions for script "${scriptName}"`);
 

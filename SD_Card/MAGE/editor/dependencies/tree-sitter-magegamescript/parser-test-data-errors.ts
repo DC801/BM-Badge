@@ -4,6 +4,23 @@ export type ErrorTest = {
 	expectedErrors: string[];
 };
 export const errorTests: Record<string, ErrorTest> = {
+	copy_script_recursion_detection: {
+		testText: `
+			inner { outer(); }
+			outer { inner(); }
+		`,
+		expectedWarnings: [],
+		expectedErrors: ['recursive copy_script'],
+	},
+	fn_call_recursion_detection: {
+		testText: `
+			fn inner ($n) { outer($n); }
+			fn outer ($n) { inner($n); }
+			fn_call_recursion_detection { outer("asdf"); }
+		`,
+		expectedWarnings: [],
+		expectedErrors: ['recursive fn call'],
+	},
 	json_known_action_wrong_param: {
 		testText: `_{
 			json[{"action":"BLOCKING_DELAY", "ddddduration":100}]
