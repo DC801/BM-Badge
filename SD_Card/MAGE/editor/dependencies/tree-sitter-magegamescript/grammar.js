@@ -1182,10 +1182,9 @@ export default grammar({
 		array_method_length: () => seq('.', 'length', '(', ')'),
 		array_method_pop: () => seq('.', 'pop', '(', ')'),
 		array_method_pop_left: () => seq('.', 'pop_left', '(', ')'),
-		array_method_push: ($) =>
-			seq('.', 'push', '(', field('exp', $.int_expression_expandable), ')'),
+		array_method_push: ($) => seq('.', 'push', '(', field('exp', $._int_expression), ')'),
 		array_method_push_left: ($) =>
-			seq('.', 'push_left', '(', field('exp', $.int_expression_expandable), ')'),
+			seq('.', 'push_left', '(', field('exp', $._int_expression), ')'),
 		array_method_for_each: ($) =>
 			seq('.', 'for_each', '(', field('fn', $.fn_lambda_or_identifier), ')'),
 	},

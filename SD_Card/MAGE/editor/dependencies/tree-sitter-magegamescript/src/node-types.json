@@ -2386,10 +2386,6 @@
             "named": true
           },
           {
-            "type": "int_expression_expansion",
-            "named": true
-          },
-          {
             "type": "int_getable",
             "named": true
           },
@@ -2427,10 +2423,6 @@
           },
           {
             "type": "int_binary_expression",
-            "named": true
-          },
-          {
-            "type": "int_expression_expansion",
             "named": true
           },
           {

@@ -7426,7 +7426,7 @@
           "name": "exp",
           "content": {
             "type": "SYMBOL",
-            "name": "int_expression_expandable"
+            "name": "_int_expression"
           }
         },
         {
@@ -7455,7 +7455,7 @@
           "name": "exp",
           "content": {
             "type": "SYMBOL",
-            "name": "int_expression_expandable"
+            "name": "_int_expression"
           }
         },
         {
