@@ -254,6 +254,25 @@ debug_commands {
 			{"action":"ARRAY_READ_FROM_VARIABLE_INDEX_INTO_VARIABLE","variable":"array_write_test","array_name":"arr","variable_index":"array_read_test"}
 		]
 		show serial_dialog { wrap 200 "Value of array_write_test reading index $array_read_test$ should be the last valid value, 960: $array_write_test$" };
+		show serial_dialog { wrap 200 "---- testing array_sort, array_reverse, array_length_into_variable" };
+		json[
+			{"action":"ARRAY_NEW","array_name":"sorted"}
+		]
+		show serial_dialog { wrap 200 "Value of array_length_test should be 0: $array_length_test$" };
+		json[
+			{"action":"ARRAY_PUSH_FROM_VALUE","value":400,"array_name":"sorted"},
+			{"action":"ARRAY_PUSH_FROM_VALUE","value":4,"array_name":"sorted"},
+			{"action":"ARRAY_PUSH_FROM_VALUE","value":17,"array_name":"sorted"},
+			{"action":"ARRAY_PUSH_FROM_VALUE","value":1,"array_name":"sorted"},
+			{"action":"ARRAY_PUSH_FROM_VALUE","value":2,"array_name":"sorted"},
+			{"action":"ARRAY_LOG","array_name":"sorted"},
+			{"action":"ARRAY_SORT","array_name":"sorted"},
+			{"action":"ARRAY_LOG","array_name":"sorted"},
+			{"action":"ARRAY_REVERSE","array_name":"sorted"},
+			{"action":"ARRAY_LOG","array_name":"sorted"},
+			{"action":"ARRAY_LENGTH_INTO_VARIABLE","array_name":"sorted","variable":"array_length_test"}
+		]
+		show serial_dialog { wrap 200 "Value of array_length_test should be 5: $array_length_test$" };
 	};
 }
 
