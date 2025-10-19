@@ -649,7 +649,7 @@ const nodeFns: Record<string, (debug: MathlangLocation) => AnyNode[]> = {
 		const innerChildren = namedChildren(debug);
 		const last = innerChildren[innerChildren.length - 1];
 		let trailingComma = false;
-		if (last.text === ',') {
+		if (last?.text === ',') {
 			// it worked this way at first... then stopped working? Leaving it here
 			trailingComma = true;
 			const last = innerChildren.pop();

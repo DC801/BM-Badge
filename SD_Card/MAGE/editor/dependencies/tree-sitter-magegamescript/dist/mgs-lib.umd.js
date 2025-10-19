@@ -5571,7 +5571,7 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       const innerChildren = namedChildren(debug);
       const last = innerChildren[innerChildren.length - 1];
       let trailingComma = false;
-      if (last.text === ",") {
+      if ((last == null ? void 0 : last.text) === ",") {
         trailingComma = true;
         const last2 = innerChildren.pop();
         if (!last2) throw new Error("we just saw this, it should exist bruh");
