@@ -379,7 +379,7 @@ types:
         doc: local index to the map's script list
       - id: primary_id
         type: u2
-        doc: may be: entity_type_id, animation_id, tileset_id
+        doc: may be entity_type_id, animation_id, tileset_id
       - id: secondary_id
         type: u2
         doc: if primary_id_type is tileset_id, this is the tile_id, otherwise 0

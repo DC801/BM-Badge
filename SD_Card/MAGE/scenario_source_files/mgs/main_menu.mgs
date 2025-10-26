@@ -273,6 +273,35 @@ debug_commands {
 			{"action":"ARRAY_LENGTH_INTO_VARIABLE","array_name":"sorted","variable":"array_length_test"}
 		]
 		show serial_dialog { wrap 200 "Value of array_length_test should be 5: $array_length_test$" };
+		show serial_dialog { wrap 200 "---- testing array_write_into_index_from_value, array_write_into_index_from_variable" };
+		two = 2;
+		three = 3;
+		nine = 9;
+		json[
+			{"action":"ARRAY_NEW","array_name":"overwrite"},
+			{"action":"ARRAY_PUSH_FROM_VALUE","value":100,"array_name":"overwrite"},
+			{"action":"ARRAY_PUSH_FROM_VALUE","value":100,"array_name":"overwrite"},
+			{"action":"ARRAY_PUSH_FROM_VALUE","value":100,"array_name":"overwrite"},
+			{"action":"ARRAY_PUSH_FROM_VALUE","value":100,"array_name":"overwrite"},
+			{"action":"ARRAY_WRITE_INTO_INDEX_FROM_VALUE","value":2,"array_name":"overwrite","index":0},
+			{"action":"ARRAY_WRITE_INTO_INDEX_FROM_VARIABLE","variable":"three","array_name":"overwrite","index":1},
+			{"action":"ARRAY_LOG","array_name":"overwrite"}
+		]
+		show serial_dialog { wrap 200 "Values in array overwrite should be [2, 3, 100, 100]" };
+		show serial_dialog { wrap 200 "---- testing array_write_into_variable_index_from_value, array_write_into_variable_index_from_variable" };
+		json[
+			{"action":"ARRAY_WRITE_INTO_VARIABLE_INDEX_FROM_VALUE","value":2,"array_name":"overwrite","variable_index":"two"},
+			{"action":"ARRAY_WRITE_INTO_VARIABLE_INDEX_FROM_VARIABLE","variable":"three","array_name":"overwrite","variable_index":"three"},
+			{"action":"ARRAY_LOG","array_name":"overwrite"}
+		]
+		show serial_dialog { wrap 200 "Values in array overwrite should be [2, 3, 2, 3]" };
+		show serial_dialog { wrap 200 "---- testing array write out of bounds" };
+		json[
+			{"action":"ARRAY_WRITE_INTO_INDEX_FROM_VALUE","value":2,"array_name":"overwrite","index":100},
+			{"action":"ARRAY_WRITE_INTO_INDEX_FROM_VARIABLE","variable":"nine","array_name":"overwrite","index":100},
+			{"action":"ARRAY_WRITE_INTO_VARIABLE_INDEX_FROM_VALUE","value":2,"array_name":"overwrite","variable_index":"nine"},
+			{"action":"ARRAY_WRITE_INTO_VARIABLE_INDEX_FROM_VARIABLE","variable":"nine","array_name":"overwrite","variable_index":"nine"}
+		]
 	};
 }
 

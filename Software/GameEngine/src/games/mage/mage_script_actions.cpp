@@ -2900,6 +2900,166 @@ void array_read_from_index_into_variable(uint8_t * args, MageScriptState * resum
 		"array_read_from_index_into_variable: Invalid arrayId: " + std::to_string(argStruct->arrayId)
 	);
 }
+void array_write_into_index_from_value(uint8_t * args, MageScriptState * resumeStateStruct)
+{
+	typedef struct {
+		uint16_t value;
+		uint8_t arrayId;
+		uint8_t index;
+		uint8_t paddingE;
+		uint8_t paddingF;
+		uint8_t paddingG;
+	} ActionArrayWriteIntoIndexFromValue;
+	auto *argStruct = (ActionArrayWriteIntoIndexFromValue*)args;
+	ROM_ENDIAN_U2_BUFFER(&argStruct->value, 1);
+	for (MageScriptArray& array: MageGame->scriptArrays){
+		if (array.arrayId == argStruct->arrayId) {
+			const auto arrayLength = array.values.size();
+			if (argStruct->index >= arrayLength) {
+				MageCommand->debugScriptsPrintln(
+					"array_write_into_index_from_value: ERROR! array " + std::to_string(argStruct->arrayId) +
+					": Invalid index " + std::to_string(argStruct->index) +
+					" since array length is " + std::to_string(arrayLength) +
+					" attempting to store value " + std::to_string(argStruct->value)
+				);
+				return;
+			}
+			MageCommand->debugScriptsPrintln(
+				"array_write_into_index_from_value: array " + std::to_string(argStruct->arrayId) +
+				": Writing value " + std::to_string(argStruct->value) +
+				" into index" + std::to_string(argStruct->index)
+			);
+			array.values[argStruct->index] = argStruct->value;
+			return;
+		}
+	}
+	MageCommand->debugScriptsPrintln(
+		"array_write_into_index_from_value: Invalid arrayId: " + std::to_string(argStruct->arrayId)
+	);
+}
+void array_write_into_index_from_variable(uint8_t * args, MageScriptState * resumeStateStruct)
+{
+	typedef struct {
+		uint8_t variableId;
+		uint8_t arrayId;
+		uint8_t index;
+		uint8_t paddingD;
+		uint8_t paddingE;
+		uint8_t paddingF;
+		uint8_t paddingG;
+	} ActionArrayWriteIntoIndexFromVariable;
+	auto *argStruct = (ActionArrayWriteIntoIndexFromVariable*)args;
+	for (MageScriptArray& array: MageGame->scriptArrays){
+		if (array.arrayId == argStruct->arrayId) {
+			const auto value = MageGame->currentSave.scriptVariables[argStruct->variableId];
+			const auto arrayLength = array.values.size();
+			if (argStruct->index >= arrayLength) {
+				MageCommand->debugScriptsPrintln(
+					"array_write_into_index_from_variable: ERROR! array " + std::to_string(argStruct->arrayId) +
+					": Reading from variableID " + std::to_string(argStruct->variableId) +
+					": Invalid index " + std::to_string(argStruct->index) +
+					" since array length is " + std::to_string(arrayLength) +
+					" attempting to store value " + std::to_string(value)
+				);
+				return;
+			}
+			MageCommand->debugScriptsPrintln(
+				"array_write_into_index_from_variable: array " + std::to_string(argStruct->arrayId) +
+				": Reading from variableID " + std::to_string(argStruct->variableId) +
+				": Writing value " + std::to_string(value) +
+				" into index" + std::to_string(argStruct->index)
+			);
+			array.values[argStruct->index] = value;
+			return;
+		}
+	}
+	MageCommand->debugScriptsPrintln(
+		"array_write_into_index_from_variable: Invalid arrayId: " + std::to_string(argStruct->arrayId)
+	);
+}
+void array_write_into_variable_index_from_value(uint8_t * args, MageScriptState * resumeStateStruct)
+{
+	typedef struct {
+		uint16_t value;
+		uint8_t arrayId;
+		uint8_t variableIdIndex;
+		uint8_t paddingE;
+		uint8_t paddingF;
+		uint8_t paddingG;
+	} ActionArrayWriteIntoVariableIndexFromValue;
+	auto *argStruct = (ActionArrayWriteIntoVariableIndexFromValue*)args;
+	ROM_ENDIAN_U2_BUFFER(&argStruct->value, 1);
+	for (MageScriptArray& array: MageGame->scriptArrays){
+		if (array.arrayId == argStruct->arrayId) {
+			const auto variableIndex = MageGame->currentSave.scriptVariables[argStruct->variableIdIndex];
+			const auto arrayLength = array.values.size();
+			if (variableIndex >= arrayLength) {
+				MageCommand->debugScriptsPrintln(
+					"array_write_into_variable_index_from_value: ERROR! array " + std::to_string(argStruct->arrayId) +
+					": Reading from variableID " + std::to_string(argStruct->variableIdIndex) +
+					": Invalid index " + std::to_string(variableIndex) +
+					" since array length is " + std::to_string(arrayLength) +
+					" attempting to store value " + std::to_string(argStruct->value)
+				);
+				return;
+			}
+			MageCommand->debugScriptsPrintln(
+				"array_write_into_variable_index_from_value: array " + std::to_string(argStruct->arrayId) +
+				": Reading from variableID " + std::to_string(argStruct->variableIdIndex) +
+				": Writing value " + std::to_string(argStruct->value) +
+				" into index" + std::to_string(variableIndex)
+			);
+			array.values[variableIndex] = argStruct->value;
+			return;
+		}
+	}
+	MageCommand->debugScriptsPrintln(
+		"array_write_into_variable_index_from_value: Invalid arrayId: " + std::to_string(argStruct->arrayId)
+	);
+}
+void array_write_into_variable_index_from_variable(uint8_t * args, MageScriptState * resumeStateStruct)
+{
+	typedef struct {
+		uint8_t variableIdValue;
+		uint8_t arrayId;
+		uint8_t variableIdIndex;
+		uint8_t paddingD;
+		uint8_t paddingE;
+		uint8_t paddingF;
+		uint8_t paddingG;
+	} ActionArrayWriteIntoVariableIndexFromVariable;
+	auto *argStruct = (ActionArrayWriteIntoVariableIndexFromVariable*)args;
+	for (MageScriptArray& array: MageGame->scriptArrays){
+		if (array.arrayId == argStruct->arrayId) {
+			const auto value = MageGame->currentSave.scriptVariables[argStruct->variableIdValue];
+			const auto variableIndex = MageGame->currentSave.scriptVariables[argStruct->variableIdIndex];
+			const auto arrayLength = array.values.size();
+			if (variableIndex >= arrayLength) {
+				MageCommand->debugScriptsPrintln(
+					"array_write_into_variable_index_from_variable: ERROR! array " + std::to_string(argStruct->arrayId) +
+					": Reading from variableIdValue " + std::to_string(argStruct->variableIdValue) +
+					": Reading from variableIdIndex " + std::to_string(argStruct->variableIdIndex) +
+					": Invalid index " + std::to_string(variableIndex) +
+					" since array length is " + std::to_string(arrayLength) +
+					" attempting to store value " + std::to_string(value)
+				);
+				return;
+			}
+			MageCommand->debugScriptsPrintln(
+				"array_write_into_variable_index_from_variable: array " + std::to_string(argStruct->arrayId) +
+				": Reading from variableIdValue " + std::to_string(argStruct->variableIdValue) +
+				": Reading from variableIdIndex " + std::to_string(argStruct->variableIdIndex) +
+				": Writing value " + std::to_string(value) +
+				" into index" + std::to_string(variableIndex)
+			);
+			array.values[variableIndex] = value;
+			return;
+		}
+	}
+	MageCommand->debugScriptsPrintln(
+		"array_write_into_variable_index_from_variable: Invalid arrayId: " + std::to_string(argStruct->arrayId)
+	);
+}
 void array_read_from_variable_index_into_variable(uint8_t * args, MageScriptState * resumeStateStruct)
 {
 	typedef struct {
@@ -3105,22 +3265,22 @@ ActionFunctionPointer actionFunctions[MageScriptActionTypeId::NUM_ACTIONS] = {
 	&array_sort,
 	&array_reverse,
 	&array_length_into_variable,
-	NULL, //&array_write_into_index_from_value
-	NULL, //&array_write_into_index_from_variable
-	NULL, //&array_write_into_variable_index_from_value
-	NULL, //&array_write_into_variable_index_from_variable
+	&array_write_into_index_from_value,
+	&array_write_into_index_from_variable,
+	&array_write_into_variable_index_from_value,
+	&array_write_into_variable_index_from_variable,
 	&array_read_from_index_into_variable,
 	&array_read_from_variable_index_into_variable,
 	&array_push_from_value,
 	&array_push_from_variable,
-	NULL, //&array_push_left_from_value
-	NULL, //&array_push_left_from_variable
-	NULL, //&array_slice
-	NULL, //&array_slice_by_variable
-	NULL, //&array_slice_twice
-	NULL, //&array_slice_twice_by_variable
-	NULL, //&array_pop_into_variable
-	NULL, //&array_pop_left_into_variable
+	NULL, //&array_push_left_from_value,
+	NULL, //&array_push_left_from_variable,
+	NULL, //&array_slice,
+	NULL, //&array_slice_by_variable,
+	NULL, //&array_slice_twice,
+	NULL, //&array_slice_twice_by_variable,
+	NULL, //&array_pop_into_variable,
+	NULL, //&array_pop_left_into_variable,
 };
 
 uint16_t getUsefulGeometryIndexFromActionGeometryId(
