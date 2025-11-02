@@ -302,6 +302,13 @@ debug_commands {
 			{"action":"ARRAY_WRITE_INTO_VARIABLE_INDEX_FROM_VALUE","value":2,"array_name":"overwrite","variable_index":"nine"},
 			{"action":"ARRAY_WRITE_INTO_VARIABLE_INDEX_FROM_VARIABLE","variable":"nine","array_name":"overwrite","variable_index":"nine"}
 		]
+		show serial_dialog { wrap 200 "---- testing push_left actions" };
+		json[
+			{"action":"ARRAY_PUSH_LEFT_FROM_VALUE","value":9001,"array_name":"overwrite"},
+			{"action":"ARRAY_PUSH_LEFT_FROM_VARIABLE","variable":"nine","array_name":"overwrite"},
+			{"action":"ARRAY_LOG","array_name":"overwrite"}
+		]
+		show serial_dialog { wrap 200 "Values in array overwrite should be [9, 9001, 2, 3, 2, 3]" };
 	};
 }
 

@@ -3156,6 +3156,59 @@ void array_push_from_variable(uint8_t * args, MageScriptState * resumeStateStruc
 		"array_push_from_variable: Invalid arrayId: " + std::to_string(argStruct->arrayId)
 	);
 }
+void array_push_left_from_value(uint8_t * args, MageScriptState * resumeStateStruct)
+{
+	typedef struct {
+		uint16_t value;
+		uint8_t arrayId;
+		uint8_t paddingD;
+		uint8_t paddingE;
+		uint8_t paddingF;
+		uint8_t paddingG;
+	} ActionArrayPushLeftFromValue;
+	auto *argStruct = (ActionArrayPushLeftFromValue*)args;
+	ROM_ENDIAN_U2_BUFFER(&argStruct->value, 1);
+	for (MageScriptArray& array: MageGame->scriptArrays){
+		if (array.arrayId == argStruct->arrayId) {
+			MageCommand->debugScriptsPrintln(
+				"array_push_left_from_value: array " + std::to_string(argStruct->arrayId) +
+				": Pushing in value " + std::to_string(argStruct->value)
+			);
+			array.values.insert(array.values.begin(), argStruct->value);
+			return;
+		}
+	}
+	MageCommand->debugScriptsPrintln(
+		"array_push_left_from_value: Invalid arrayId: " + std::to_string(argStruct->arrayId)
+	);
+}
+void array_push_left_from_variable(uint8_t * args, MageScriptState * resumeStateStruct)
+{
+	typedef struct {
+		uint8_t arrayId;
+		uint8_t variableId;
+		uint8_t paddingC;
+		uint8_t paddingD;
+		uint8_t paddingE;
+		uint8_t paddingF;
+		uint8_t paddingG;
+	} ActionArrayPushLeftFromVariable;
+	auto *argStruct = (ActionArrayPushLeftFromVariable*)args;
+	for (MageScriptArray& array: MageGame->scriptArrays){
+		if (array.arrayId == argStruct->arrayId) {
+			const uint16_t *currentValue = &MageGame->currentSave.scriptVariables[argStruct->variableId];
+			MageCommand->debugScriptsPrintln(
+				"array_push_left_from_variable: array " + std::to_string(argStruct->arrayId) +
+				": Pushing in value " + std::to_string(*currentValue)
+			);
+			array.values.insert(array.values.begin(), *currentValue);
+			return;
+		}
+	}
+	MageCommand->debugScriptsPrintln(
+		"array_push_left_from_variable: Invalid arrayId: " + std::to_string(argStruct->arrayId)
+	);
+}
 
 
 ActionFunctionPointer actionFunctions[MageScriptActionTypeId::NUM_ACTIONS] = {
@@ -3273,8 +3326,8 @@ ActionFunctionPointer actionFunctions[MageScriptActionTypeId::NUM_ACTIONS] = {
 	&array_read_from_variable_index_into_variable,
 	&array_push_from_value,
 	&array_push_from_variable,
-	NULL, //&array_push_left_from_value,
-	NULL, //&array_push_left_from_variable,
+	&array_push_left_from_value,
+	&array_push_left_from_variable,
 	NULL, //&array_slice,
 	NULL, //&array_slice_by_variable,
 	NULL, //&array_slice_twice,
