@@ -508,12 +508,12 @@ var actionFieldsMap = {
 		{propertyName: 'array_destination', size: 1},
 	],
 	ARRAY_POP_INTO_VARIABLE: [
-		{propertyName: 'variable', size: 1},
 		{propertyName: 'array_name', size: 1},
+		{propertyName: 'variable', size: 1},
 	],
 	ARRAY_POP_LEFT_INTO_VARIABLE: [
-		{propertyName: 'variable', size: 1},
 		{propertyName: 'array_name', size: 1},
+		{propertyName: 'variable', size: 1},
 	],
 };
 

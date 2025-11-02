@@ -309,6 +309,31 @@ debug_commands {
 			{"action":"ARRAY_LOG","array_name":"overwrite"}
 		]
 		show serial_dialog { wrap 200 "Values in array overwrite should be [9, 9001, 2, 3, 2, 3]" };
+		show serial_dialog { wrap 200 "---- testing array pop actions" };
+		json[
+			{"action":"ARRAY_POP_INTO_VARIABLE","variable":"array_read_test","array_name":"overwrite"},
+			{"action":"ARRAY_POP_INTO_VARIABLE","variable":"array_read_test","array_name":"overwrite"},
+			{"action":"ARRAY_POP_INTO_VARIABLE","variable":"array_read_test","array_name":"overwrite"},
+			{"action":"ARRAY_POP_INTO_VARIABLE","variable":"array_read_test","array_name":"overwrite"},
+			{"action":"ARRAY_POP_LEFT_INTO_VARIABLE","variable":"array_read_test","array_name":"overwrite"},
+			{"action":"ARRAY_LOG","array_name":"overwrite"}
+		]
+		show serial_dialog { wrap 200 "array overwrite should be [9001], array_read_test should be 9: $array_read_test$" };
+		json[
+			{"action":"ARRAY_POP_INTO_VARIABLE","variable":"array_read_test","array_name":"overwrite"},
+			{"action":"ARRAY_LOG","array_name":"overwrite"}
+		]
+		show serial_dialog { wrap 200 "array overwrite should be [], array_read_test should be 9001: $array_read_test$" };
+		json[
+			{"action":"ARRAY_POP_INTO_VARIABLE","variable":"array_read_test","array_name":"overwrite"},
+			{"action":"ARRAY_LOG","array_name":"overwrite"}
+		]
+		show serial_dialog { wrap 200 "error expected, array overwrite should be [], array_read_test should be 9001: $array_read_test$" };
+		json[
+			{"action":"ARRAY_POP_LEFT_INTO_VARIABLE","variable":"array_read_test","array_name":"overwrite"},
+			{"action":"ARRAY_LOG","array_name":"overwrite"}
+		]
+		show serial_dialog { wrap 200 "error expected, array overwrite should be [], array_read_test should be 9001: $array_read_test$" };
 	};
 }
 
