@@ -1,0 +1,421 @@
+include "header.mgs";
+
+// To check that the actions even encode
+array_gamut {
+	json[
+		{"action":"ARRAY_NEW","array_name":"arr"},
+		{"action":"ARRAY_NEW","array_name":"asdf"},
+		{"action":"ARRAY_DELETE","array_name":"arr"},
+		{"action":"ARRAY_LOG","array_name":"arr"},
+		{"action":"ARRAY_SORT","array_name":"arr"},
+		{"action":"ARRAY_REVERSE","array_name":"arr"},
+		{"action":"ARRAY_LENGTH_INTO_VARIABLE","array_name":"arr","variable":"varr"},
+		{"action":"ARRAY_WRITE_INTO_INDEX_FROM_VALUE","value":0,"array_name":"arr","index":0},
+		{"action":"ARRAY_WRITE_INTO_INDEX_FROM_VARIABLE","variable":"varr","array_name":"arr","index":0},
+		{"action":"ARRAY_WRITE_INTO_VARIABLE_INDEX_FROM_VALUE","value":0,"array_name":"arr","variable_index":"vindex"},
+		{"action":"ARRAY_WRITE_INTO_VARIABLE_INDEX_FROM_VARIABLE","variable":"varr","array_name":"arr","variable_index":"vindex"},
+		{"action":"ARRAY_READ_FROM_INDEX_INTO_VARIABLE","variable":"varr","array_name":"arr","index":0},
+		{"action":"ARRAY_READ_FROM_VARIABLE_INDEX_INTO_VARIABLE","variable":"varr","array_name":"arr","variable_index":"vindex"},
+		{"action":"ARRAY_PUSH_FROM_VALUE","value":0,"array_name":"arr"},
+		{"action":"ARRAY_PUSH_FROM_VARIABLE","array_name":"arr","variable":"varr"},
+		{"action":"ARRAY_PUSH_LEFT_FROM_VALUE","value":0,"array_name":"arr"},
+		{"action":"ARRAY_PUSH_LEFT_FROM_VARIABLE","array_name":"arr","variable":"varr"},
+		{"action":"ARRAY_SLICE","array_source":"source","array_destination":"dest","index_start":0},
+		{"action":"ARRAY_SLICE_BY_VARIABLE","variable_start":"vstart","array_source":"source","array_destination":"dest"},
+		{"action":"ARRAY_SLICE_TWICE","array_source":"source","array_destination":"dest","index_start":0,"index_end":0},
+		{"action":"ARRAY_SLICE_TWICE_BY_VARIABLE","variable_start":"vstart","variable_end":"vend","array_source":"source","array_destination":"dest"},
+		{"action":"ARRAY_POP_INTO_VARIABLE","variable":"varr","array_name":"arr"},
+		{"action":"ARRAY_POP_LEFT_INTO_VARIABLE","variable":"varr","array_name":"arr"}
+	]
+}
+
+array_bytecode_tests {
+	// Array creation
+	show serial_dialog { wrap 200 "---- Creating an array named 'arr'" };
+	json[
+		{"action":"ARRAY_NEW","array_name":"arr"},
+		{"action":"ARRAY_LOG","array_name":"arr"},
+		{"action":"ARRAY_PUSH_FROM_VALUE","value":0,"array_name":"arr"},
+		{"action":"ARRAY_LOG","array_name":"arr"},
+		{"action":"ARRAY_PUSH_FROM_VALUE","value":99,"array_name":"arr"},
+		{"action":"ARRAY_LOG","array_name":"arr"}
+	]
+	show serial_dialog { wrap 200 "---- Creating another array named 'asdf'" };
+	json[
+		{"action":"ARRAY_NEW","array_name":"asdf"},
+		{"action":"ARRAY_LOG","array_name":"asdf"},
+		{"action":"ARRAY_PUSH_FROM_VALUE","value":1234,"array_name":"asdf"},
+		{"action":"ARRAY_LOG","array_name":"asdf"},
+		{"action":"ARRAY_PUSH_FROM_VALUE","value":72,"array_name":"asdf"},
+		{"action":"ARRAY_LOG","array_name":"asdf"}
+	]
+	show serial_dialog { wrap 200 "---- Can both arrays be read afterward?" };
+	json[
+		{"action":"ARRAY_LOG","array_name":"arr"},
+		{"action":"ARRAY_LOG","array_name":"asdf"}
+	]
+
+	// Array deletion
+	show serial_dialog { wrap 200 "---- Deleting array 'arr' and then trying to use it" };
+	json[
+		{"action":"ARRAY_DELETE","array_name":"arr"},
+		{"action":"ARRAY_LOG","array_name":"arr"},
+		{"action":"ARRAY_PUSH_FROM_VALUE","value":5,"array_name":"arr"}
+	]
+	show serial_dialog { wrap 200 "---- Deleting array 'arr' twice and then trying to use it" };
+	json[
+		{"action":"ARRAY_DELETE","array_name":"arr"},
+		{"action":"ARRAY_DELETE","array_name":"arr"},
+		{"action":"ARRAY_LOG","array_name":"arr"},
+		{"action":"ARRAY_PUSH_FROM_VALUE","value":5,"array_name":"arr"}
+	]
+
+	// Array push from variable, read into variable (from number index)
+	show serial_dialog { wrap 200 "---- Assigning 3840 into a variable and then pushing that variable into an array" };
+	array_read_test = 3840;
+	array_write_test = 0;
+	json[
+		{"action":"ARRAY_NEW","array_name":"arr"},
+		{"action":"ARRAY_PUSH_FROM_VARIABLE","variable":"array_read_test","array_name":"arr"},
+		{"action":"ARRAY_LOG","array_name":"arr"},
+		{"action":"ARRAY_READ_FROM_INDEX_INTO_VARIABLE","variable":"array_write_test","array_name":"arr","index":0}
+	]
+	show serial_dialog { wrap 200 "Value of array_write_test should be 3840: $array_write_test$" };
+	show serial_dialog { wrap 200 "---- array_read_from_variable_index_into_variable, starting with failure state first. You should see an error:" };
+	show serial_dialog { wrap 200 "array_read_test should be 3840, way out of bounds: $array_read_test$" };
+	array_write_test = 0;
+
+	// Array read into variable (from variable index)
+	json[
+		{"action":"ARRAY_READ_FROM_VARIABLE_INDEX_INTO_VARIABLE","variable":"array_write_test","array_name":"arr","variable_index":"array_read_test"}
+	]
+	show serial_dialog { wrap 200 "Value of array_write_test should still be 0: $array_write_test$" };
+	show serial_dialog { wrap 200 "---- array_read_from_variable_index_into_variable, reading indices 0, 1, 2" };
+	json[
+		{"action":"ARRAY_PUSH_FROM_VALUE","value":1920,"array_name":"arr"},
+		{"action":"ARRAY_PUSH_FROM_VALUE","value":960,"array_name":"arr"},
+		{"action":"ARRAY_LOG","array_name":"arr"}
+	]
+	array_read_test = 0;
+	json[
+		{"action":"ARRAY_READ_FROM_VARIABLE_INDEX_INTO_VARIABLE","variable":"array_write_test","array_name":"arr","variable_index":"array_read_test"}
+	]
+	show serial_dialog { wrap 200 "Value of array_write_test reading index $array_read_test$ should be 3840: $array_write_test$" };
+	array_read_test = 1;
+	json[
+		{"action":"ARRAY_READ_FROM_VARIABLE_INDEX_INTO_VARIABLE","variable":"array_write_test","array_name":"arr","variable_index":"array_read_test"}
+	]
+	show serial_dialog { wrap 200 "Value of array_write_test reading index $array_read_test$ should be 1920: $array_write_test$" };
+	array_read_test = 2;
+	json[
+		{"action":"ARRAY_READ_FROM_VARIABLE_INDEX_INTO_VARIABLE","variable":"array_write_test","array_name":"arr","variable_index":"array_read_test"}
+	]
+	show serial_dialog { wrap 200 "Value of array_write_test reading index $array_read_test$ should be 960: $array_write_test$" };
+	show serial_dialog { wrap 200 "---- array_read_from_variable_index_into_variable, should error reading index 3 on array length of 3:" };
+	array_read_test = 3;
+	json[
+		{"action":"ARRAY_READ_FROM_VARIABLE_INDEX_INTO_VARIABLE","variable":"array_write_test","array_name":"arr","variable_index":"array_read_test"}
+	]
+	show serial_dialog { wrap 200 "Value of array_write_test reading index $array_read_test$ should be the last valid value, 960: $array_write_test$" };
+
+	// Sort, reverse, length
+	show serial_dialog { wrap 200 "---- testing array_sort, array_reverse, array_length_into_variable" };
+	json[
+		{"action":"ARRAY_NEW","array_name":"sorted"}
+	]
+	show serial_dialog { wrap 200 "Value of array_length_test should be 0: $array_length_test$" };
+	json[
+		{"action":"ARRAY_PUSH_FROM_VALUE","value":400,"array_name":"sorted"},
+		{"action":"ARRAY_PUSH_FROM_VALUE","value":4,"array_name":"sorted"},
+		{"action":"ARRAY_PUSH_FROM_VALUE","value":17,"array_name":"sorted"},
+		{"action":"ARRAY_PUSH_FROM_VALUE","value":1,"array_name":"sorted"},
+		{"action":"ARRAY_PUSH_FROM_VALUE","value":2,"array_name":"sorted"},
+		{"action":"ARRAY_LOG","array_name":"sorted"},
+		{"action":"ARRAY_SORT","array_name":"sorted"},
+		{"action":"ARRAY_LOG","array_name":"sorted"},
+		{"action":"ARRAY_REVERSE","array_name":"sorted"},
+		{"action":"ARRAY_LOG","array_name":"sorted"},
+		{"action":"ARRAY_LENGTH_INTO_VARIABLE","array_name":"sorted","variable":"array_length_test"}
+	]
+	show serial_dialog { wrap 200 "Value of array_length_test should be 5: $array_length_test$" };
+
+	// Array write from value or vairable (into number index)
+	show serial_dialog { wrap 200 "---- testing array_write_into_index_from_value, array_write_into_index_from_variable" };
+	two = 2;
+	three = 3;
+	nine = 9;
+	json[
+		{"action":"ARRAY_NEW","array_name":"overwrite"},
+		{"action":"ARRAY_PUSH_FROM_VALUE","value":100,"array_name":"overwrite"},
+		{"action":"ARRAY_PUSH_FROM_VALUE","value":100,"array_name":"overwrite"},
+		{"action":"ARRAY_PUSH_FROM_VALUE","value":100,"array_name":"overwrite"},
+		{"action":"ARRAY_PUSH_FROM_VALUE","value":100,"array_name":"overwrite"},
+		{"action":"ARRAY_WRITE_INTO_INDEX_FROM_VALUE","value":2,"array_name":"overwrite","index":0},
+		{"action":"ARRAY_WRITE_INTO_INDEX_FROM_VARIABLE","variable":"three","array_name":"overwrite","index":1},
+		{"action":"ARRAY_LOG","array_name":"overwrite"}
+	]
+	show serial_dialog { wrap 200 "Values in array overwrite should be [2, 3, 100, 100]" };
+
+	// Array write from value or vairable (into variable index)
+	show serial_dialog { wrap 200 "---- testing array_write_into_variable_index_from_value, array_write_into_variable_index_from_variable" };
+	json[
+		{"action":"ARRAY_WRITE_INTO_VARIABLE_INDEX_FROM_VALUE","value":2,"array_name":"overwrite","variable_index":"two"},
+		{"action":"ARRAY_WRITE_INTO_VARIABLE_INDEX_FROM_VARIABLE","variable":"three","array_name":"overwrite","variable_index":"three"},
+		{"action":"ARRAY_LOG","array_name":"overwrite"}
+	]
+	show serial_dialog { wrap 200 "Values in array overwrite should be [2, 3, 2, 3]" };
+
+	// Array write out of bounds
+	show serial_dialog { wrap 200 "---- testing array write out of bounds" };
+	json[
+		{"action":"ARRAY_WRITE_INTO_INDEX_FROM_VALUE","value":2,"array_name":"overwrite","index":100},
+		{"action":"ARRAY_WRITE_INTO_INDEX_FROM_VARIABLE","variable":"nine","array_name":"overwrite","index":100},
+		{"action":"ARRAY_WRITE_INTO_VARIABLE_INDEX_FROM_VALUE","value":2,"array_name":"overwrite","variable_index":"nine"},
+		{"action":"ARRAY_WRITE_INTO_VARIABLE_INDEX_FROM_VARIABLE","variable":"nine","array_name":"overwrite","variable_index":"nine"}
+	]
+	show serial_dialog { wrap 200 "---- testing push_left actions" };
+	json[
+		{"action":"ARRAY_PUSH_LEFT_FROM_VALUE","value":9001,"array_name":"overwrite"},
+		{"action":"ARRAY_PUSH_LEFT_FROM_VARIABLE","variable":"nine","array_name":"overwrite"},
+		{"action":"ARRAY_LOG","array_name":"overwrite"}
+	]
+	show serial_dialog { wrap 200 "Values in array overwrite should be [9, 9001, 2, 3, 2, 3]" };
+
+	// Array pop
+	show serial_dialog { wrap 200 "---- testing array pop actions" };
+	json[
+		{"action":"ARRAY_POP_INTO_VARIABLE","variable":"array_read_test","array_name":"overwrite"},
+		{"action":"ARRAY_POP_INTO_VARIABLE","variable":"array_read_test","array_name":"overwrite"},
+		{"action":"ARRAY_POP_INTO_VARIABLE","variable":"array_read_test","array_name":"overwrite"},
+		{"action":"ARRAY_POP_INTO_VARIABLE","variable":"array_read_test","array_name":"overwrite"},
+		{"action":"ARRAY_POP_LEFT_INTO_VARIABLE","variable":"array_read_test","array_name":"overwrite"},
+		{"action":"ARRAY_LOG","array_name":"overwrite"}
+	]
+	show serial_dialog { wrap 200 "array overwrite should be [9001], array_read_test should be 9: $array_read_test$" };
+	json[
+		{"action":"ARRAY_POP_INTO_VARIABLE","variable":"array_read_test","array_name":"overwrite"},
+		{"action":"ARRAY_LOG","array_name":"overwrite"}
+	]
+	show serial_dialog { wrap 200 "array overwrite should be [], array_read_test should be 9001: $array_read_test$" };
+	json[
+		{"action":"ARRAY_POP_INTO_VARIABLE","variable":"array_read_test","array_name":"overwrite"},
+		{"action":"ARRAY_LOG","array_name":"overwrite"}
+	]
+	show serial_dialog { wrap 200 "error expected, array overwrite should be [], array_read_test should be 9001: $array_read_test$" };
+	json[
+		{"action":"ARRAY_POP_LEFT_INTO_VARIABLE","variable":"array_read_test","array_name":"overwrite"},
+		{"action":"ARRAY_LOG","array_name":"overwrite"}
+	]
+	show serial_dialog { wrap 200 "error expected, array overwrite should be [], array_read_test should be 9001: $array_read_test$" };
+}
+
+fn bad_unit_test($fnd, $exp) {
+    expected = $exp *1;
+    found = $fnd *1;
+    concat serial_dialog {"[ <r>BAD</> ] "};
+    concat serial_dialog {"(expected <y>$expected$</>, found <r>$found$</>) "};
+}
+good_unit_test {
+    concat serial_dialog {"[ <g>OK</>  ] "};
+}
+
+fn print_compared_values ($fnd, $exp) {
+    if ($fnd != $exp) {
+        bad_unit_test($fnd, $exp);
+    } else {
+        good_unit_test();
+    }
+}
+
+fn tens ($n) { return $n * 10; }
+
+array_unit_tests {
+    show serial_dialog spacer;
+    show serial_dialog { "<c>---ARRAY UNIT TESTS---</>\n "};
+    array arr = [];
+
+    // READ FROM NUMBER INDEX
+    array arr = [3];
+    print array arr;
+    print_compared_values(arr[0], 3);
+    show serial_dialog {"READ FROM NUMBER INDEX"};
+    debug!(" ")
+    
+    // PUSH VALUE
+    arr.push(1);
+    print array arr;
+    print_compared_values(arr[1], 1);
+    show serial_dialog {"PUSH VALUE"};
+    debug!(" ")
+
+    // PUSH VARIABLE
+    v = 2;
+    arr.push(v);
+    print array arr;
+    print_compared_values(arr[2], v);
+    show serial_dialog {"PUSH VARIABLE"};
+    debug!(" ")
+
+    // LENGTH
+    print array arr;
+    print_compared_values(arr.length(), 3);
+    show serial_dialog {"LENGTH"};
+    debug!(" ")
+
+    // PUSH_LEFT VALUE
+    arr.push_left(0);
+    print array arr;
+    print_compared_values(arr[0], 0);
+    show serial_dialog {"PUSH_LEFT VALUE"};
+    debug!(" ")
+
+    // PUSH_LEFT VARIABLE
+    v = 4;
+    arr.push_left(v);
+    print array arr;
+    print_compared_values(arr[0], v);
+    show serial_dialog {"PUSH_LEFT VARIABLE"};
+
+    // SORT
+    arr.sort();
+    print array arr;
+    // SORT [0]
+    print_compared_values(arr[0], 0);
+    show serial_dialog {"SORT [0]"};
+    debug!(" ")
+    // SORT [1]
+    print_compared_values(arr[1], 1);
+    show serial_dialog {"SORT [1]"};
+    debug!(" ")
+    // SORT [2]
+    print_compared_values(arr[2], 2);
+    show serial_dialog {"SORT [2]"};
+    debug!(" ")
+    // SORT [3]
+    print_compared_values(arr[3], 3);
+    show serial_dialog {"SORT [3]"};
+    debug!(" ")
+    // SORT [4]
+    print_compared_values(arr[4], 4);
+    show serial_dialog {"SORT [4]"};
+    debug!(" ")
+
+    // REVERSE
+    arr.reverse();
+    print array arr;
+    // REVERSE [0]
+    print_compared_values(arr[0], 4);
+    show serial_dialog {"REVERSE [0]"};
+    debug!(" ")
+    // REVERSE [1]
+    print_compared_values(arr[1], 3);
+    show serial_dialog {"REVERSE [1]"};
+    debug!(" ")
+    // REVERSE [2]
+    print_compared_values(arr[2], 2);
+    show serial_dialog {"REVERSE [2]"};
+    debug!(" ")
+    // REVERSE [3]
+    print_compared_values(arr[3], 1);
+    show serial_dialog {"REVERSE [3]"};
+    debug!(" ")
+    // REVERSE [4]
+    print_compared_values(arr[4], 0);
+    show serial_dialog {"REVERSE [4]"};
+    debug!(" ")
+
+	// POP
+	v = arr.pop();
+	print array arr;
+    print_compared_values(v, 0);
+    show serial_dialog {"POP"};
+    debug!(" ")
+
+	// POP_LEFT
+	v = arr.pop_left();
+	print array arr;
+    print_compared_values(v, 4);
+    show serial_dialog {"POP_LEFT"};
+    debug!(" ")
+
+	// WRITE TO NUMBER INDEX, NUMBER VALUE
+	arr[0] = 10;
+	print array arr;
+    print_compared_values(arr[0], 10);
+    show serial_dialog {"WRITE TO NUMBER INDEX, NUMBER VALUE"};
+    debug!(" ")
+
+	// WRITE TO NUMBER INDEX, VARIABLE VALUE
+	v = 20;
+	arr[1] = v;
+	print array arr;
+    print_compared_values(arr[1], v);
+    show serial_dialog {"WRITE TO NUMBER INDEX, VARIABLE VALUE"};
+    debug!(" ")
+
+	// [10,20,1]
+
+	// WRITE TO VARIABLE INDEX, NUMBER VALUE
+	v = 2;
+	arr[v] = 30;
+	print array arr;
+    print_compared_values(arr[v], 30);
+    show serial_dialog {"WRITE TO VARIABLE INDEX, NUMBER VALUE"};
+    debug!(" ")
+
+	// WRITE TO VARIABLE INDEX, VARIABLE VALUE
+	v = 100;
+	w = 0;
+	arr[w] = v;
+	print array arr;
+    print_compared_values(arr[w], v);
+    show serial_dialog {"WRITE TO VARIABLE INDEX, VARIABLE VALUE"};
+    debug!(" ")
+
+    // MAP REFERENCE
+    delete array arr;
+	array arr = [1,2];
+	array arr = arr.map(tens);
+    print array arr;
+    // MAP LAMBDA [0]
+    print_compared_values(arr[0], 10);
+    show serial_dialog {"MAP REFERENCE [0]"};
+    debug!(" ")
+    // MAP LAMBDA [1]
+    print_compared_values(arr[1], 20);
+    show serial_dialog {"MAP REFERENCE [1]"};
+    debug!(" ")
+
+    // MAP LAMBDA
+    delete array arr;
+    array arr = [1,2];
+	array arr = arr.map(($n) { return $n * 10; });
+    print array arr;
+    // MAP LAMBDA [0]
+    print_compared_values(arr[0], 10);
+    show serial_dialog {"MAP LAMBDA [0]"};
+    debug!(" ")
+    // MAP LAMBDA [1]
+    print_compared_values(arr[1], 20);
+    show serial_dialog {"MAP LAMBDA [1]"};
+    debug!(" ")
+
+    // FOR_EACH LAMBDA
+    delete array arr;
+    array temp = [1,2];
+	array arr = [];
+	temp.for_each(($n) {
+		arr.push($n * 100);
+	});
+    print array arr;
+    // FOR_EACH LAMBDA [0]
+    print_compared_values(arr[0], 100);
+    show serial_dialog {"FOR_EACH LAMBDA [0]"};
+    debug!(" ")
+    // FOR_EACH LAMBDA [1]
+    print_compared_values(arr[1], 200);
+    show serial_dialog {"FOR_EACH LAMBDA [1]"};
+    debug!(" ")
+
+    delete array arr;
+}
