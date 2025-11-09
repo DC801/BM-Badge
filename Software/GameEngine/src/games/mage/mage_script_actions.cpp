@@ -3209,6 +3209,82 @@ void array_push_left_from_variable(uint8_t * args, MageScriptState * resumeState
 		"array_push_left_from_variable: Invalid arrayId: " + std::to_string(argStruct->arrayId)
 	);
 }
+void array_pop_into_variable(uint8_t * args, MageScriptState * resumeStateStruct)
+{
+	typedef struct {
+		uint8_t arrayId;
+		uint8_t variableId;
+		uint8_t paddingC;
+		uint8_t paddingD;
+		uint8_t paddingE;
+		uint8_t paddingF;
+		uint8_t paddingG;
+	} ActionArrayPopIntoVariable;
+	auto *argStruct = (ActionArrayPopIntoVariable*)args;
+	for (MageScriptArray& array: MageGame->scriptArrays){
+		if (array.arrayId == argStruct->arrayId) {
+			const size_t arrayLength = array.values.size();
+			if (arrayLength == 0) {
+				MageCommand->debugScriptsPrintln(
+					"ERROR! array_pop_into_variable: array " + std::to_string(argStruct->arrayId) +
+					": is empty and has no values to pop!"
+				);
+				return;
+			}
+			const auto arrayValue = array.values.back();
+			MageGame->currentSave.scriptVariables[argStruct->variableId] = arrayValue;
+			array.values.pop_back();
+			MageCommand->debugScriptsPrintln(
+				"array_pop_into_variable: array " + std::to_string(argStruct->arrayId) +
+				": arrayLength is now " + std::to_string(arrayLength - 1) +
+				": and value " + std::to_string(arrayValue) +
+				": stored into variable " + std::to_string(argStruct->variableId)
+			);
+			return;
+		}
+	}
+	MageCommand->debugScriptsPrintln(
+		"array_pop_into_variable: Invalid arrayId: " + std::to_string(argStruct->arrayId)
+	);
+}
+void array_pop_left_into_variable(uint8_t * args, MageScriptState * resumeStateStruct)
+{
+	typedef struct {
+		uint8_t arrayId;
+		uint8_t variableId;
+		uint8_t paddingC;
+		uint8_t paddingD;
+		uint8_t paddingE;
+		uint8_t paddingF;
+		uint8_t paddingG;
+	} ActionArrayPopLeftIntoVariable;
+	auto *argStruct = (ActionArrayPopLeftIntoVariable*)args;
+	for (MageScriptArray& array: MageGame->scriptArrays){
+		if (array.arrayId == argStruct->arrayId) {
+			const size_t arrayLength = array.values.size();
+			if (arrayLength == 0) {
+				MageCommand->debugScriptsPrintln(
+					"ERROR! array_pop_left_into_variable: array " + std::to_string(argStruct->arrayId) +
+					": is empty and has no values to pop!"
+				);
+				return;
+			}
+			const auto arrayValue = array.values.front();
+			MageGame->currentSave.scriptVariables[argStruct->variableId] = arrayValue;
+			array.values.erase(array.values.begin());
+			MageCommand->debugScriptsPrintln(
+				"array_pop_left_into_variable: array " + std::to_string(argStruct->arrayId) +
+				": arrayLength is now " + std::to_string(arrayLength - 1) +
+				": and value " + std::to_string(arrayValue) +
+				": stored into variable " + std::to_string(argStruct->variableId)
+			);
+			return;
+		}
+	}
+	MageCommand->debugScriptsPrintln(
+		"array_pop_left_into_variable: Invalid arrayId: " + std::to_string(argStruct->arrayId)
+	);
+}
 
 
 ActionFunctionPointer actionFunctions[MageScriptActionTypeId::NUM_ACTIONS] = {
@@ -3332,8 +3408,8 @@ ActionFunctionPointer actionFunctions[MageScriptActionTypeId::NUM_ACTIONS] = {
 	NULL, //&array_slice_by_variable,
 	NULL, //&array_slice_twice,
 	NULL, //&array_slice_twice_by_variable,
-	NULL, //&array_pop_into_variable,
-	NULL, //&array_pop_left_into_variable,
+	&array_pop_into_variable,
+	&array_pop_left_into_variable,
 };
 
 uint16_t getUsefulGeometryIndexFromActionGeometryId(
