@@ -1,0 +1,291 @@
+"on_tick_ch3_mouseroom_walk" {
+	if button PAGE pressed then goto label if_true_34;
+	goto label if_chain_rendezvous_33;
+	if_true_34:
+	player_control = false;
+	show serial_dialog "mage_cursor_wtf.mgs-34:5";
+	wait 1ms;
+	show serial_dialog "mage_cursor_wtf.mgs-38:5";
+	if player direction == north then goto label if_true_2;
+	if player direction == east then goto label if_true_3;
+	if player direction == south then goto label if_true_4;
+	if player direction == west then goto label if_true_5;
+	goto label if_chain_rendezvous_1;
+	if_true_5:
+	"__RETURN_" = 3;
+	goto label end_of_script_6;
+	goto label if_chain_rendezvous_1;
+	if_true_4:
+	"__RETURN_" = 2;
+	goto label end_of_script_6;
+	goto label if_chain_rendezvous_1;
+	if_true_3:
+	"__RETURN_" = 1;
+	goto label end_of_script_6;
+	goto label if_chain_rendezvous_1;
+	if_true_2:
+	"__RETURN_" = 0;
+	goto label end_of_script_6;
+	if_chain_rendezvous_1:
+	end_of_script_6:
+	"player_dir" = "__RETURN_";
+	"__RETURN_" = 0;
+	"player_x" = player x;
+	"player_y" = player y;
+	"log_x" = "player_x";
+	"log_y" = "player_y";
+	if debug_mode then goto label if_true_7;
+	goto label rendezvous_7;
+	if_true_7:
+	show serial_dialog "mage_cursor_wtf.mgs-20:4";
+	rendezvous_7:
+	end_of_script_8:
+	show serial_dialog "mage_cursor_wtf.mgs-40:5";
+	if entity "cursor" direction == north then goto label if_true_10;
+	if entity "cursor" direction == east then goto label if_true_11;
+	if entity "cursor" direction == south then goto label if_true_12;
+	if entity "cursor" direction == west then goto label if_true_13;
+	goto label if_chain_rendezvous_9;
+	if_true_13:
+	"__RETURN_" = 3;
+	goto label end_of_script_14;
+	goto label if_chain_rendezvous_9;
+	if_true_12:
+	"__RETURN_" = 2;
+	goto label end_of_script_14;
+	goto label if_chain_rendezvous_9;
+	if_true_11:
+	"__RETURN_" = 1;
+	goto label end_of_script_14;
+	goto label if_chain_rendezvous_9;
+	if_true_10:
+	"__RETURN_" = 0;
+	goto label end_of_script_14;
+	if_chain_rendezvous_9:
+	end_of_script_14:
+	"cursor_dir" = "__RETURN_";
+	"__RETURN_" = 0;
+	"cursor_x" = entity "cursor" x;
+	"cursor_y" = entity "cursor" y;
+	"log_x" = "cursor_x";
+	"log_y" = "cursor_y";
+	if debug_mode then goto label if_true_15;
+	goto label rendezvous_15;
+	if_true_15:
+	show serial_dialog "mage_cursor_wtf.mgs-20:4";
+	rendezvous_15:
+	end_of_script_16:
+	show serial_dialog "mage_cursor_wtf.mgs-42:5";
+	if "player_dir" == 0 then goto label if_true_18;
+	if "player_dir" == 1 then goto label if_true_19;
+	if "player_dir" == 2 then goto label if_true_20;
+	if "player_dir" == 3 then goto label if_true_21;
+	goto label if_chain_rendezvous_17;
+	if_true_21:
+	player direction = "west";
+	goto label if_chain_rendezvous_17;
+	if_true_20:
+	player direction = "south";
+	goto label if_chain_rendezvous_17;
+	if_true_19:
+	player direction = "east";
+	goto label if_chain_rendezvous_17;
+	if_true_18:
+	player direction = "north";
+	if_chain_rendezvous_17:
+	end_of_script_22:
+	player x = "cursor_x";
+	player y = "cursor_y";
+	"log_x" = "cursor_x";
+	"log_y" = "cursor_y";
+	if debug_mode then goto label if_true_23;
+	goto label rendezvous_23;
+	if_true_23:
+	show serial_dialog "mage_cursor_wtf.mgs-29:4";
+	rendezvous_23:
+	end_of_script_24:
+	show serial_dialog "mage_cursor_wtf.mgs-44:5";
+	if "player_dir" == 0 then goto label if_true_26;
+	if "player_dir" == 1 then goto label if_true_27;
+	if "player_dir" == 2 then goto label if_true_28;
+	if "player_dir" == 3 then goto label if_true_29;
+	goto label if_chain_rendezvous_25;
+	if_true_29:
+	entity "cursor" direction = "west";
+	goto label if_chain_rendezvous_25;
+	if_true_28:
+	entity "cursor" direction = "south";
+	goto label if_chain_rendezvous_25;
+	if_true_27:
+	entity "cursor" direction = "east";
+	goto label if_chain_rendezvous_25;
+	if_true_26:
+	entity "cursor" direction = "north";
+	if_chain_rendezvous_25:
+	end_of_script_30:
+	entity "cursor" x = "player_x";
+	entity "cursor" y = "player_y";
+	"log_x" = "player_x";
+	"log_y" = "player_y";
+	if debug_mode then goto label if_true_31;
+	goto label rendezvous_31;
+	if_true_31:
+	show serial_dialog "mage_cursor_wtf.mgs-29:4";
+	rendezvous_31:
+	end_of_script_32:
+	player type = "cursor";
+	entity "cursor" type = "mage";
+	"print_x" = player x;
+	"print_y" = player y;
+	show serial_dialog "mage_cursor_wtf.mgs-51:5";
+	player_control = true;
+	self on_tick = "on_tick_ch3_mouseroom_mouse";
+	if_chain_rendezvous_33:
+	end_of_script_35:
+}
+
+"on_tick_ch3_mouseroom_mouse" {
+	if button PAGE pressed then goto label if_true_69;
+	goto label if_chain_rendezvous_68;
+	if_true_69:
+	player_control = false;
+	show serial_dialog "mage_cursor_wtf.mgs-60:5";
+	wait 1ms;
+	show serial_dialog "mage_cursor_wtf.mgs-64:5";
+	if player direction == north then goto label if_true_37;
+	if player direction == east then goto label if_true_38;
+	if player direction == south then goto label if_true_39;
+	if player direction == west then goto label if_true_40;
+	goto label if_chain_rendezvous_36;
+	if_true_40:
+	"__RETURN_" = 3;
+	goto label end_of_script_41;
+	goto label if_chain_rendezvous_36;
+	if_true_39:
+	"__RETURN_" = 2;
+	goto label end_of_script_41;
+	goto label if_chain_rendezvous_36;
+	if_true_38:
+	"__RETURN_" = 1;
+	goto label end_of_script_41;
+	goto label if_chain_rendezvous_36;
+	if_true_37:
+	"__RETURN_" = 0;
+	goto label end_of_script_41;
+	if_chain_rendezvous_36:
+	end_of_script_41:
+	"player_dir" = "__RETURN_";
+	"__RETURN_" = 0;
+	"player_x" = player x;
+	"player_y" = player y;
+	"log_x" = "player_x";
+	"log_y" = "player_y";
+	if debug_mode then goto label if_true_42;
+	goto label rendezvous_42;
+	if_true_42:
+	show serial_dialog "mage_cursor_wtf.mgs-20:4";
+	rendezvous_42:
+	end_of_script_43:
+	show serial_dialog "mage_cursor_wtf.mgs-66:5";
+	if entity "cursor" direction == north then goto label if_true_45;
+	if entity "cursor" direction == east then goto label if_true_46;
+	if entity "cursor" direction == south then goto label if_true_47;
+	if entity "cursor" direction == west then goto label if_true_48;
+	goto label if_chain_rendezvous_44;
+	if_true_48:
+	"__RETURN_" = 3;
+	goto label end_of_script_49;
+	goto label if_chain_rendezvous_44;
+	if_true_47:
+	"__RETURN_" = 2;
+	goto label end_of_script_49;
+	goto label if_chain_rendezvous_44;
+	if_true_46:
+	"__RETURN_" = 1;
+	goto label end_of_script_49;
+	goto label if_chain_rendezvous_44;
+	if_true_45:
+	"__RETURN_" = 0;
+	goto label end_of_script_49;
+	if_chain_rendezvous_44:
+	end_of_script_49:
+	"cursor_dir" = "__RETURN_";
+	"__RETURN_" = 0;
+	"cursor_x" = entity "cursor" x;
+	"cursor_y" = entity "cursor" y;
+	"log_x" = "cursor_x";
+	"log_y" = "cursor_y";
+	if debug_mode then goto label if_true_50;
+	goto label rendezvous_50;
+	if_true_50:
+	show serial_dialog "mage_cursor_wtf.mgs-20:4";
+	rendezvous_50:
+	end_of_script_51:
+	show serial_dialog "mage_cursor_wtf.mgs-68:5";
+	if "cursor_dir" == 0 then goto label if_true_53;
+	if "cursor_dir" == 1 then goto label if_true_54;
+	if "cursor_dir" == 2 then goto label if_true_55;
+	if "cursor_dir" == 3 then goto label if_true_56;
+	goto label if_chain_rendezvous_52;
+	if_true_56:
+	player direction = "west";
+	goto label if_chain_rendezvous_52;
+	if_true_55:
+	player direction = "south";
+	goto label if_chain_rendezvous_52;
+	if_true_54:
+	player direction = "east";
+	goto label if_chain_rendezvous_52;
+	if_true_53:
+	player direction = "north";
+	if_chain_rendezvous_52:
+	end_of_script_57:
+	player x = "cursor_x";
+	player y = "cursor_y";
+	"log_x" = "cursor_x";
+	"log_y" = "cursor_y";
+	if debug_mode then goto label if_true_58;
+	goto label rendezvous_58;
+	if_true_58:
+	show serial_dialog "mage_cursor_wtf.mgs-29:4";
+	rendezvous_58:
+	end_of_script_59:
+	show serial_dialog "mage_cursor_wtf.mgs-70:5";
+	if "cursor_dir" == 0 then goto label if_true_61;
+	if "cursor_dir" == 1 then goto label if_true_62;
+	if "cursor_dir" == 2 then goto label if_true_63;
+	if "cursor_dir" == 3 then goto label if_true_64;
+	goto label if_chain_rendezvous_60;
+	if_true_64:
+	entity "cursor" direction = "west";
+	goto label if_chain_rendezvous_60;
+	if_true_63:
+	entity "cursor" direction = "south";
+	goto label if_chain_rendezvous_60;
+	if_true_62:
+	entity "cursor" direction = "east";
+	goto label if_chain_rendezvous_60;
+	if_true_61:
+	entity "cursor" direction = "north";
+	if_chain_rendezvous_60:
+	end_of_script_65:
+	entity "cursor" x = "player_x";
+	entity "cursor" y = "player_y";
+	"log_x" = "player_x";
+	"log_y" = "player_y";
+	if debug_mode then goto label if_true_66;
+	goto label rendezvous_66;
+	if_true_66:
+	show serial_dialog "mage_cursor_wtf.mgs-29:4";
+	rendezvous_66:
+	end_of_script_67:
+	player type = "mage";
+	entity "cursor" type = "cursor";
+	"print_x" = player x;
+	"print_y" = player y;
+	show serial_dialog "mage_cursor_wtf.mgs-77:5";
+	player_control = true;
+	self on_tick = "on_tick_ch3_mouseroom_walk";
+	if_chain_rendezvous_68:
+	end_of_script_70:
+}

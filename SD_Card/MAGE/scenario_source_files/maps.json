@@ -5,6 +5,12 @@
 		"on_tick": "on_tick_main_menu",
 		"disable_warn_on_look": true
 	},
+	"ch3-mouseroom": {
+		"path": "maps/map-ch3-mouseroom.json",
+		"on_load": "on_load_ch3_mouseroom",
+		"on_tick": "on_tick_ch3_mouseroom",
+		"disable_warn_on_look": true
+	},
 	"ch2-castle-outside": {
 		"path": "maps/map-ch2-castle-outside.json",
 		"on_load": "on_load_ch2_castle_outside",

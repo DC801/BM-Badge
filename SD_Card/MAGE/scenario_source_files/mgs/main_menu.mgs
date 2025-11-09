@@ -36,6 +36,7 @@ debug_commands {
 		"<y>></> <c>RNGTEST</>: test RNG!() single syntax 20 times"
 		"<y>></> <c>RNGTEST2</>: test RNG!() range syntax 20 times"
 		"<y>></> <c>BUFFER TEST</>: test serial messages sizes"
+		"<y>></> <c>CURSOR</>: go to the cursor (mouse) test room"
 		"Go to the CH2 town for the <c>CUTBUG</> test"
 	};
 	command debug + "ch2" = {
@@ -57,6 +58,9 @@ debug_commands {
 			"<y>></> <c>POST</>: post credits scene"
 			"<y>></> <c>SKIP _</>: skip to storyflag round and set all prev flags"
 		};
+	};
+	command cursor = {
+		load map "ch3-mouseroom";
 	};
 	command entrance = {
 		debug_set_flags_to_round0()
