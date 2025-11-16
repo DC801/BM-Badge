@@ -356,7 +356,7 @@ export const simplifyLabelGotos = (actions: AnyNode[]): AnyNode[] => {
 
 	// If a label definition is followed by a goto for a different label,
 	// then the previous label registration can be replaced with following goto value
-	const labelDefThenDifferentGotoLabel = {}; // Record<string, string>
+	const labelDefThenDifferentGotoLabel: Record<string, string> = {};
 	actions.forEach((action: AnyNode, i: number) => {
 		if (action instanceof LabelDefinition) {
 			const next = actions[i + 1];

@@ -24,13 +24,13 @@ import { handleNode } from './parser-node.ts';
 // All print() methods on MathlangNodes are as if they were to be encountered in a grammatically valid MGS script
 
 export class AnyNode {
-	isIdenticalTo(that: unknown) {
+	isIdenticalTo(that: unknown): boolean {
 		if (this instanceof ACTION.Action || this instanceof MathlangNode) {
 			return this.isIdenticalTo(that);
 		}
 		throw new Error('ACTIONS DO NOT MATCH???');
 	}
-	clone() {
+	clone(): AnyNode {
 		if (this instanceof MathlangNode) return this.clone();
 		return ACTION.Action.fromArgs(this);
 	}
@@ -527,6 +527,32 @@ export type DialogSettings = {
 	alignment?: string;
 	border_tileset?: string;
 };
+export type DialogSettingsKeyString = 'entity' | 'name' | 'portrait' | 'alignment' | 'border_tileset'
+export type DialogSettingsKeyNumber = 'wrap' | 'emote'
+export const isDialogSettingsKeyString = (str: string): str is DialogSettingsKeyString => {
+	if (str === 'entity') return true;
+	if (str === 'name') return true;
+	if (str === 'portrait') return true;
+	if (str === 'alignment') return true;
+	if (str === 'border_tileset') return true;
+	return false;
+};
+export const isDialogSettingsKeyNumber = (str: string): str is DialogSettingsKeyNumber => {
+	if (str === 'wrap') return true;
+	if (str === 'emote') return true;
+	return false;
+};
+export const addParamToDialogSettings = (settings: DialogSettings | Dialog, k: string, _v: unknown) => {
+	const v = _v instanceof BoolLiteral ? _v.value : _v;
+	if (isDialogSettingsKeyString(k) && typeof v == 'string') {
+		settings[k] = v;
+	} else if (isDialogSettingsKeyNumber(k) && typeof v == 'number') {
+		settings[k] = v;
+	} else {
+		throw new Error ("something borked")
+	}
+	return settings;
+}
 
 export class DialogParameter extends MathlangNode {
 	property: string;
@@ -585,7 +611,7 @@ export class Dialog extends MathlangNode {
 		this.messages = ACTION.breakIfNotStringArray(args.messages);
 		if (typeof args.settings === 'object' && args.settings !== null) {
 			Object.entries(args.settings).forEach(([k, v]) => {
-				this[k] = v; // todo: this is a little bit of trust, eh?
+				addParamToDialogSettings(this, k, v);
 			});
 		}
 	}
@@ -751,6 +777,23 @@ export class SerialDialogDefinition extends MathlangNode {
 export type SerialDialogSettings = {
 	wrap?: number;
 };
+
+export type SerialDialogSettingsKey = keyof SerialDialogSettings;
+
+export const isSerialDialogSettingsKey = (str: string): str is SerialDialogSettingsKey => {
+	if (str === 'wrap') return true;
+	return false;
+};
+// Make this look like the dialog ones if you need to add string params
+export const addParamToSerialDialogSettings = (settings: SerialDialogSettings, k: string, _v: unknown) => {
+	const v = _v instanceof BoolLiteral ? _v.value : _v;
+	if (isSerialDialogSettingsKey(k) && typeof v == 'number') {
+		settings[k] = v;
+	} else {
+		throw new Error ("something borked")
+	}
+	return settings;
+}
 
 export class SerialDialogParameter extends MathlangNode {
 	property: string;
@@ -1125,12 +1168,13 @@ export class CopyMacro extends MathlangNode {
 		if (this.search_and_replace && !that.search_and_replace) return false;
 		if (!this.search_and_replace && that.search_and_replace) return false;
 		if (this.search_and_replace && that.search_and_replace) {
-			const keys: Set<string> = new Set([
+			const keys: string[] = [...new Set([
 				...Object.keys(this.search_and_replace),
 				...Object.keys(that.search_and_replace),
-			]);
-			for (let i = 0; i < keys.size; i++) {
-				if (this.search_and_replace[keys[i]] !== that.search_and_replace[keys[i]]) {
+			])];
+			for (let i = 0; i < keys.length; i++) {
+				const key_i = keys[i];
+				if (this.search_and_replace[key_i] !== that.search_and_replace[key_i]) {
 					return false;
 				}
 			}
@@ -1219,11 +1263,11 @@ export class IntExpression extends MathlangNode {
 		}
 		return v;
 	}
-	toSteps(destinationVar: string) {
+	toSteps(destinationVar: string): AnyNode[] {
 		// USE THE CHILDREN
 		return this.toSteps(destinationVar);
 	}
-	assignToVar(destinationVar: string) {
+	assignToVar(destinationVar: string): AnyNode {
 		// USE THE CHILDREN
 		return this.assignToVar(destinationVar);
 	}
@@ -1329,11 +1373,11 @@ export class IntUnit extends IntExpression {
 		}
 		throw new Error('invalid IntUnit');
 	}
-	toSteps(destinationVar: string) {
+	toSteps(destinationVar: string): AnyNode[] {
 		// TODO: I think this shouldn't be being used?
 		return [this.assignToVar(destinationVar)];
 	}
-	assignToVar(variable: string) {
+	assignToVar(variable: string): AnyNode {
 		// TODO: I think this shouldn't be being used?
 		return ACTION.Action.fromArgs({ ...this, variable });
 	}
@@ -1378,13 +1422,13 @@ export class NumberLiteral extends IntUnit {
 	static quick(debug: MathlangLocation, value: number) {
 		return new NumberLiteral(debug, { value });
 	}
-	toSteps(destinationVar: string) {
+	toSteps(destinationVar: string): AnyNode[] {
 		return [this.assignToVar(destinationVar)];
 	}
 	assignToVar(destinationVar: string): AnyNode {
 		return ACTION.MUTATE_VARIABLE.set(destinationVar, this.value);
 	}
-	toStepsWithOp(destinationVar: string, op: string) {
+	toStepsWithOp(destinationVar: string, op: string): AnyNode[] {
 		return [this.assignToVarWithOp(destinationVar, op)];
 	}
 	assignToVarWithOp(destinationVar: string, op: string): AnyNode {
@@ -1422,13 +1466,13 @@ export class IdentifierLiteral extends IntGetable {
 	static quick(debug: MathlangLocation, source: string) {
 		return new IdentifierLiteral(debug, { source });
 	}
-	toSteps(destinationVar: string) {
+	toSteps(destinationVar: string): AnyNode[] {
 		return [this.assignToVar(destinationVar)];
 	}
 	assignToVar(destinationVar: string): AnyNode {
 		return ACTION.MUTATE_VARIABLES.set(this.debug, destinationVar, this.source);
 	}
-	toStepsWithOp(destinationVar: string, op: string) {
+	toStepsWithOp(destinationVar: string, op: string): AnyNode[] {
 		return [this.assignToVarWithOp(destinationVar, op)];
 	}
 	assignToVarWithOp(destinationVar: string, op: string): AnyNode {
@@ -1470,13 +1514,13 @@ export class EntityIntField extends IntGetable {
 	static quick(debug: MathlangLocation, entity: string, field: string) {
 		return new EntityIntField(debug, { entity, field });
 	}
-	toSteps(destinationVar: string) {
+	toSteps(destinationVar: string): AnyNode[] {
 		return [this.assignToVar(destinationVar)];
 	}
-	assignToVar(variable: string) {
+	assignToVar(variable: string): AnyNode {
 		return ACTION.COPY_VARIABLE.intoVariable(this.entity, this.field, variable);
 	}
-	setToVariable(variable: string) {
+	setToVariable(variable: string): AnyNode {
 		return ACTION.COPY_VARIABLE.intoField(variable, this.entity, this.field);
 	}
 	setToNumber(value: number) {
@@ -1562,10 +1606,10 @@ export class RNGSingle extends IntGetable {
 	static quick(debug: MathlangLocation, value: number) {
 		return new RNGSingle(debug, { value });
 	}
-	toSteps(destinationVar: string) {
+	toSteps(destinationVar: string): AnyNode[] {
 		return [this.assignToVar(destinationVar)];
 	}
-	assignToVar(destinationVar: string) {
+	assignToVar(destinationVar: string): AnyNode {
 		return ACTION.MUTATE_VARIABLE.change(this.debug, destinationVar, this.value, '?');
 	}
 	expPrint() {
@@ -1595,13 +1639,13 @@ export class RNGPair extends IntGetable {
 	static quick(debug: MathlangLocation, value: number, add: number) {
 		return new RNGPair(debug, { value, add });
 	}
-	toSteps(destinationVar: string) {
+	toSteps(destinationVar: string): AnyNode[] {
 		return [
 			ACTION.MUTATE_VARIABLE.change(this.debug, destinationVar, this.value, '?'),
 			ACTION.MUTATE_VARIABLE.change(this.debug, destinationVar, this.add, '+'),
 		];
 	}
-	assignToVar(destinationVar: string) {
+	assignToVar(destinationVar: string): AnyNode {
 		return MathlangSequence.quick(
 			this.debug,
 			this.toSteps(destinationVar),
@@ -1655,11 +1699,11 @@ export class FnCall extends IntGetable {
 		const steps = handleNode(this.debug.using(this.rawBody));
 		return FnCallReturnValue.quick(this.debug, this.identifier, 'fn', flattenNodes(steps));
 	}
-	toSteps(destinationVar: string) {
+	toSteps(destinationVar: string): AnyNode[] {
 		const baked = this.bake();
 		return baked.toSteps(destinationVar);
 	}
-	assignToVar(destinationVar: string) {
+	assignToVar(destinationVar: string): AnyNode {
 		return MathlangSequence.quick(
 			this.debug,
 			this.toSteps(destinationVar),
@@ -1710,13 +1754,13 @@ export class FnCallReturnValue extends IntGetable {
 	static quick(debug: MathlangLocation, identifier: string, type: string, steps: AnyNode[]) {
 		return new FnCallReturnValue(debug, { identifier, type, steps });
 	}
-	toSteps(destinationVar: string) {
+	toSteps(destinationVar: string): AnyNode[] {
 		const assign = ACTION.MUTATE_VARIABLES.set(this.debug, destinationVar, RETURN);
 		// so wrong values don't live in the return "register" (todo: is this helpful?)
 		const reset = ACTION.MUTATE_VARIABLE.set(RETURN, 0);
 		return [...this.steps, assign, reset];
 	}
-	assignToVar(destinationVar: string) {
+	assignToVar(destinationVar: string): AnyNode {
 		return MathlangSequence.quick(
 			this.debug,
 			this.toSteps(destinationVar),
@@ -1753,10 +1797,10 @@ export class ArrayValueLookup extends IntGetable {
 	static quick(debug: MathlangLocation, chain: ArrayMethodChain) {
 		return new ArrayValueLookup(debug, { chain });
 	}
-	toSteps(destinationVar: string) {
+	toSteps(destinationVar: string): AnyNode[] {
 		return this.chain.toSteps(destinationVar);
 	}
-	assignToVar(destinationVar: string) {
+	assignToVar(destinationVar: string): AnyNode {
 		return MathlangSequence.quick(
 			this.debug,
 			this.toSteps(destinationVar),
@@ -1784,7 +1828,7 @@ export class BoolExpression extends MathlangNode {
 		}
 		return v;
 	}
-	toSteps(ifLabel: string) {
+	toSteps(ifLabel: string): AnyNode[] {
 		// break if not a known thing
 		if (!(this instanceof BoolExpression)) {
 			throw new Error(`this BoolExpression.toSteps not implemented (ifLabel ${ifLabel})`);
@@ -1801,6 +1845,9 @@ export class BoolExpression extends MathlangNode {
 		// ->
 		// if (self glitched) { player glitched = true; } else { player glitched = false; }
 		const cloneIfFalse = setBool.clone();
+		if (!(cloneIfFalse instanceof ACTION.ActionSetBool)) {
+			throw new Error ('unreachable')
+		}
 		cloneIfFalse.invert();
 		const steps = simpleBranchMaker(this.debug, this, [setBool], [cloneIfFalse]);
 		return MathlangSequence.quick(this.debug, steps, 'BoolExpression.assignToSetBool');
@@ -1814,7 +1861,7 @@ export class BoolExpression extends MathlangNode {
 }
 
 export class BoolComparisonSequence extends BoolExpression {
-	type: string;
+	type?: string;
 	steps: AnyNode[];
 	constructor(debug: MathlangLocation, args: GenericObj) {
 		super(debug, args);
@@ -1924,6 +1971,7 @@ export class BoolComparison extends BoolExpression {
 	expected_bool: boolean;
 	constructor(debug: MathlangLocation, args: GenericObj) {
 		super(debug, args);
+		this.action = 'THE CHILD SHOULD OVERRIDE THIS';
 		this.expected_bool = ACTION.breakIfNotBool(args.expected_bool);
 	}
 	isIdenticalTo(that: unknown) {
@@ -1945,7 +1993,7 @@ export class BoolComparison extends BoolExpression {
 	toDestinationLabel(label: string) {
 		return this.toAction({ label });
 	}
-	toSteps(label: string) {
+	toSteps(label: string): AnyNode[] {
 		return [this.toDestinationLabel(label)];
 	}
 	expPrint() {
@@ -1997,7 +2045,7 @@ export class BoolBinaryExpression extends BoolExpression {
 		this.op = inverseOpMap[this.op];
 		return this;
 	}
-	toSteps(ifLabel: string) {
+	toSteps(ifLabel: string): AnyNode[] {
 		const debug = this.debug;
 		const op = this.op;
 		const lhs = this.lhs;
@@ -2066,6 +2114,7 @@ export class BoolGetable extends BoolUnit {
 	expected_bool: boolean;
 	constructor(debug: MathlangLocation, args: GenericObj) {
 		super(debug, args);
+		this.action = 'THE CHILD SHOULD OVERRIDE THIS';
 		this.expected_bool = ACTION.breakIfNotBool(args.expected_bool);
 	}
 	isIdenticalTo(that: unknown) {

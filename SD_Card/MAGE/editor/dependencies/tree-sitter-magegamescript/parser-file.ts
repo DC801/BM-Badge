@@ -18,18 +18,20 @@ type Constant = {
 	debug: MathlangLocation;
 };
 export type FunctionStackEntry = Record<string, ConstantDefinition>;
+export type FileStateDialogSettings = {
+		default: DialogSettings;
+		entity: Record<string, DialogSettings>;
+		label: Record<string, DialogSettings>;
+		serial: SerialDialogSettings;
+	};
+export type FileStateDialogSettingsKeys = keyof FileStateDialogSettings;
 export class FileState {
 	p: ProjectState;
 	fileName: string;
 	constants: Record<string, Constant>;
 	functions: Record<string, FunctionDefinition>;
 	currFunction: FunctionStackEntry[];
-	settings: {
-		default: DialogSettings;
-		entity: DialogSettings;
-		label: DialogSettings;
-		serial: SerialDialogSettings;
-	};
+	settings: FileStateDialogSettings;
 	nodes: AnyNode[];
 	errorCount: number;
 	warningCount: number;

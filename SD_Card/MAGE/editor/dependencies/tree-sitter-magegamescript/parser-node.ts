@@ -72,6 +72,9 @@ import {
 	FunctionDefinition,
 	forLoopMaker,
 	IntExpression,
+	addParamToDialogSettings,
+	type SerialDialogSettings,
+	addParamToSerialDialogSettings,
 } from './parser-types.ts';
 import {
 	Action,
@@ -374,22 +377,25 @@ const nodeFns: Record<string, (debug: MathlangLocation) => AnyNode[]> = {
 			f.nodes.push(node);
 		});
 
-		// add (serial) dialog settings
-		['default', 'serial'].forEach((type) => {
-			Object.keys(insertF.settings[type]).forEach((param) => {
-				f.settings[type][param] = insertF.settings[type][param];
-			});
+		// add serial dialog settings
+		Object.entries(insertF.settings.serial).forEach(([k, v])=>{
+			addParamToSerialDialogSettings(f.settings.serial, k, v);
 		});
 
-		// ...some of which are extra layered
-		['entity', 'label'].forEach((type) => {
-			Object.keys(insertF.settings[type]).forEach((target) => {
-				const params = Object.keys(insertF.settings[type][target]);
-				f.settings[type][target] = f.settings[type][target] || {};
-				params.forEach((param) => {
-					// (I apologize for this)
-					f.settings[type][target][param] = insertF.settings[type][target][param];
-				});
+		// add dialog settings
+		Object.entries(insertF.settings.default).forEach(([k, v])=>{
+			addParamToDialogSettings(f.settings.default, k, v);
+		});
+		Object.keys(insertF.settings.entity).forEach((target) => {
+			f.settings.entity[target] = f.settings.entity[target] || {};;
+			Object.entries(insertF.settings.entity[target]).forEach(([k, v])=>{
+				addParamToDialogSettings(f.settings.entity[target], k, v);
+			});
+		});
+		Object.keys(insertF.settings.label).forEach((target) => {
+			f.settings.label[target] = f.settings.label[target] || {};;
+			Object.entries(insertF.settings.label[target]).forEach(([k, v])=>{
+				addParamToDialogSettings(f.settings.label[target], k, v);
 			});
 		});
 
@@ -486,7 +492,7 @@ const nodeFns: Record<string, (debug: MathlangLocation) => AnyNode[]> = {
 		);
 		parameters.forEach((param) => {
 			// put them in the bucket
-			settingsTarget[param.property] = param.value;
+			addParamToDialogSettings(settingsTarget, param.property, param.value);
 		});
 
 		// Make a node "receipt"
@@ -497,7 +503,7 @@ const nodeFns: Record<string, (debug: MathlangLocation) => AnyNode[]> = {
 		const rawParameters = capturesForField(debug, 'serial_dialog_parameter');
 		const parameters = SerialDialogParameter.breakIfNotAll(rawParameters);
 		parameters.forEach((param) => {
-			debug.f.settings.serial[param.property] = param.value;
+			addParamToDialogSettings(debug.f.settings.serial, param.property, param.value)
 		});
 		// Make a node "receipt"
 		return [AddSerialDialogSettings.quick(debug, parameters)];
@@ -548,12 +554,12 @@ const nodeFns: Record<string, (debug: MathlangLocation) => AnyNode[]> = {
 	},
 	serial_dialog: (debug): AnyNode[] => {
 		// Settings
-		const settings = {};
+		const settings: SerialDialogSettings = {};
 		const params = SerialDialogParameter.breakIfNotAll(
 			capturesForField(debug, 'serial_dialog_parameter'),
 		);
 		params.forEach((v) => {
-			settings[v.property] = v.value;
+			addParamToDialogSettings(settings, v.property, v.value)
 		});
 		// Options
 		const rawOptions = handleChildrenForField(debug, 'serial_dialog_option');
@@ -578,10 +584,10 @@ const nodeFns: Record<string, (debug: MathlangLocation) => AnyNode[]> = {
 		// Identifier
 		const identifier = DialogIdentifier.breakIfNot(captureForField(debug, 'dialog_identifier'));
 		// Settings
-		const settings = {};
-		const params = DialogParameter.breakIfNotAll(capturesForField(debug, 'dialog_parameter'));
-		params.forEach((v) => {
-			settings[v.property] = v.value;
+		const settings: DialogSettings = {};
+		const params: DialogParameter[] = DialogParameter.breakIfNotAll(capturesForField(debug, 'dialog_parameter'));
+		params.forEach((param) => {
+			addParamToDialogSettings(settings, param.property, param.value);
 		});
 		// Messages
 		const messageN = childrenForField(debug, 'message');
@@ -620,7 +626,7 @@ const nodeFns: Record<string, (debug: MathlangLocation) => AnyNode[]> = {
 			return [];
 		}
 		try {
-			let parsedAction = Action.fromArgs(parsed, debug);
+			let parsedAction: AnyNode = Action.fromArgs(parsed, debug);
 			if (parsedAction instanceof COPY_SCRIPT) {
 				parsedAction = CopyMacro.quick(
 					debug,

@@ -58,10 +58,10 @@ export class ProjectState {
 	// auto counter, so that auto-generated gotos don't share labels:
 	gotoSuffixValue: number;
 	constructor(tsParser: Parser, fileMap: FileMap, scenarioData: Record<string, unknown>) {
-		// why did we need to do this?
-		Object.entries(scenarioData).forEach(([k, v]) => {
-			this[k] = v;
-		});
+		// // why did we need to do this? (I guess we don't?)
+		// Object.entries(scenarioData).forEach(([k, v]) => {
+		// 	this[k] = v;
+		// });
 		this.parser = tsParser;
 		this.fileMap = fileMap;
 		this.scripts = {};
@@ -221,7 +221,9 @@ export class ProjectState {
 			const labelSuffix = 'c' + this.advanceGotoSuffix();
 			let copiedActions: AnyNode[] = this.scripts[action.script].actions.map((v) => {
 				if (isMightHaveLabel(v)) {
-					return v.clone().ifLabelAddSuffix(labelSuffix);
+					const clone = v.clone();
+					if (!isMightHaveLabel(clone)) throw new Error ('unreachable')
+					return clone.ifLabelAddSuffix(labelSuffix);
 				}
 				return v;
 			});
@@ -233,7 +235,9 @@ export class ProjectState {
 				// TODO: test this at all
 				copiedActions = copiedActions.map((v) => {
 					if (isHasVariables(v)) {
-						return v.clone().realignVars();
+					const clone = v.clone();
+					if (!isHasVariables(clone)) throw new Error ('unreachable')
+						return clone.realignVars();
 					}
 					return v;
 				});

@@ -1,6 +1,12 @@
 import { RETURN } from './parser-utilities.ts';
 
-export const actionTests = {
+export type ActionTest = {
+	input: string[],
+	expected?: string[],
+	pre?: string | string[],
+}
+
+export const actionTests: Record<string, ActionTest> = {
 	keyword_as_variable_name: {
 		input: [`"if" = 10;`],
 		expected: [`"if" = 10;`],

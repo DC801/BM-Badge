@@ -8,7 +8,7 @@ import { fileTests } from './parser-test-data-files.ts';
 
 const actionArrayToScript = (
 	scriptName: string,
-	actionArray: AnyNode[],
+	actionArray: string[],
 	autoAddEOF: boolean = false,
 ): string => {
 	const ret = [`"${scriptName}" {`, ...actionArray.map((v) => '\t' + v)];
@@ -28,7 +28,7 @@ const doErrorTests = true;
 // --------------------------- Putting action and file tests into a "project" ---------------------------
 // (error tests are separate, as they are each their own project)
 
-const fakeFileMap = {};
+const fakeFileMap: Record<string, unknown> = {};
 
 const doAllTests =
 	onlyDoTheseActionTests.length === 0 &&
@@ -55,8 +55,8 @@ fakeFileMap['actionTests.mgs'] = {
 				if (typeof v.pre === 'string') {
 					strung = v.pre + '\n' + strung;
 				} else if (Array.isArray(v.pre)) {
-					const combo = v.pre.push(strung);
-					strung = combo.join('\n');
+					v.pre.push(strung);
+					strung = v.pre.join('\n');
 				}
 			}
 			return strung;
@@ -179,7 +179,7 @@ export const compareTexts = (
 		};
 	}
 	const lines: ComparedLines[] = [];
-	const registeredLabels = {};
+	const registeredLabels: Record<string, string> = {};
 	foundLines.forEach((found, i) => {
 		const expected = expectedLines[i];
 		if (expected === found) {
@@ -328,9 +328,9 @@ const simplifyArrays = (origLH: unknown[] = [], origRH: unknown[] = []) => {
 const simplifyObjects = (origLH: GenericObj = {}, origRH: GenericObj = {}) => {
 	delete origLH.debug;
 	delete origRH.debug;
-	const sortedLH = {};
-	const sortedRH = {};
-	const sortedDiff = {};
+	const sortedLH: Record<string, unknown> = {};
+	const sortedRH: Record<string, unknown> = {};
+	const sortedDiff: Record<string, unknown> = {};
 	Object.keys(origLH)
 		.sort()
 		.forEach((k) => {

@@ -406,13 +406,13 @@ const actionData: Record<string, actionDataEntry> = {
 		handle: (v, debug) => BreakStatement.quick(debug),
 	},
 	action_close_dialog: {
-		handle: () => new CLOSE_DIALOG(),
+		handle: () => new CLOSE_DIALOG({}),
 	},
 	action_close_serial_dialog: {
-		handle: () => new CLOSE_SERIAL_DIALOG(),
+		handle: () => new CLOSE_SERIAL_DIALOG({}),
 	},
 	action_save_slot: {
-		handle: () => new SLOT_SAVE(),
+		handle: () => new SLOT_SAVE({}),
 	},
 	action_load_slot: {
 		captures: ['slot'],
