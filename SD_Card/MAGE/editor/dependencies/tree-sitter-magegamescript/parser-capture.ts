@@ -645,7 +645,10 @@ const captureFns: Record<string, (debug: MathlangLocation) => AnyNode | Capture 
 			if (fn) {
 				return fn;
 			} else {
-				debug.quickError('undefined fn', `function ${identifier} is undefined`);
+				if (!debug.f.undefinedFunctions.has(identifier)) {
+					debug.f.undefinedFunctions.add(identifier);
+					debug.quickError('undefined fn', `function ${identifier} is undefined`);
+				}
 				return FunctionDefinition.placeholder(debug);
 			}
 		}

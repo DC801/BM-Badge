@@ -31,6 +31,7 @@ export class FileState {
 	constants: Record<string, Constant>;
 	functions: Record<string, FunctionDefinition>;
 	currFunction: FunctionStackEntry[];
+	undefinedFunctions: Set<string>;
 	settings: FileStateDialogSettings;
 	nodes: AnyNode[];
 	errorCount: number;
@@ -47,6 +48,7 @@ export class FileState {
 		// similar, but for copy-and-paste macros (inline functions)
 		this.functions = {};
 		this.currFunction = [];
+		this.undefinedFunctions = new Set();
 
 		// dialog and serial dialog settings, applied to the (s)dialogs as we go
 		this.settings = {

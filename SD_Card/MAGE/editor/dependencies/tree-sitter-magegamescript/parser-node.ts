@@ -156,7 +156,7 @@ const nodeFns: Record<string, (debug: MathlangLocation) => AnyNode[]> = {
 		let error = false;
 		const params = paramNodes.map((param) => {
 			if (param.grammarType !== 'CONSTANT') {
-				debug.quickError('invalid fn arg', 'fn arg must be CONSTANT (prefixed with $)');
+				debug.using(param).quickError('invalid fn arg', 'fn arg must be CONSTANT (prefixed with $)');
 				error = true;
 			}
 			return param.text;
@@ -195,8 +195,11 @@ const nodeFns: Record<string, (debug: MathlangLocation) => AnyNode[]> = {
 
 		const definition = debug.f.functions[name];
 		if (!definition) {
-			const nameNode = optionalChildForField(debug, 'name') || debug.node;
-			debug.using(nameNode).quickError('undefined fn', `function ${name} is undefined`);
+			if (!debug.f.undefinedFunctions.has(name)) {
+				debug.f.undefinedFunctions.add(name);
+				const nameNode = optionalChildForField(debug, 'name') || debug.node;
+				debug.using(nameNode).quickError('undefined fn', `function ${name} is undefined`);
+			}
 			fnRecursion.pop();
 			return [];
 		}

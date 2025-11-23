@@ -340,6 +340,35 @@
         }
       ]
     },
+    "_CONSTANT_VALUE_MINI": {
+      "type": "CHOICE",
+      "members": [
+        {
+          "type": "SYMBOL",
+          "name": "NUMBER"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "BOOL"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "CONSTANT"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "COLOR"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "QUOTED_STRING"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "BAREWORD"
+        }
+      ]
+    },
     "bool": {
       "type": "CHOICE",
       "members": [
@@ -1191,7 +1220,7 @@
           "name": "arg",
           "content": {
             "type": "SYMBOL",
-            "name": "CONSTANT"
+            "name": "_CONSTANT_VALUE_MINI"
           }
         },
         {
@@ -1211,7 +1240,7 @@
                     "name": "arg",
                     "content": {
                       "type": "SYMBOL",
-                      "name": "CONSTANT"
+                      "name": "_CONSTANT_VALUE_MINI"
                     }
                   }
                 ]

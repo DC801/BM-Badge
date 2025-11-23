@@ -3945,7 +3945,27 @@
         "required": true,
         "types": [
           {
+            "type": "BAREWORD",
+            "named": true
+          },
+          {
+            "type": "BOOL",
+            "named": true
+          },
+          {
+            "type": "COLOR",
+            "named": true
+          },
+          {
             "type": "CONSTANT",
+            "named": true
+          },
+          {
+            "type": "NUMBER",
+            "named": true
+          },
+          {
+            "type": "QUOTED_STRING",
             "named": true
           }
         ]

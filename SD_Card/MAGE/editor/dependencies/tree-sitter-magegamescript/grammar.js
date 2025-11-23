@@ -95,6 +95,15 @@ export default grammar({
 				$.QUOTED_STRING,
 				$.BAREWORD,
 			),
+		_CONSTANT_VALUE_MINI: ($) =>
+			choice(
+				$.NUMBER,
+				$.BOOL,
+				$.CONSTANT,
+				$.COLOR,
+				$.QUOTED_STRING,
+				$.BAREWORD,
+			),
 
 		bool: ($) => choice($.BOOL, $.CONSTANT),
 		bool_expandable: ($) => choice($.bool, $.bool_expansion),
@@ -164,8 +173,8 @@ export default grammar({
 		_fn_literal: ($) =>
 			seq(
 				'(',
-				field('arg', $.CONSTANT),
-				optional(repeat(seq(',', field('arg', $.CONSTANT)))),
+				field('arg', $._CONSTANT_VALUE_MINI),
+				optional(repeat(seq(',', field('arg', $._CONSTANT_VALUE_MINI)))),
 				optional(','),
 				')',
 				field('body', $.script_block),

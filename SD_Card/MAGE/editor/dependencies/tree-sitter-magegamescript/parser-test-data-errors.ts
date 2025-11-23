@@ -64,12 +64,11 @@ export const errorTests: Record<string, ErrorTest> = {
 		expectedWarnings: ['invalid operator'],
 		expectedErrors: [],
 	},
-	// TODO doesn't work
-	// invalid_arg_type: {
-	// 	testText: `fn invalid_arg(4) {}`,
-	// 	expectedWarnings: [],
-	// 	expectedErrors: ['invalid fn arg'],
-	// },
+	invalid_arg_type: {
+		testText: `fn invalid_arg(4) {}`,
+		expectedWarnings: [],
+		expectedErrors: ['invalid fn arg'],
+	},
 	not_enough_fn_args: {
 		testText: `
 			fn _($a, $b, $c) {}
