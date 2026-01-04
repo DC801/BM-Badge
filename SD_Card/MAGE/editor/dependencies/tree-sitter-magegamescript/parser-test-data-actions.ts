@@ -1,10 +1,10 @@
 import { RETURN } from './parser-utilities.ts';
 
 export type ActionTest = {
-	input: string[],
-	expected?: string[],
-	pre?: string | string[],
-}
+	input: string[];
+	expected?: string[];
+	pre?: string | string[];
+};
 
 export const actionTests: Record<string, ActionTest> = {
 	keyword_as_variable_name: {
@@ -20,28 +20,29 @@ export const actionTests: Record<string, ActionTest> = {
 		expected: [`command "T" = "hanoi_help;`, `command "TIPS" = "hanoi_help;`],
 	},
 	array_map_read_value: {
-		input: [`varName = arrayName.map(($n) { return $n + 1; })[0];`],
+		input: [`varName = givenAMapFn.map(($n) { return $n + 1; })[0];`],
 		expected: [
 			`__TEMP_0 = 0;`,
-			`__TEMP_1 = arrayName.length();`,
+			`__TEMP_1 = "givenAMapFn".length();`,
 			`map_condition_*A*:`,
 			`if "__TEMP_0" < "__TEMP_1" then goto label map_body_*D*;`,
 			`goto label map_break_*B*;`,
 			`map_body_*D*:`,
-			`__TEMP_2 = arrayName[__TEMP_0];`,
+			`__TEMP_2 = "givenAMapFn"["__TEMP_0"];`,
 			`__TEMP_3 = __TEMP_2;`,
 			`__TEMP_3 +`,
 			`= 1;`,
 			`${RETURN} = __TEMP_3;`,
 			`end_of_script_***:`,
-			`__TEMPORARY_ARRAY_.push(${RETURN});`,
+			`__TEMP_ARRAY_1.push(${RETURN});`,
 			`${RETURN} = 0;`,
 			`map_continue_*C*:`,
 			`__TEMP_0 +`,
 			`= 1;`,
 			`goto label map_condition_*A*;`,
 			`map_break_*B*:`,
-			`varName = __TEMPORARY_ARRAY_[0];`,
+			`"varName" = __TEMP_ARRAY_1[0];`,
+			`delete array __TEMP_ARRAY_1;`,
 		],
 	},
 	array_for_each_chain: {
@@ -68,6 +69,7 @@ export const actionTests: Record<string, ActionTest> = {
 			`for_each_break_*B*:`,
 		],
 	},
+	// TODO cannot assign for_each though!
 	array_for_each_identifier: {
 		pre: `fn accumulateSum ($n) { sum += $n; }`,
 		input: [`sum = 0;`, `array a = b.for_each(accumulateSum);`],
@@ -114,37 +116,10 @@ export const actionTests: Record<string, ActionTest> = {
 		pre: `fn doThing ($n) { return $n + 1; }`,
 		input: [`a = b.map(doThing);`],
 		expected: [
-			// should be same as lambda version
-			`array a = [];`,
-			`__TEMP_0 = 0;`,
-			`__TEMP_1 = b.length();`,
+			`__TEMP_0 = 0;`, // i = 0;
+			`__TEMP_1 = "b".length();`, // length = b.length();
 			`map_condition_*A*:`,
 			`if "__TEMP_0" < "__TEMP_1" then goto label map_body_*D*;`,
-			`goto label map_break_*B*;`,
-			`map_body_*D*:`,
-			`__TEMP_2 = b[__TEMP_0];`,
-			`__TEMP_3 = __TEMP_2;`,
-			`__TEMP_3 +`,
-			`= 1;`,
-			`${RETURN} = __TEMP_3;`,
-			`end_of_script_***:`,
-			`a.push(${RETURN});`,
-			`${RETURN} = 0;`,
-			`map_continue_*C*:`,
-			`__TEMP_0 +`,
-			`= 1;`,
-			`goto label map_condition_*A*;`,
-			`map_break_*B*:`,
-		],
-	},
-	array_map_lambda: {
-		input: [`array a = b.map(($n) { return $n + 1; });`],
-		expected: [
-			`array a = [];`,
-			`__TEMP_0 = 0;`, // i = 0;
-			`__TEMP_1 = b.length();`, // length = b.length();
-			`map_condition_*A*:`,
-			`if "__TEMP_0" < "__TEMP_1" then goto label map_body_*D*;`, // (i < length)
 			`goto label map_break_*B*;`,
 			`map_body_*D*:`,
 			`__TEMP_2 = b[__TEMP_0];`, // curr = b[i];
@@ -152,14 +127,45 @@ export const actionTests: Record<string, ActionTest> = {
 			`__TEMP_3 +`, // tempvar += 1;
 			`= 1;`,
 			`${RETURN} = __TEMP_3;`, // RETURN = tempvar;
-			`end_of_script_***:`,
-			`a.push(${RETURN});`, // ≈ c.push(RETURN);
+			`end_of_script_*E*:`,
+			`__TEMP_ARRAY_1.push(${RETURN});`, // ≈ c.push(RETURN);
 			`${RETURN} = 0;`, // RETURN = 0;
 			`map_continue_*C*:`,
 			`__TEMP_0 +`, // i += 1;
 			`= 1;`,
 			`goto label map_condition_*A*;`,
 			`map_break_*B*:`,
+			`a = __TEMP_ARRAY_1.slice();`,
+			`delete array __TEMP_ARRAY_1;`,
+			// `__TEMP_ARRAY_1.rename(a);`,
+		],
+	},
+	array_map_lambda: {
+		input: [`array a = b.map(($n) { return $n + 1; });`],
+		expected: [
+			// should be same as identifier version
+			`__TEMP_0 = 0;`, // i = 0;
+			`__TEMP_1 = "b".length();`, // length = b.length();
+			`map_condition_*A*:`,
+			`if "__TEMP_0" < "__TEMP_1" then goto label map_body_*D*;`,
+			`goto label map_break_*B*;`,
+			`map_body_*D*:`,
+			`__TEMP_2 = b[__TEMP_0];`, // curr = b[i];
+			`__TEMP_3 = __TEMP_2;`, // tempvar = curr;
+			`__TEMP_3 +`, // tempvar += 1;
+			`= 1;`,
+			`${RETURN} = __TEMP_3;`, // RETURN = tempvar;
+			`end_of_script_*E*:`,
+			`__TEMP_ARRAY_1.push(${RETURN});`, // ≈ c.push(RETURN);
+			`${RETURN} = 0;`, // RETURN = 0;
+			`map_continue_*C*:`,
+			`__TEMP_0 +`, // i += 1;
+			`= 1;`,
+			`goto label map_condition_*A*;`,
+			`map_break_*B*:`,
+			`a = __TEMP_ARRAY_1.slice();`,
+			`delete array __TEMP_ARRAY_1;`,
+			// `__TEMP_ARRAY_1.rename(a);`,
 		],
 	},
 	array_write_exp: {
@@ -272,16 +278,20 @@ export const actionTests: Record<string, ActionTest> = {
 			`array c = d.slice(player x + 10, player y - 10);`,
 		],
 		expected: [
-			`array a = [];`,
 			`__TEMP_0 = player x;`,
 			`__TEMP_0 += 10;`,
-			`a = b.slice(__TEMP_0);`,
-			`array c = [];`,
+			`__TEMP_ARRAY_1 = b.slice(__TEMP_0);`,
+			// `"__TEMP_ARRAY_1".rename("a")`,
+			`a = __TEMP_ARRAY_1.slice();`,
+			`delete array __TEMP_ARRAY_1;`,
 			`__TEMP_0 = player x;`,
 			`__TEMP_0 += 10;`,
 			`__TEMP_1 = player y;`,
 			`__TEMP_1 -= 10;`,
-			`c = d.slice(__TEMP_0, __TEMP_1);`,
+			`__TEMP_ARRAY_1 = d.slice(__TEMP_0, __TEMP_1);`,
+			// `"__TEMP_ARRAY_1".rename("c");`,
+			`c = __TEMP_ARRAY_1.slice();`,
+			`delete array __TEMP_ARRAY_1;`,
 		],
 	},
 	array_slices_strings: {
@@ -292,16 +302,27 @@ export const actionTests: Record<string, ActionTest> = {
 			`array g = h.slice(5, six);`,
 		],
 		expected: [
-			`array a = [];`,
-			`a = b.slice(zero);`,
-			`array c = [];`,
-			`c = d.slice(one, two);`,
-			`array e = [];`,
+			`__TEMP_ARRAY_1 = b.slice(zero);`,
+			// `"__TEMP_ARRAY_1".rename("a")`,
+			`a = __TEMP_ARRAY_1.slice();`,
+			`delete array __TEMP_ARRAY_1;`,
+
+			`__TEMP_ARRAY_1 = d.slice(one, two);`,
+			// `"__TEMP_ARRAY_1".rename("c")`,
+			`c = __TEMP_ARRAY_1.slice();`,
+			`delete array __TEMP_ARRAY_1;`,
+
 			`__TEMP_0 = 4;`,
-			`e = f.slice(three, __TEMP_0);`,
-			`array g = [];`,
+			`__TEMP_ARRAY_1 = f.slice(three, __TEMP_0);`,
+			// `"__TEMP_ARRAY_1".rename("e")`,
+			`e = __TEMP_ARRAY_1.slice();`,
+			`delete array __TEMP_ARRAY_1;`,
+
 			`__TEMP_0 = 5;`,
-			`g = h.slice(__TEMP_0, six);`,
+			`__TEMP_ARRAY_1 = h.slice(__TEMP_0, six);`,
+			// `"__TEMP_ARRAY_1".rename("g")`,
+			`g = __TEMP_ARRAY_1.slice();`,
+			`delete array __TEMP_ARRAY_1;`,
 		],
 	},
 	array_slices_numbers: {
@@ -312,14 +333,22 @@ export const actionTests: Record<string, ActionTest> = {
 			`array g = h.slice(2,3);`,
 		],
 		expected: [
-			`array a = [];`,
-			`a = b.slice();`,
-			`array c = [];`,
-			`c = d.slice();`,
-			`array e = [];`,
-			`e = f.slice(1);`,
-			`array g = [];`,
-			`g = h.slice(2, 3);`,
+			`__TEMP_ARRAY_1 = b.slice();`,
+			// `"__TEMP_ARRAY_1".rename("a")`,
+			`a = __TEMP_ARRAY_1.slice();`,
+			`delete array __TEMP_ARRAY_1;`,
+			`__TEMP_ARRAY_1 = d.slice();`,
+			// `"__TEMP_ARRAY_1".rename("c")`,
+			`c = __TEMP_ARRAY_1.slice();`,
+			`delete array __TEMP_ARRAY_1;`,
+			`__TEMP_ARRAY_1 = f.slice(1);`,
+			// `"__TEMP_ARRAY_1".rename("e")`,
+			`e = __TEMP_ARRAY_1.slice();`,
+			`delete array __TEMP_ARRAY_1;`,
+			`__TEMP_ARRAY_1 = h.slice(2, 3);`,
+			// `"__TEMP_ARRAY_1".rename("g")`,
+			`g = __TEMP_ARRAY_1.slice();`,
+			`delete array __TEMP_ARRAY_1;`,
 		],
 	},
 	new_array_with_method_chain: {
@@ -331,27 +360,40 @@ export const actionTests: Record<string, ActionTest> = {
 			`array x = y.slice().sort().slice(4).reverse();`,
 		],
 		expected: [
-			`array a = [];`,
-			`a = b.slice();`,
+			`"__TEMP_ARRAY_1" = "b".slice();`,
+			// `"__TEMP_ARRAY_1".rename("a");`,
+			`a = __TEMP_ARRAY_1.slice();`,
+			`delete array __TEMP_ARRAY_1;`,
 
-			`array c = [];`,
-			`d.sort();`,
-			`c = d.slice();`,
+			`"d".sort();`,
+			`"__TEMP_ARRAY_1" = "d".slice();`,
+			// `"__TEMP_ARRAY_1".rename("c");`,
+			`c = __TEMP_ARRAY_1.slice();`,
+			`delete array __TEMP_ARRAY_1;`,
 
-			`array e = [];`,
-			`e = f.slice();`,
-			`e.reverse();`,
+			`"__TEMP_ARRAY_1" = "f".slice();`,
+			`"__TEMP_ARRAY_1".reverse();`,
+			// `"__TEMP_ARRAY_1".rename("e");`,
+			`e = __TEMP_ARRAY_1.slice();`,
+			`delete array __TEMP_ARRAY_1;`,
 
-			`array g = [];`,
-			`h.sort();`,
-			`g = h.slice();`,
-			`g.reverse();`,
+			`"h".sort();`,
+			`"__TEMP_ARRAY_1" = "h".slice();`,
+			`"__TEMP_ARRAY_1".reverse();`,
+			// `"__TEMP_ARRAY_1".rename("g");`,
+			`g = __TEMP_ARRAY_1.slice();`,
+			`delete array __TEMP_ARRAY_1;`,
 
-			`array x = [];`,
-			`x = y.slice();`,
-			`x.sort();`,
-			`x = x.slice(4);`,
-			`x.reverse();`,
+			`"__TEMP_ARRAY_1" = "y".slice();`,
+			`"__TEMP_ARRAY_1".sort();`,
+			`"__TEMP_ARRAY_2" = "__TEMP_ARRAY_1".slice(4);`,
+			// `"__TEMP_ARRAY_2".rename("__TEMP_ARRAY_1");`,
+			`__TEMP_ARRAY_1 = __TEMP_ARRAY_2.slice();`,
+			`delete array __TEMP_ARRAY_2;`,
+			`"__TEMP_ARRAY_1".reverse();`,
+			// `"__TEMP_ARRAY_1".rename("x");`,
+			`x = __TEMP_ARRAY_1.slice();`,
+			`delete array __TEMP_ARRAY_1;`,
 		],
 	},
 	new_array_with_initial_values: {

@@ -45,7 +45,7 @@ export class Action extends AnyNode {
 		const clone = fn(this as GenericObj);
 		// TODO double check this
 		if (this.constructor !== clone.constructor) {
-			throw new Error ('not a real clone');
+			throw new Error('not a real clone');
 		}
 		return clone;
 	}
@@ -117,7 +117,7 @@ export class UnknownAction extends Action {
 	clone(): UnknownAction {
 		const clone = Action.fromArgs(this);
 		if (!(clone instanceof UnknownAction)) {
-			throw new Error ('clone of UnknownAction not UnknownAction')
+			throw new Error('clone of UnknownAction not UnknownAction');
 		}
 		return clone;
 	}
@@ -266,7 +266,7 @@ export const printEntityFieldEquality = (
 	v: CheckAction,
 	entity: string,
 	param: string,
-	value: number | string
+	value: number | string,
 ): string => {
 	const lhs = `${printEntityIdentifier(entity)} ${param}`;
 	return v.expected_bool
@@ -1920,7 +1920,12 @@ export class CHECK_ENTITY_INTERACT_SCRIPT extends ActionStringCheckable {
 		return new CHECK_ENTITY_INTERACT_SCRIPT({ entity, expected_script, expected_bool });
 	}
 	print() {
-		return printEntityFieldEquality(this, this.entity, 'on_interact', `"${this.expected_script}"`);
+		return printEntityFieldEquality(
+			this,
+			this.entity,
+			'on_interact',
+			`"${this.expected_script}"`,
+		);
 	}
 }
 export class CHECK_ENTITY_TICK_SCRIPT extends ActionStringCheckable {
@@ -3443,6 +3448,24 @@ export class ARRAY_SORT extends Action {
 		return `"${this.array_name}".sort();`;
 	}
 }
+export class ARRAY_RENAME extends Action {
+	// TODO: NOT OFFICIAL YET
+	action: 'ARRAY_RENAME';
+	array_name: string;
+	new_name: string;
+	constructor(args: GenericObj, debug?: MathlangLocation) {
+		super(args);
+		this.action = 'ARRAY_RENAME';
+		this.array_name = tryString(args.array_name, 'ARRAY_RENAME param "array_name"', debug);
+		this.new_name = tryString(args.new_name, 'ARRAY_RENAME param "new_name"', debug);
+	}
+	static quick(array_name: string, new_name: string) {
+		return new ARRAY_RENAME({ array_name, new_name });
+	}
+	print() {
+		return `"${this.array_name}".rename("${this.new_name}");`;
+	}
+}
 
 export type HasOneVariable = MUTATE_VARIABLE | CHECK_VARIABLE | COPY_VARIABLE;
 export type HasTwoVariables = MUTATE_VARIABLES | CHECK_VARIABLES;
@@ -3501,7 +3524,10 @@ export const breakIfNotBool = (v: unknown): boolean => {
 	throw new Error('not a boolean');
 };
 
-export const actionConstructorLookup: Record<string, (args: GenericObj, debug?: MathlangLocation) => Action > = {
+export const actionConstructorLookup: Record<
+	string,
+	(args: GenericObj, debug?: MathlangLocation) => Action
+> = {
 	NULL_ACTION: (args) => new NULL_ACTION(args),
 	COPY_SCRIPT: (args, debug) => new COPY_SCRIPT(args, debug),
 	LABEL: (args, debug) => new LABEL(args, debug),
@@ -3672,6 +3698,7 @@ export const actionConstructorLookup: Record<string, (args: GenericObj, debug?: 
 	ARRAY_POP_LEFT_INTO_VARIABLE: (args, debug) => new ARRAY_POP_LEFT_INTO_VARIABLE(args, debug),
 	ARRAY_REVERSE: (args, debug) => new ARRAY_REVERSE(args, debug),
 	ARRAY_SORT: (args, debug) => new ARRAY_SORT(args, debug),
+	ARRAY_RENAME: (args, debug) => new ARRAY_RENAME(args, debug),
 };
 
 // more nuanced!???!

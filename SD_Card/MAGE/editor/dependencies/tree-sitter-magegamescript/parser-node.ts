@@ -156,7 +156,9 @@ const nodeFns: Record<string, (debug: MathlangLocation) => AnyNode[]> = {
 		let error = false;
 		const params = paramNodes.map((param) => {
 			if (param.grammarType !== 'CONSTANT') {
-				debug.using(param).quickError('invalid fn arg', 'fn arg must be CONSTANT (prefixed with $)');
+				debug
+					.using(param)
+					.quickError('invalid fn arg', 'fn arg must be CONSTANT (prefixed with $)');
 				error = true;
 			}
 			return param.text;
@@ -381,23 +383,23 @@ const nodeFns: Record<string, (debug: MathlangLocation) => AnyNode[]> = {
 		});
 
 		// add serial dialog settings
-		Object.entries(insertF.settings.serial).forEach(([k, v])=>{
+		Object.entries(insertF.settings.serial).forEach(([k, v]) => {
 			addParamToSerialDialogSettings(f.settings.serial, k, v);
 		});
 
 		// add dialog settings
-		Object.entries(insertF.settings.default).forEach(([k, v])=>{
+		Object.entries(insertF.settings.default).forEach(([k, v]) => {
 			addParamToDialogSettings(f.settings.default, k, v);
 		});
 		Object.keys(insertF.settings.entity).forEach((target) => {
-			f.settings.entity[target] = f.settings.entity[target] || {};;
-			Object.entries(insertF.settings.entity[target]).forEach(([k, v])=>{
+			f.settings.entity[target] = f.settings.entity[target] || {};
+			Object.entries(insertF.settings.entity[target]).forEach(([k, v]) => {
 				addParamToDialogSettings(f.settings.entity[target], k, v);
 			});
 		});
 		Object.keys(insertF.settings.label).forEach((target) => {
-			f.settings.label[target] = f.settings.label[target] || {};;
-			Object.entries(insertF.settings.label[target]).forEach(([k, v])=>{
+			f.settings.label[target] = f.settings.label[target] || {};
+			Object.entries(insertF.settings.label[target]).forEach(([k, v]) => {
 				addParamToDialogSettings(f.settings.label[target], k, v);
 			});
 		});
@@ -506,7 +508,7 @@ const nodeFns: Record<string, (debug: MathlangLocation) => AnyNode[]> = {
 		const rawParameters = capturesForField(debug, 'serial_dialog_parameter');
 		const parameters = SerialDialogParameter.breakIfNotAll(rawParameters);
 		parameters.forEach((param) => {
-			addParamToDialogSettings(debug.f.settings.serial, param.property, param.value)
+			addParamToDialogSettings(debug.f.settings.serial, param.property, param.value);
 		});
 		// Make a node "receipt"
 		return [AddSerialDialogSettings.quick(debug, parameters)];
@@ -562,7 +564,7 @@ const nodeFns: Record<string, (debug: MathlangLocation) => AnyNode[]> = {
 			capturesForField(debug, 'serial_dialog_parameter'),
 		);
 		params.forEach((v) => {
-			addParamToDialogSettings(settings, v.property, v.value)
+			addParamToDialogSettings(settings, v.property, v.value);
 		});
 		// Options
 		const rawOptions = handleChildrenForField(debug, 'serial_dialog_option');
@@ -588,7 +590,9 @@ const nodeFns: Record<string, (debug: MathlangLocation) => AnyNode[]> = {
 		const identifier = DialogIdentifier.breakIfNot(captureForField(debug, 'dialog_identifier'));
 		// Settings
 		const settings: DialogSettings = {};
-		const params: DialogParameter[] = DialogParameter.breakIfNotAll(capturesForField(debug, 'dialog_parameter'));
+		const params: DialogParameter[] = DialogParameter.breakIfNotAll(
+			capturesForField(debug, 'dialog_parameter'),
+		);
 		params.forEach((param) => {
 			addParamToDialogSettings(settings, param.property, param.value);
 		});

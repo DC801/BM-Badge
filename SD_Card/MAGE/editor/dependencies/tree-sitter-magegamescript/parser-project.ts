@@ -57,6 +57,8 @@ export class ProjectState {
 	mgsWarnings: string;
 	// auto counter, so that auto-generated gotos don't share labels:
 	gotoSuffixValue: number;
+	tempArrayCount: number;
+
 	constructor(tsParser: Parser, fileMap: FileMap, scenarioData: Record<string, unknown>) {
 		// // why did we need to do this? (I guess we don't?)
 		// Object.entries(scenarioData).forEach(([k, v]) => {
@@ -78,6 +80,7 @@ export class ProjectState {
 		this.errors = [];
 		this.warnings = [];
 		this.gotoSuffixValue = 0;
+		this.tempArrayCount = 0;
 	}
 	newError(v: MathlangMessage) {
 		this.errors.push(v);
@@ -90,6 +93,21 @@ export class ProjectState {
 	}
 	getGotoSuffix() {
 		return this.gotoSuffixValue;
+	}
+	newTempArray() {
+		this.tempArrayCount += 1;
+		const n = this.tempArrayCount;
+		return `__TEMP_ARRAY_${n}`;
+	}
+	currTempArray() {
+		const n = this.tempArrayCount;
+		return `__TEMP_ARRAY_${n}`;
+	}
+	dropTempArray() {
+		this.tempArrayCount -= 1;
+		if (this.tempArrayCount < 0) {
+			throw new Error('Removed too many temp arrays');
+		}
 	}
 
 	// for adding a file's data to the project
@@ -222,7 +240,7 @@ export class ProjectState {
 			let copiedActions: AnyNode[] = this.scripts[action.script].actions.map((v) => {
 				if (isMightHaveLabel(v)) {
 					const clone = v.clone();
-					if (!isMightHaveLabel(clone)) throw new Error ('unreachable')
+					if (!isMightHaveLabel(clone)) throw new Error('unreachable');
 					return clone.ifLabelAddSuffix(labelSuffix);
 				}
 				return v;
@@ -235,8 +253,8 @@ export class ProjectState {
 				// TODO: test this at all
 				copiedActions = copiedActions.map((v) => {
 					if (isHasVariables(v)) {
-					const clone = v.clone();
-					if (!isHasVariables(clone)) throw new Error ('unreachable')
+						const clone = v.clone();
+						if (!isHasVariables(clone)) throw new Error('unreachable');
 						return clone.realignVars();
 					}
 					return v;

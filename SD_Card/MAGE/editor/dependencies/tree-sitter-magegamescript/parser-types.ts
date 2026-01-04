@@ -527,8 +527,13 @@ export type DialogSettings = {
 	alignment?: string;
 	border_tileset?: string;
 };
-export type DialogSettingsKeyString = 'entity' | 'name' | 'portrait' | 'alignment' | 'border_tileset'
-export type DialogSettingsKeyNumber = 'wrap' | 'emote'
+export type DialogSettingsKeyString =
+	| 'entity'
+	| 'name'
+	| 'portrait'
+	| 'alignment'
+	| 'border_tileset';
+export type DialogSettingsKeyNumber = 'wrap' | 'emote';
 export const isDialogSettingsKeyString = (str: string): str is DialogSettingsKeyString => {
 	if (str === 'entity') return true;
 	if (str === 'name') return true;
@@ -542,17 +547,21 @@ export const isDialogSettingsKeyNumber = (str: string): str is DialogSettingsKey
 	if (str === 'emote') return true;
 	return false;
 };
-export const addParamToDialogSettings = (settings: DialogSettings | Dialog, k: string, _v: unknown) => {
+export const addParamToDialogSettings = (
+	settings: DialogSettings | Dialog,
+	k: string,
+	_v: unknown,
+) => {
 	const v = _v instanceof BoolLiteral ? _v.value : _v;
 	if (isDialogSettingsKeyString(k) && typeof v == 'string') {
 		settings[k] = v;
 	} else if (isDialogSettingsKeyNumber(k) && typeof v == 'number') {
 		settings[k] = v;
 	} else {
-		throw new Error ("something borked")
+		throw new Error('something borked');
 	}
 	return settings;
-}
+};
 
 export class DialogParameter extends MathlangNode {
 	property: string;
@@ -785,15 +794,19 @@ export const isSerialDialogSettingsKey = (str: string): str is SerialDialogSetti
 	return false;
 };
 // Make this look like the dialog ones if you need to add string params
-export const addParamToSerialDialogSettings = (settings: SerialDialogSettings, k: string, _v: unknown) => {
+export const addParamToSerialDialogSettings = (
+	settings: SerialDialogSettings,
+	k: string,
+	_v: unknown,
+) => {
 	const v = _v instanceof BoolLiteral ? _v.value : _v;
 	if (isSerialDialogSettingsKey(k) && typeof v == 'number') {
 		settings[k] = v;
 	} else {
-		throw new Error ("something borked")
+		throw new Error('something borked');
 	}
 	return settings;
-}
+};
 
 export class SerialDialogParameter extends MathlangNode {
 	property: string;
@@ -1168,10 +1181,12 @@ export class CopyMacro extends MathlangNode {
 		if (this.search_and_replace && !that.search_and_replace) return false;
 		if (!this.search_and_replace && that.search_and_replace) return false;
 		if (this.search_and_replace && that.search_and_replace) {
-			const keys: string[] = [...new Set([
-				...Object.keys(this.search_and_replace),
-				...Object.keys(that.search_and_replace),
-			])];
+			const keys: string[] = [
+				...new Set([
+					...Object.keys(this.search_and_replace),
+					...Object.keys(that.search_and_replace),
+				]),
+			];
 			for (let i = 0; i < keys.length; i++) {
 				const key_i = keys[i];
 				if (this.search_and_replace[key_i] !== that.search_and_replace[key_i]) {
@@ -1846,7 +1861,7 @@ export class BoolExpression extends MathlangNode {
 		// if (self glitched) { player glitched = true; } else { player glitched = false; }
 		const cloneIfFalse = setBool.clone();
 		if (!(cloneIfFalse instanceof ACTION.ActionSetBool)) {
-			throw new Error ('unreachable')
+			throw new Error('unreachable');
 		}
 		cloneIfFalse.invert();
 		const steps = simpleBranchMaker(this.debug, this, [setBool], [cloneIfFalse]);
@@ -3444,6 +3459,8 @@ export class ArrayMethodChain extends MathlangNode {
 		this.return_type = 'array';
 		this.chain = [];
 		this.final = chain[chain.length - 1];
+		// to see if the "return type" changes anywhere within the chain (?)
+		// and ascertain the "return type" broadly
 		for (let i = 0; i < chain.length; i++) {
 			const curr = chain[i];
 			if (curr instanceof ArrayMethodReturningValue) {
@@ -3499,28 +3516,52 @@ export class ArrayMethodChain extends MathlangNode {
 		}
 		return v;
 	}
+	// POSSIBLY REDO
 	toSteps(destination: string) {
 		const steps: AnyNode[] = [];
 		let currArray = this.identifier;
-		if (this.return_type === 'array') {
-			steps.push(ACTION.ARRAY_NEW.quick(destination));
-		}
+		let currArrayIsTemp = false;
+		// if (this.return_type === 'array') {
+		// 	steps.push(ACTION.ARRAY_NEW.quick(destination));
+		// }
 		this.chain.forEach((method) => {
 			if (method instanceof ArrayMethodReturningNothing) {
 				steps.push(...method.toSteps(currArray));
 			} else if (method instanceof ArrayMethodReturningValue) {
 				steps.push(...method.toSteps(currArray, destination));
 			} else if (method instanceof ArraySliceMethod || method instanceof ArrayMap) {
-				const temp = this.return_type === 'array' ? destination : '__TEMPORARY_ARRAY_';
-				// TODO: find out if you can slice in place
-				steps.push(...method.toSteps(currArray, temp));
-				currArray = temp;
+				// the first temporary array made this way will need to be cleaned up at the end
+				const newTemporary = method.debug.f.p.newTempArray(); // wasteful sometimes, but this way there's no edge cases (the result is uniform)
+				steps.push(...method.toSteps(currArray, newTemporary));
+				if (currArrayIsTemp) {
+					steps.push(ACTION.ARRAY_SLICE.quick(newTemporary, currArray, 0));
+					steps.push(ACTION.ARRAY_DELETE.quick(newTemporary));
+					// eventually change to:
+					// steps.push(ACTION.ARRAY_RENAME.quick(newTemporary, currArray));
+					method.debug.f.p.dropTempArray();
+				} else {
+					currArray = newTemporary;
+					currArrayIsTemp = true;
+				}
 			} else if (method instanceof ArrayMethodReturningArray) {
 				steps.push(...method.toSteps(currArray, destination));
 			} else {
 				throw new Error('unknown array method type');
 			}
 		});
+		// cleaning up the first temporary array
+		if (currArrayIsTemp) {
+			const currTemp = this.debug.f.p.currTempArray();
+			if (this.return_type === 'array') {
+				steps.push(ACTION.ARRAY_SLICE.quick(currTemp, destination, 0));
+				steps.push(ACTION.ARRAY_DELETE.quick(currTemp));
+				// eventually change to:
+				// steps.push(ACTION.ARRAY_RENAME.quick(currTemp, destination))
+			} else {
+				steps.push(ACTION.ARRAY_DELETE.quick(currTemp));
+			}
+			this.debug.f.p.dropTempArray();
+		}
 		return steps;
 	}
 	assignToArray(destinationArray: string) {
@@ -3597,8 +3638,7 @@ export class ArrayMap extends ArrayMethodReturningArray {
 	}
 	isIdenticalTo(that: unknown) {
 		if (!(that instanceof ArrayMap)) return false;
-		if (!this.fn.isIdenticalTo(that.fn)) return false;
-		return true;
+		return this.fn.isIdenticalTo(that.fn);
 	}
 	clone() {
 		return new ArrayMap(this.debug.clone(), this.args);
@@ -4341,22 +4381,30 @@ const mapOrForEachBuilder = (
 
 	// make local const registry based on what we were passed for this call
 	const localConstants: FunctionStackEntry = {};
-	const defCurr = method.fn.params[0];
-	if (defCurr !== undefined) {
-		const defNode = method.fn.paramNodes[0];
-		localConstants[defCurr] = ConstantDefinition.quick(debug.using(defNode), defCurr, curr);
+	// first arg: the loop value
+	// TODO: given how this is set up, is this not required?
+	const currArg = method.fn.params[0];
+	if (currArg !== undefined) {
+		const valueArgNode = method.fn.paramNodes[0];
+		localConstants[currArg] = ConstantDefinition.quick(
+			debug.using(valueArgNode),
+			currArg,
+			curr,
+		);
 	}
-	const defI = method.fn.params[1];
-	if (defI !== undefined) {
-		const defNode = method.fn.paramNodes[1];
-		localConstants[defI] = ConstantDefinition.quick(method.debug.using(defNode), defI, i);
+	// second arg: the index of the loop (i)
+	const indexArg = method.fn.params[1];
+	if (indexArg !== undefined) {
+		const indexArgNode = method.fn.paramNodes[1];
+		localConstants[indexArg] = ConstantDefinition.quick(debug.using(indexArgNode), indexArg, i);
 	}
-	const defArr = method.fn.params[2];
-	if (defArr !== undefined) {
-		const defNode = method.fn.paramNodes[1];
-		localConstants[defArr] = ConstantDefinition.quick(
-			debug.using(defNode),
-			defArr,
+	// third arg: the name of the array we're working on (so you can .length() etc)
+	const arrayArg = method.fn.params[2];
+	if (arrayArg !== undefined) {
+		const arrayArgNode = method.fn.paramNodes[1];
+		localConstants[arrayArg] = ConstantDefinition.quick(
+			debug.using(arrayArgNode),
+			arrayArg,
 			sourceArray,
 		);
 	}
@@ -4370,29 +4418,31 @@ const mapOrForEachBuilder = (
 
 	// bake it like a script body
 	const body = [
-		// curr = array[i];
+		// `curr = array[i];`
 		...ArrayReadFromVariableIndex.quick(debug, i).toSteps(sourceArray, curr),
 		// and the rest
 		...flattenAndDoAutoReturn(debug, rawBody),
 	];
 	if (method instanceof ArrayMap) {
-		if (destinationArray === undefined) throw new Error('need destinationArray');
+		if (destinationArray === undefined) {
+			throw new Error('need destinationArray');
+		}
 		body.push(
-			// b.push(__RETURN_);
+			// `destinationArray.push(__RETURN_);`
 			ACTION.ARRAY_PUSH_FROM_VARIABLE.quick(destinationArray, RETURN),
-			// __RETURN_ = 0;
+			// `__RETURN_ = 0;`
 			ACTION.MUTATE_VARIABLE.set(RETURN, 0),
 		);
 	}
 
 	const initialize = [
-		// i = 0;
+		// `i = 0;`
 		ACTION.MUTATE_VARIABLE.set(i, 0),
-		// length = sourceArray.length();
+		// `length = sourceArray.length();`
 		ACTION.ARRAY_LENGTH_INTO_VARIABLE.quick(sourceArray, length),
 	];
 	const increment = [
-		// i += 1;
+		// `i += 1;`
 		ACTION.MUTATE_VARIABLE.change(debug, i, 1, '+'),
 	];
 	const steps = forLoopMaker(

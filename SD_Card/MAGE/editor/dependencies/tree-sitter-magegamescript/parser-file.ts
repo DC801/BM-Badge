@@ -19,11 +19,11 @@ type Constant = {
 };
 export type FunctionStackEntry = Record<string, ConstantDefinition>;
 export type FileStateDialogSettings = {
-		default: DialogSettings;
-		entity: Record<string, DialogSettings>;
-		label: Record<string, DialogSettings>;
-		serial: SerialDialogSettings;
-	};
+	default: DialogSettings;
+	entity: Record<string, DialogSettings>;
+	label: Record<string, DialogSettings>;
+	serial: SerialDialogSettings;
+};
 export type FileStateDialogSettingsKeys = keyof FileStateDialogSettings;
 export class FileState {
 	p: ProjectState;
