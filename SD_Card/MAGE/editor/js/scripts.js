@@ -859,7 +859,7 @@ var getRelativeDirectionFromAction = function (
 	return value;
 };
 
-var getNumberFromAction = function (
+var getSignedNumberFromAction = function (
 	propertyName,
 	action,
 	map,
@@ -871,6 +871,23 @@ var getNumberFromAction = function (
 		throw new Error(`${action.action} requires a value for "${propertyName}"!`);
 	}
 	value = parseInt(value, 10);
+	return value;
+};
+
+var getNumberFromAction = function (
+	propertyName,
+	action,
+	map,
+	fileNameMap,
+	scenarioData
+) {
+	var value = getSignedNumberFromAction(
+		propertyName,
+		action,
+		map,
+		fileNameMap,
+		scenarioData,
+	);
 	if (value < 0) {
 		throw new Error(`${action.action} "${propertyName}" value "${value}" must be greater than or equal to zero!`);
 	}
@@ -933,6 +950,19 @@ var getLightsFromAction = function (
 var getByteFromAction = function (propertyName, action, map) {
 	var value = getNumberFromAction(propertyName, action, map);
 	var maxSize = 255;
+	if (value > maxSize) {
+		throw new Error(`${action.action} "${propertyName}" value "${value}" must be less than or equal to ${maxSize}!`);
+	}
+	return value;
+};
+
+var getSignedByteFromAction = function (propertyName, action, map) {
+	var value = getSignedNumberFromAction(propertyName, action, map);
+	var minSize = -127;
+	var maxSize = 127;
+	if (value < minSize) {
+		throw new Error(`${action.action} "${propertyName}" value "${value}" must be greater than or equal to ${minSize}!`);
+	}
 	if (value > maxSize) {
 		throw new Error(`${action.action} "${propertyName}" value "${value}" must be less than or equal to ${maxSize}!`);
 	}
@@ -1387,9 +1417,9 @@ var actionPropertyNameToHandlerMap = {
 	is_fail: getDefaultFalseBoolFromAction,
 	value: getTwoBytesFromAction,
 	variable: getVariableIdFromAction,
-	index: getByteFromAction,
-	index_start: getByteFromAction,
-	index_end: getByteFromAction,
+	index: getSignedByteFromAction,
+	index_start: getSignedByteFromAction,
+	index_end: getSignedByteFromAction,
 	variable_index: getVariableIdFromAction,
 	variable_start: getVariableIdFromAction,
 	variable_end: getVariableIdFromAction,

@@ -279,11 +279,11 @@ array_unit_tests {
 	show serial_dialog {"READ FROM (EXPRESSION) INDEX (AGAIN)"};
 	debug!(" ")
 
-	// // READ FROM NUMBER (NEGTATIVE) INDEX
-	// print array arr;
-	// print_compared_values(arr[-1], 1);
-	// show serial_dialog {"READ FROM NUMBER (NEGTATIVE) INDEX"};
-	// debug!(" ")
+	// READ FROM NUMBER (NEGATIVE) INDEX
+	print array arr;
+	print_compared_values(arr[-1], 1);
+	show serial_dialog {"READ FROM NUMBER (NEGATIVE) INDEX"};
+	debug!(" ")
 
 	// PUSH VARIABLE
 	v = 2;
