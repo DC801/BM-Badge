@@ -210,149 +210,157 @@ array_bytecode_tests {
 }
 
 fn bad_unit_test($fnd, $exp) {
-    expected = $exp *1;
-    found = $fnd *1;
-    concat serial_dialog {"[ <r>BAD</> ] "};
-    concat serial_dialog {"(expected <y>$expected$</>, found <r>$found$</>) "};
+	expected = $exp *1;
+	found = $fnd *1;
+	concat serial_dialog {"[ <r>BAD</> ] "};
+	concat serial_dialog {"(expected <y>$expected$</>, found <r>$found$</>) "};
 }
 good_unit_test {
-    concat serial_dialog {"[ <g>OK</>  ] "};
+	concat serial_dialog {"[ <g>OK</>  ] "};
 }
 
 fn print_compared_values ($fnd, $exp) {
-    if ($fnd != $exp) {
-        bad_unit_test($fnd, $exp);
-    } else {
-        good_unit_test();
-    }
+	if ($fnd != $exp) {
+		bad_unit_test($fnd, $exp);
+	} else {
+		good_unit_test();
+	}
 }
 
 fn tens ($n) { return $n * 10; }
 fn accumulate ($n) { array_sum_test += $n; }
 
 array_unit_tests {
-    show serial_dialog spacer;
-    show serial_dialog { "<c>---ARRAY UNIT TESTS---</>\n "};
-    array arr = [];
+	show serial_dialog spacer;
+	show serial_dialog { "<c>---ARRAY UNIT TESTS---</>\n "};
 
-    // READ FROM NUMBER INDEX
-    array arr = [3];
-    print array arr;
-    print_compared_values(arr[0], 3);
-    show serial_dialog {"READ FROM NUMBER INDEX"};
-    debug!(" ")
-    
-    // PUSH VALUE
-    arr.push(1);
-    print array arr;
-    print_compared_values(arr[1], 1);
-    show serial_dialog {"PUSH VALUE"};
-    debug!(" ")
+	// ARRAY OVERWRITING
+	array overwriting = [255];
+	print array overwriting;
+	array overwriting = [5];
+	print array overwriting;
+	print_compared_values(overwriting[0], 5);
+	show serial_dialog {"ARRAY OVERWRITING"};
+	delete array overwriting;
 
-    // PUSH VARIABLE
-    v = 2;
-    arr.push(v);
-    print array arr;
-    print_compared_values(arr[2], v);
-    show serial_dialog {"PUSH VARIABLE"};
-    debug!(" ")
+	// READ FROM NUMBER INDEX
+	array arr = [3];
+	print array arr;
+	print_compared_values(arr[0], 3);
+	show serial_dialog {"READ FROM NUMBER INDEX"};
+	debug!(" ")
+	
+	// PUSH VALUE
+	arr.push(1);
+	print array arr;
+	print_compared_values(arr[1], 1);
+	show serial_dialog {"PUSH VALUE"};
+	debug!(" ")
 
-    // LENGTH
-    print array arr;
-    print_compared_values(arr.length(), 3);
-    show serial_dialog {"LENGTH"};
-    debug!(" ")
+	// PUSH VARIABLE
+	v = 2;
+	arr.push(v);
+	print array arr;
+	print_compared_values(arr[2], v);
+	show serial_dialog {"PUSH VARIABLE"};
+	debug!(" ")
 
-    // PUSH_LEFT VALUE
-    arr.push_left(0);
-    print array arr;
-    print_compared_values(arr[0], 0);
-    show serial_dialog {"PUSH_LEFT VALUE"};
-    debug!(" ")
+	// LENGTH
+	print array arr;
+	print_compared_values(arr.length(), 3);
+	show serial_dialog {"LENGTH"};
+	debug!(" ")
 
-    // PUSH_LEFT VARIABLE
-    v = 4;
-    arr.push_left(v);
-    print array arr;
-    print_compared_values(arr[0], v);
-    show serial_dialog {"PUSH_LEFT VARIABLE"};
+	// PUSH_LEFT VALUE
+	arr.push_left(0);
+	print array arr;
+	print_compared_values(arr[0], 0);
+	show serial_dialog {"PUSH_LEFT VALUE"};
+	debug!(" ")
 
-    // SORT
-    arr.sort();
-    print array arr;
-    // SORT [0]
-    print_compared_values(arr[0], 0);
-    show serial_dialog {"SORT [0]"};
-    debug!(" ")
-    // SORT [1]
-    print_compared_values(arr[1], 1);
-    show serial_dialog {"SORT [1]"};
-    debug!(" ")
-    // SORT [2]
-    print_compared_values(arr[2], 2);
-    show serial_dialog {"SORT [2]"};
-    debug!(" ")
-    // SORT [3]
-    print_compared_values(arr[3], 3);
-    show serial_dialog {"SORT [3]"};
-    debug!(" ")
-    // SORT [4]
-    print_compared_values(arr[4], 4);
-    show serial_dialog {"SORT [4]"};
-    debug!(" ")
+	// PUSH_LEFT VARIABLE
+	v = 4;
+	arr.push_left(v);
+	print array arr;
+	print_compared_values(arr[0], v);
+	show serial_dialog {"PUSH_LEFT VARIABLE"};
 
-    // REVERSE
-    arr.reverse();
-    print array arr;
-    // REVERSE [0]
-    print_compared_values(arr[0], 4);
-    show serial_dialog {"REVERSE [0]"};
-    debug!(" ")
-    // REVERSE [1]
-    print_compared_values(arr[1], 3);
-    show serial_dialog {"REVERSE [1]"};
-    debug!(" ")
-    // REVERSE [2]
-    print_compared_values(arr[2], 2);
-    show serial_dialog {"REVERSE [2]"};
-    debug!(" ")
-    // REVERSE [3]
-    print_compared_values(arr[3], 1);
-    show serial_dialog {"REVERSE [3]"};
-    debug!(" ")
-    // REVERSE [4]
-    print_compared_values(arr[4], 0);
-    show serial_dialog {"REVERSE [4]"};
-    debug!(" ")
+	// SORT
+	arr.sort();
+	print array arr;
+	// SORT [0]
+	print_compared_values(arr[0], 0);
+	show serial_dialog {"SORT [0]"};
+	debug!(" ")
+	// SORT [1]
+	print_compared_values(arr[1], 1);
+	show serial_dialog {"SORT [1]"};
+	debug!(" ")
+	// SORT [2]
+	print_compared_values(arr[2], 2);
+	show serial_dialog {"SORT [2]"};
+	debug!(" ")
+	// SORT [3]
+	print_compared_values(arr[3], 3);
+	show serial_dialog {"SORT [3]"};
+	debug!(" ")
+	// SORT [4]
+	print_compared_values(arr[4], 4);
+	show serial_dialog {"SORT [4]"};
+	debug!(" ")
+
+	// REVERSE
+	arr.reverse();
+	print array arr;
+	// REVERSE [0]
+	print_compared_values(arr[0], 4);
+	show serial_dialog {"REVERSE [0]"};
+	debug!(" ")
+	// REVERSE [1]
+	print_compared_values(arr[1], 3);
+	show serial_dialog {"REVERSE [1]"};
+	debug!(" ")
+	// REVERSE [2]
+	print_compared_values(arr[2], 2);
+	show serial_dialog {"REVERSE [2]"};
+	debug!(" ")
+	// REVERSE [3]
+	print_compared_values(arr[3], 1);
+	show serial_dialog {"REVERSE [3]"};
+	debug!(" ")
+	// REVERSE [4]
+	print_compared_values(arr[4], 0);
+	show serial_dialog {"REVERSE [4]"};
+	debug!(" ")
 
 	// POP
 	v = arr.pop();
 	print array arr;
-    print_compared_values(v, 0);
-    show serial_dialog {"POP"};
-    debug!(" ")
+	print_compared_values(v, 0);
+	show serial_dialog {"POP"};
+	debug!(" ")
 
 	// POP_LEFT
 	v = arr.pop_left();
 	print array arr;
-    print_compared_values(v, 4);
-    show serial_dialog {"POP_LEFT"};
-    debug!(" ")
+	print_compared_values(v, 4);
+	show serial_dialog {"POP_LEFT"};
+	debug!(" ")
 
 	// WRITE TO NUMBER INDEX, NUMBER VALUE
 	arr[0] = 10;
 	print array arr;
-    print_compared_values(arr[0], 10);
-    show serial_dialog {"WRITE TO NUMBER INDEX, NUMBER VALUE"};
-    debug!(" ")
+	print_compared_values(arr[0], 10);
+	show serial_dialog {"WRITE TO NUMBER INDEX, NUMBER VALUE"};
+	debug!(" ")
 
 	// WRITE TO NUMBER INDEX, VARIABLE VALUE
 	v = 20;
 	arr[1] = v;
 	print array arr;
-    print_compared_values(arr[1], v);
-    show serial_dialog {"WRITE TO NUMBER INDEX, VARIABLE VALUE"};
-    debug!(" ")
+	print_compared_values(arr[1], v);
+	show serial_dialog {"WRITE TO NUMBER INDEX, VARIABLE VALUE"};
+	debug!(" ")
 
 	// [10,20,1]
 
@@ -360,70 +368,134 @@ array_unit_tests {
 	v = 2;
 	arr[v] = 30;
 	print array arr;
-    print_compared_values(arr[v], 30);
-    show serial_dialog {"WRITE TO VARIABLE INDEX, NUMBER VALUE"};
-    debug!(" ")
+	print_compared_values(arr[v], 30);
+	show serial_dialog {"WRITE TO VARIABLE INDEX, NUMBER VALUE"};
+	debug!(" ")
 
 	// WRITE TO VARIABLE INDEX, VARIABLE VALUE
 	v = 100;
 	w = 0;
 	arr[w] = v;
 	print array arr;
-    print_compared_values(arr[w], v);
-    show serial_dialog {"WRITE TO VARIABLE INDEX, VARIABLE VALUE"};
-    debug!(" ")
+	print_compared_values(arr[w], v);
+	show serial_dialog {"WRITE TO VARIABLE INDEX, VARIABLE VALUE"};
+	debug!(" ")
 	
-    delete array arr;
+	delete array arr;
 
-    // FOR_EACH LAMBDA
+	// FOR_EACH LAMBDA
 	array_sum_test = 0;
-    array arr = [1,10,100];
-    print array arr;
+	array arr = [1,10,100];
+	print array arr;
 	arr.for_each(($n) { array_sum_test += $n; });
-    // FOR_EACH LAMBDA
-    print_compared_values(array_sum_test, 111);
-    show serial_dialog {"FOR_EACH LAMBDA"};
-    debug!(" ")
-    delete array arr;
+	// FOR_EACH LAMBDA
+	print_compared_values(array_sum_test, 111);
+	show serial_dialog {"FOR_EACH LAMBDA"};
+	debug!(" ")
+	delete array arr;
 
-    // FOR_EACH REFERENCE
+	// FOR_EACH REFERENCE
 	array_sum_test = 0;
-    array arr = [1,10,100];
-    print array arr;
+	array arr = [1,10,100];
+	print array arr;
 	arr.for_each(accumulate);
-    // FOR_EACH REFERENCE
-    print_compared_values(array_sum_test, 111);
-    show serial_dialog {"FOR_EACH REFERENCE"};
-    debug!(" ")
-    delete array arr;
+	// FOR_EACH REFERENCE
+	print_compared_values(array_sum_test, 111);
+	show serial_dialog {"FOR_EACH REFERENCE"};
+	debug!(" ")
+	delete array arr;
 
-    // // MAP REFERENCE
+	// // MAP REFERENCE
 	// array arr = [1,2];
 	// array mapped = arr.map(tens);
-    // print array mapped;
-    // // MAP LAMBDA [0]
-    // print_compared_values(mapped[0], 10);
-    // show serial_dialog {"MAP REFERENCE [0]"};
-    // debug!(" ")
-    // // MAP LAMBDA [1]
-    // print_compared_values(mapped[1], 20);
-    // show serial_dialog {"MAP REFERENCE [1]"};
-    // debug!(" ")
-    // delete array mapped;
-    // delete array arr;
+	// print array mapped;
+	// // MAP LAMBDA [0]
+	// print_compared_values(mapped[0], 10);
+	// show serial_dialog {"MAP REFERENCE [0]"};
+	// debug!(" ")
+	// // MAP LAMBDA [1]
+	// print_compared_values(mapped[1], 20);
+	// show serial_dialog {"MAP REFERENCE [1]"};
+	// debug!(" ")
+	// delete array mapped;
+	// delete array arr;
 
-    // // MAP LAMBDA
-    // array arr = [1,2];
+	// // MAP LAMBDA
+	// array arr = [1,2];
 	// array mapped = arr.map(($n) { return $n * 10; });
-    // print array mapped;
-    // // MAP LAMBDA [0]
-    // print_compared_values(mapped[0], 10);
-    // show serial_dialog {"MAP LAMBDA [0]"};
-    // debug!(" ")
-    // // MAP LAMBDA [1]
-    // print_compared_values(mapped[1], 20);
-    // show serial_dialog {"MAP LAMBDA [1]"};
-    // debug!(" ")
-    // delete array mapped;
-    // delete array arr;
+	// print array mapped;
+	// // MAP LAMBDA [0]
+	// print_compared_values(mapped[0], 10);
+	// show serial_dialog {"MAP LAMBDA [0]"};
+	// debug!(" ")
+	// // MAP LAMBDA [1]
+	// print_compared_values(mapped[1], 20);
+	// show serial_dialog {"MAP LAMBDA [1]"};
+	// debug!(" ")
+	// delete array mapped;
+	// delete array arr;
+
+	// // MAP SLICE NUMBER
+	// array arr = [1,2,3,4];
+	// array sliced = arr.slice(1);
+	// // MAP SLICE NUMBER (length)
+	// print_compared_values(sliced.length, 3);
+	// show serial_dialog {"MAP SLICE NUMBER (length)"};
+	// // MAP SLICE NUMBER [0]
+	// print_compared_values(sliced[0], 2);
+	// show serial_dialog {"MAP SLICE NUMBER [0]"};
+	// delete array sliced;
+	// delete array arr;
+
+	// // MAP SLICE NUMBER NEGATIVE
+	// array arr = [1,2,3,4];
+	// array sliced = arr.slice(-1);
+	// // MAP SLICE NUMBER NEGATIVE (length)
+	// print_compared_values(sliced.length, 1);
+	// show serial_dialog {"MAP SLICE NUMBER (length)"};
+	// // MAP SLICE NUMBER NEGATIVE [0]
+	// print_compared_values(sliced[0], 4);
+	// show serial_dialog {"MAP SLICE NUMBER [0]"};
+	// delete array sliced;
+	// delete array arr;
+
+	// // MAP SLICE TWICE NUMBER
+	// array arr = [1,2,3,4];
+	// array sliced = arr.slice(1, 3);
+	// // MAP SLICE TWICE NUMBER (length)
+	// print_compared_values(sliced.length, 2);
+	// show serial_dialog {"MAP SLICE TWICE NUMBER (length)"};
+	// // MAP SLICE TWICE NUMBER [last]
+	// sliced.reverse();
+	// print_compared_values(sliced[0], 3);
+	// show serial_dialog {"MAP SLICE TWICE NUMBER [last]"};
+	// delete array sliced;
+	// delete array arr;
+
+	// // MAP SLICE VARIABLE
+	// one = 1;
+	// three = 3;
+	// array arr = [1,2,3,4];
+	// array sliced = arr.slice(one);
+	// // MAP SLICE VARIABLE (length)
+	// print_compared_values(sliced.length, 3);
+	// show serial_dialog {"MAP SLICE VARIABLE (length)"};
+	// // MAP SLICE VARIABLE [0]
+	// print_compared_values(sliced[0], 2);
+	// show serial_dialog {"MAP SLICE VARIABLE [0]"};
+	// delete array sliced;
+	// delete array arr;
+
+	// // MAP SLICE TWICE VARIABLE
+	// array arr = [1,2,3,4];
+	// array sliced = arr.slice(one, three);
+	// // MAP SLICE TWICE VARIABLE (length)
+	// print_compared_values(sliced.length, 2);
+	// show serial_dialog {"MAP SLICE TWICE VARIABLE (length)"};
+	// // MAP SLICE TWICE VARIABLE [last]
+	// sliced.reverse();
+	// print_compared_values(sliced[0], 3);
+	// show serial_dialog {"MAP SLICE TWICE VARIABLE [last]"};
+	// delete array sliced;
+	// delete array arr;
 }

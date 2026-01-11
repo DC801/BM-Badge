@@ -9612,6 +9612,7 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
           steps.push(...method.toSteps(currArray, destination));
         } else if (method instanceof ArraySliceMethod || method instanceof ArrayMap) {
           const newTemporary2 = method.debug.f.p.newTempArray();
+          steps.push(ARRAY_NEW.quick(newTemporary2));
           steps.push(...method.toSteps(currArray, newTemporary2));
           if (currArrayIsTemp) {
             steps.push(ARRAY_SLICE.quick(newTemporary2, currArray, 0));

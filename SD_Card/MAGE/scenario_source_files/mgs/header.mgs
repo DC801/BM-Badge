@@ -7,6 +7,9 @@ add dialog settings {
 	label ZIPPY { entity "Aunt Zippy" }
 	label ZAPPY { entity "Uncle Zappy" }
 }
+
+$MAX_INT = 65535;
+
 /* todo: make this wrap to 64 instead, and adjust wrapped word colors */
 add serial_dialog settings { wrap 60 }
 

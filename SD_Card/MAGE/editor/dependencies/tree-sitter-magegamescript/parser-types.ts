@@ -3532,6 +3532,7 @@ export class ArrayMethodChain extends MathlangNode {
 			} else if (method instanceof ArraySliceMethod || method instanceof ArrayMap) {
 				// the first temporary array made this way will need to be cleaned up at the end
 				const newTemporary = method.debug.f.p.newTempArray(); // wasteful sometimes, but this way there's no edge cases (the result is uniform)
+				steps.push(ACTION.ARRAY_NEW.quick(newTemporary));
 				steps.push(...method.toSteps(currArray, newTemporary));
 				if (currArrayIsTemp) {
 					steps.push(ACTION.ARRAY_SLICE.quick(newTemporary, currArray, 0));
