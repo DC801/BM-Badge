@@ -39,6 +39,7 @@ debug_commands {
 		"<y>></> <c>RNGTEST2</>: test RNG!() range syntax 20 times"
 		"<y>></> <c>BUFFER TEST</>: test serial messages sizes"
 		"<y>></> <c>CURSOR</>: go to the cursor (mouse) test room"
+		"<y>></> <c>HANOI</>: plates of Hanoi"
 		"<y>></> <c>ARRAY GAMUT</>: (test for encoder)"
 		"<y>></> <c>ARRAY BASICS</>: tests array bytecode actions"
 		"<y>></> <c>ARRAY UNIT TESTS</>: tests array bytecode actions"
@@ -149,6 +150,11 @@ debug_commands {
 	command skip + "2" = debug_jump_to_round2;
 	command skip + "3" = debug_jump_to_round3;
 	command skip + "4" = debug_jump_to_round4;
+	command hanoi = {
+		ch2_storyflag_round = 3;
+		ch2_jukebox_backstory = true;
+		load map "ch2-castle-34";
+	};
 	register_warp()
 	register_storyflag()
 

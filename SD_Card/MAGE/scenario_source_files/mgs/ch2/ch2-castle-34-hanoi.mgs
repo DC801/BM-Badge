@@ -103,7 +103,7 @@ array2_pop {
 		tempvar = array2_4 *1;
 		array2_4 = 0;
 	} else if (array2_length == 3) {
-		grip_vtempvaralue = array2_3 *1;
+		tempvar = array2_3 *1;
 		array2_3 = 0;
 	} else if (array2_length == 2) {
 		tempvar = array2_2 *1;
