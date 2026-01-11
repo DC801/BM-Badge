@@ -18,16 +18,12 @@ set_follower_scripts {
 }
 
 $follow_delay = 2;
-$queue_diff = 6;
-$queue_size = 10;
 
 follow_player_stack_init {
 	offset_self_x = self x;
 	if (curr_follower == $nano) { offset_self_x -= 8; }
 	if (curr_follower == $emacs) { offset_self_x += 8; }
 	offset_self_y = self y + 1;
-	// first in xy queue is follower's curr location
-	// next four pos in queue are equal-sized steps between follower and followee
 	diff = get_diff(player x, offset_self_x);
 	if (player x > offset_self_x) {
 		delete array queue_x;
@@ -38,10 +34,6 @@ follow_player_stack_init {
 			offset_self_x + (3 * diff / 5),
 			offset_self_x + (4 * diff / 5),
 			player x,
-			player x,
-			player x,
-			player x,
-			player x,
 		];
 	} else {
 		delete array queue_x;
@@ -51,10 +43,6 @@ follow_player_stack_init {
 			player x + (3 * diff / 5),
 			player x + (2 * diff / 5),
 			player x + (1 * diff / 5),
-			player x,
-			player x,
-			player x,
-			player x,
 			player x,
 		];
 	}
@@ -68,10 +56,6 @@ follow_player_stack_init {
 			offset_self_y + (3 * diff / 5),
 			offset_self_y + (4 * diff / 5),
 			player y,
-			player y,
-			player y,
-			player y,
-			player y,
 		];
 	} else {
 		delete array queue_y;
@@ -82,25 +66,17 @@ follow_player_stack_init {
 			player y + (2 * diff / 5),
 			player y + (1 * diff / 5),
 			player y,
-			player y,
-			player y,
-			player y,
-			player y,
 		];
 	}
-	// the rest of the queue is the followee's current pos
-	// (the player will fill these in as they get to them)
-	curr_self_queue = 0;
-	curr_player_queue = 6;
 }
 
 save_player_pos {
-	queue_x[curr_player_queue] = player x;
-	queue_y[curr_player_queue] = player y;
+	queue_x.push(player x);
+	queue_y.push(player y);
 }
 load_self_pos {
-	self x = queue_x[curr_self_queue];
-	self y = queue_y[curr_self_queue];
+	self x = queue_x.pop_left();
+	self y = queue_y.pop_left();
 	if (curr_follower == $nano) { self x += 8; }
 	if (curr_follower == $emacs) { self x -= 8; }
 	self y -= 1;
@@ -119,7 +95,6 @@ follow_player {
 		}
 	} else {
 		save_player_pos();
-		curr_player_queue = (curr_player_queue + 1) % $queue_size;
 		if (!should_follow_player) {
 			should_follow_player = true;
 			follow_player_stack_init();
@@ -136,9 +111,7 @@ follow_player {
 	if (am_following_player) {
 		my_old_x = self x;
 		my_old_y = self y;
-		// advance the queue
-		curr_self_queue = (curr_self_queue + 1) % $queue_size;
-		// set position based on the new queue value
+		// set follower position
 		load_self_pos()
 		// get the absolute value of the delta
 		my_diff_x = get_diff(self x, my_old_x);
