@@ -3299,7 +3299,7 @@ export class ARRAY_SLICE extends Action {
 		return new ARRAY_SLICE({ array_source, array_destination, index_start });
 	}
 	print() {
-		return `"${this.array_destination}" = "${this.array_source}".slice(${this.index_start || ''});`;
+		return `array "${this.array_destination}" = "${this.array_source}".slice(${this.index_start || ''});`;
 	}
 }
 export class ARRAY_SLICE_BY_VARIABLE extends Action {
@@ -3330,7 +3330,7 @@ export class ARRAY_SLICE_BY_VARIABLE extends Action {
 		return new ARRAY_SLICE_BY_VARIABLE({ array_source, array_destination, variable_start });
 	}
 	print() {
-		return `"${this.array_destination}" = "${this.array_source}".slice(${`"${this.variable_start}"` || ''});`;
+		return `array "${this.array_destination}" = "${this.array_source}".slice(${`"${this.variable_start}"` || ''});`;
 	}
 }
 export class ARRAY_SLICE_TWICE extends Action {
@@ -3368,7 +3368,7 @@ export class ARRAY_SLICE_TWICE extends Action {
 		return new ARRAY_SLICE_TWICE({ array_source, array_destination, index_start, index_end });
 	}
 	print() {
-		return `"${this.array_destination}" = "${this.array_source}".slice(${this.index_start}, ${this.index_end});`;
+		return `array "${this.array_destination}" = "${this.array_source}".slice(${this.index_start}, ${this.index_end});`;
 	}
 }
 export class ARRAY_SLICE_TWICE_BY_VARIABLE extends Action {
@@ -3415,7 +3415,7 @@ export class ARRAY_SLICE_TWICE_BY_VARIABLE extends Action {
 		});
 	}
 	print() {
-		return `"${this.array_destination}" = "${this.array_source}".slice("${this.variable_start}", "${this.variable_end}");`;
+		return `array "${this.array_destination}" = "${this.array_source}".slice("${this.variable_start}", "${this.variable_end}");`;
 	}
 }
 export class ARRAY_REVERSE extends Action {

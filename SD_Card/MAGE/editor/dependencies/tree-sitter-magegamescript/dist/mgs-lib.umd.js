@@ -5514,7 +5514,9 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
     dialog: (debug) => {
       const identifier = DialogIdentifier.breakIfNot(captureForField(debug, "dialog_identifier"));
       const settings = {};
-      const params = DialogParameter.breakIfNotAll(capturesForField(debug, "dialog_parameter"));
+      const params = DialogParameter.breakIfNotAll(
+        capturesForField(debug, "dialog_parameter")
+      );
       params.forEach((param) => {
         addParamToDialogSettings(settings, param.property, param.value);
       });
@@ -7551,10 +7553,12 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       if (this.search_and_replace && !that.search_and_replace) return false;
       if (!this.search_and_replace && that.search_and_replace) return false;
       if (this.search_and_replace && that.search_and_replace) {
-        const keys = [.../* @__PURE__ */ new Set([
-          ...Object.keys(this.search_and_replace),
-          ...Object.keys(that.search_and_replace)
-        ])];
+        const keys = [
+          .../* @__PURE__ */ new Set([
+            ...Object.keys(this.search_and_replace),
+            ...Object.keys(that.search_and_replace)
+          ])
+        ];
         for (let i2 = 0; i2 < keys.length; i2++) {
           const key_i = keys[i2];
           if (this.search_and_replace[key_i] !== that.search_and_replace[key_i]) {
@@ -9596,27 +9600,43 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       }
       return v;
     }
+    // POSSIBLY REDO
     toSteps(destination) {
       const steps = [];
       let currArray = this.identifier;
-      if (this.return_type === "array") {
-        steps.push(ARRAY_NEW.quick(destination));
-      }
+      let currArrayIsTemp = false;
       this.chain.forEach((method) => {
         if (method instanceof ArrayMethodReturningNothing) {
           steps.push(...method.toSteps(currArray));
         } else if (method instanceof ArrayMethodReturningValue) {
           steps.push(...method.toSteps(currArray, destination));
         } else if (method instanceof ArraySliceMethod || method instanceof ArrayMap) {
-          const temp = this.return_type === "array" ? destination : "__TEMPORARY_ARRAY_";
-          steps.push(...method.toSteps(currArray, temp));
-          currArray = temp;
+          const newTemporary2 = method.debug.f.p.newTempArray();
+          steps.push(...method.toSteps(currArray, newTemporary2));
+          if (currArrayIsTemp) {
+            steps.push(ARRAY_SLICE.quick(newTemporary2, currArray, 0));
+            steps.push(ARRAY_DELETE.quick(newTemporary2));
+            method.debug.f.p.dropTempArray();
+          } else {
+            currArray = newTemporary2;
+            currArrayIsTemp = true;
+          }
         } else if (method instanceof ArrayMethodReturningArray) {
           steps.push(...method.toSteps(currArray, destination));
         } else {
           throw new Error("unknown array method type");
         }
       });
+      if (currArrayIsTemp) {
+        const currTemp = this.debug.f.p.currTempArray();
+        if (this.return_type === "array") {
+          steps.push(ARRAY_SLICE.quick(currTemp, destination, 0));
+          steps.push(ARRAY_DELETE.quick(currTemp));
+        } else {
+          steps.push(ARRAY_DELETE.quick(currTemp));
+        }
+        this.debug.f.p.dropTempArray();
+      }
       return steps;
     }
     assignToArray(destinationArray) {
@@ -9689,8 +9709,7 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
     }
     isIdenticalTo(that) {
       if (!(that instanceof ArrayMap)) return false;
-      if (!this.fn.isIdenticalTo(that.fn)) return false;
-      return true;
+      return this.fn.isIdenticalTo(that.fn);
     }
     clone() {
       return new ArrayMap(this.debug.clone(), this.args);
@@ -10404,22 +10423,26 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
     const length = newTemporary();
     const curr = newTemporary();
     const localConstants = {};
-    const defCurr = method.fn.params[0];
-    if (defCurr !== void 0) {
-      const defNode = method.fn.paramNodes[0];
-      localConstants[defCurr] = ConstantDefinition.quick(debug.using(defNode), defCurr, curr);
+    const currArg = method.fn.params[0];
+    if (currArg !== void 0) {
+      const valueArgNode = method.fn.paramNodes[0];
+      localConstants[currArg] = ConstantDefinition.quick(
+        debug.using(valueArgNode),
+        currArg,
+        curr
+      );
     }
-    const defI = method.fn.params[1];
-    if (defI !== void 0) {
-      const defNode = method.fn.paramNodes[1];
-      localConstants[defI] = ConstantDefinition.quick(method.debug.using(defNode), defI, i2);
+    const indexArg = method.fn.params[1];
+    if (indexArg !== void 0) {
+      const indexArgNode = method.fn.paramNodes[1];
+      localConstants[indexArg] = ConstantDefinition.quick(debug.using(indexArgNode), indexArg, i2);
     }
-    const defArr = method.fn.params[2];
-    if (defArr !== void 0) {
-      const defNode = method.fn.paramNodes[1];
-      localConstants[defArr] = ConstantDefinition.quick(
-        debug.using(defNode),
-        defArr,
+    const arrayArg = method.fn.params[2];
+    if (arrayArg !== void 0) {
+      const arrayArgNode = method.fn.paramNodes[1];
+      localConstants[arrayArg] = ConstantDefinition.quick(
+        debug.using(arrayArgNode),
+        arrayArg,
         sourceArray
       );
     }
@@ -10427,28 +10450,30 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
     stack.unshift(localConstants);
     const rawBody = handleNamedChildren(debug.using(method.fn.bodyNode));
     const body2 = [
-      // curr = array[i];
+      // `curr = array[i];`
       ...ArrayReadFromVariableIndex.quick(debug, i2).toSteps(sourceArray, curr),
       // and the rest
       ...flattenAndDoAutoReturn(debug, rawBody)
     ];
     if (method instanceof ArrayMap) {
-      if (destinationArray === void 0) throw new Error("need destinationArray");
+      if (destinationArray === void 0) {
+        throw new Error("need destinationArray");
+      }
       body2.push(
-        // b.push(__RETURN_);
+        // `destinationArray.push(__RETURN_);`
         ARRAY_PUSH_FROM_VARIABLE.quick(destinationArray, RETURN),
-        // __RETURN_ = 0;
+        // `__RETURN_ = 0;`
         MUTATE_VARIABLE.set(RETURN, 0)
       );
     }
     const initialize = [
-      // i = 0;
+      // `i = 0;`
       MUTATE_VARIABLE.set(i2, 0),
-      // length = sourceArray.length();
+      // `length = sourceArray.length();`
       ARRAY_LENGTH_INTO_VARIABLE.quick(sourceArray, length)
     ];
     const increment = [
-      // i += 1;
+      // `i += 1;`
       MUTATE_VARIABLE.change(debug, i2, 1, "+")
     ];
     const steps = forLoopMaker(
@@ -12333,7 +12358,12 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       return new CHECK_ENTITY_INTERACT_SCRIPT({ entity, expected_script, expected_bool });
     }
     print() {
-      return printEntityFieldEquality(this, this.entity, "on_interact", `"${this.expected_script}"`);
+      return printEntityFieldEquality(
+        this,
+        this.entity,
+        "on_interact",
+        `"${this.expected_script}"`
+      );
     }
   }
   class CHECK_ENTITY_TICK_SCRIPT extends ActionStringCheckable {
@@ -13706,7 +13736,7 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       return new ARRAY_SLICE({ array_source, array_destination, index_start });
     }
     print() {
-      return `"${this.array_destination}" = "${this.array_source}".slice(${this.index_start || ""});`;
+      return `array "${this.array_destination}" = "${this.array_source}".slice(${this.index_start || ""});`;
     }
   }
   class ARRAY_SLICE_BY_VARIABLE extends Action {
@@ -13737,7 +13767,7 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       return new ARRAY_SLICE_BY_VARIABLE({ array_source, array_destination, variable_start });
     }
     print() {
-      return `"${this.array_destination}" = "${this.array_source}".slice(${`"${this.variable_start}"` || ""});`;
+      return `array "${this.array_destination}" = "${this.array_source}".slice(${`"${this.variable_start}"` || ""});`;
     }
   }
   class ARRAY_SLICE_TWICE extends Action {
@@ -13770,7 +13800,7 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       return new ARRAY_SLICE_TWICE({ array_source, array_destination, index_start, index_end });
     }
     print() {
-      return `"${this.array_destination}" = "${this.array_source}".slice(${this.index_start}, ${this.index_end});`;
+      return `array "${this.array_destination}" = "${this.array_source}".slice(${this.index_start}, ${this.index_end});`;
     }
   }
   class ARRAY_SLICE_TWICE_BY_VARIABLE extends Action {
@@ -13812,7 +13842,7 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       });
     }
     print() {
-      return `"${this.array_destination}" = "${this.array_source}".slice("${this.variable_start}", "${this.variable_end}");`;
+      return `array "${this.array_destination}" = "${this.array_source}".slice("${this.variable_start}", "${this.variable_end}");`;
     }
   }
   class ARRAY_REVERSE extends Action {
@@ -13843,6 +13873,24 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
     }
     print() {
       return `"${this.array_name}".sort();`;
+    }
+  }
+  class ARRAY_RENAME extends Action {
+    constructor(args2, debug) {
+      super(args2);
+      // TODO: NOT OFFICIAL YET
+      __publicField(this, "action");
+      __publicField(this, "array_name");
+      __publicField(this, "new_name");
+      this.action = "ARRAY_RENAME";
+      this.array_name = tryString(args2.array_name, 'ARRAY_RENAME param "array_name"', debug);
+      this.new_name = tryString(args2.new_name, 'ARRAY_RENAME param "new_name"', debug);
+    }
+    static quick(array_name, new_name) {
+      return new ARRAY_RENAME({ array_name, new_name });
+    }
+    print() {
+      return `"${this.array_name}".rename("${this.new_name}");`;
     }
   }
   const isHasVariables = (v) => {
@@ -14060,7 +14108,8 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
     ARRAY_POP_INTO_VARIABLE: (args2, debug) => new ARRAY_POP_INTO_VARIABLE(args2, debug),
     ARRAY_POP_LEFT_INTO_VARIABLE: (args2, debug) => new ARRAY_POP_LEFT_INTO_VARIABLE(args2, debug),
     ARRAY_REVERSE: (args2, debug) => new ARRAY_REVERSE(args2, debug),
-    ARRAY_SORT: (args2, debug) => new ARRAY_SORT(args2, debug)
+    ARRAY_SORT: (args2, debug) => new ARRAY_SORT(args2, debug),
+    ARRAY_RENAME: (args2, debug) => new ARRAY_RENAME(args2, debug)
   };
   const tryString = (v, label, debug) => {
     if (debug) return coerceToString(debug, v, label);
@@ -14407,6 +14456,7 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       __publicField(this, "mgsWarnings");
       // auto counter, so that auto-generated gotos don't share labels:
       __publicField(this, "gotoSuffixValue");
+      __publicField(this, "tempArrayCount");
       this.parser = tsParser;
       this.fileMap = fileMap;
       this.scripts = {};
@@ -14423,6 +14473,7 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       this.errors = [];
       this.warnings = [];
       this.gotoSuffixValue = 0;
+      this.tempArrayCount = 0;
     }
     newError(v) {
       this.errors.push(v);
@@ -14435,6 +14486,21 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
     }
     getGotoSuffix() {
       return this.gotoSuffixValue;
+    }
+    newTempArray() {
+      this.tempArrayCount += 1;
+      const n = this.tempArrayCount;
+      return `__TEMP_ARRAY_${n}`;
+    }
+    currTempArray() {
+      const n = this.tempArrayCount;
+      return `__TEMP_ARRAY_${n}`;
+    }
+    dropTempArray() {
+      this.tempArrayCount -= 1;
+      if (this.tempArrayCount < 0) {
+        throw new Error("Removed too many temp arrays");
+      }
     }
     // for adding a file's data to the project
     addScript(data) {
