@@ -21,163 +21,86 @@ $follow_delay = 2;
 $queue_diff = 6;
 $queue_size = 10;
 
-// follow_player_stack_init { // ARRAY VERSION
-// 	offset_self_x = self x;
-// 	if (curr_follower == $nano) { offset_self_x -= 8; }
-// 	if (curr_follower == $emacs) { offset_self_x += 8; }
-// 	offset_self_y = self y + 1;
-// 	if (player x > offset_self_x) {
-// 		new Array followingPlayerX = [
-// 			offset_self_x,
-// 			offset_self_x + (1 * diff / 5),
-// 			offset_self_x + (2 * diff / 5),
-// 			offset_self_x + (3 * diff / 5),
-// 			offset_self_x + (4 * diff / 5),
-// 			player x,
-// 			player x,
-// 			player x,
-// 			player x,
-// 			player x,
-// 		]
-// 	} else {
-// 		new Array followingPlayerX = [
-// 			offset_self_x,
-// 			player x + (4 * diff / 5),
-// 			player x + (3 * diff / 5),
-// 			player x + (2 * diff / 5),
-// 			player x + (1 * diff / 5),
-// 			player x,
-// 			player x,
-// 			player x,
-// 			player x,
-// 			player x,
-// 		]
-// 	}
-// 	if (player y > offset_self_y) {
-// 		new Array followingPlayerY = [
-// 			offset_self_y,
-// 			offset_self_y + (1 * diff / 5),
-// 			offset_self_y + (2 * diff / 5),
-// 			offset_self_y + (3 * diff / 5),
-// 			offset_self_y + (4 * diff / 5),
-// 			player y,
-// 			player y,
-// 			player y,
-// 			player y,
-// 			player y,
-// 		]
-// 	} else {
-// 		new Array followingPlayerY = [
-// 			offset_self_y,
-// 			player y + (4 * diff / 5),
-// 			player y + (3 * diff / 5),
-// 			player y + (2 * diff / 5),
-// 			player y + (1 * diff / 5),
-// 			player y,
-// 			player y,
-// 			player y,
-// 			player y,
-// 			player y,
-// 		]
-// 	}
-// 	curr_self_queue = 0;
-// 	curr_player_queue = 6;
-// }
 follow_player_stack_init {
 	offset_self_x = self x;
 	if (curr_follower == $nano) { offset_self_x -= 8; }
 	if (curr_follower == $emacs) { offset_self_x += 8; }
 	offset_self_y = self y + 1;
 	// first in xy queue is follower's curr location
-	queue_x0 = offset_self_x *1;
-	queue_y0 = offset_self_y *1;
 	// next four pos in queue are equal-sized steps between follower and followee
 	diff = get_diff(player x, offset_self_x);
 	if (player x > offset_self_x) {
-		queue_x1 = offset_self_x + (1 * diff / 5);
-		queue_x2 = offset_self_x + (2 * diff / 5);
-		queue_x3 = offset_self_x + (3 * diff / 5);
-		queue_x4 = offset_self_x + (4 * diff / 5);
+		delete array queue_x;
+		array queue_x = [
+			offset_self_x,
+			offset_self_x + (1 * diff / 5),
+			offset_self_x + (2 * diff / 5),
+			offset_self_x + (3 * diff / 5),
+			offset_self_x + (4 * diff / 5),
+			player x,
+			player x,
+			player x,
+			player x,
+			player x,
+		];
 	} else {
-		queue_x1 = player x + (4 * diff / 5);
-		queue_x2 = player x + (3 * diff / 5);
-		queue_x3 = player x + (2 * diff / 5);
-		queue_x4 = player x + (1 * diff / 5);
+		delete array queue_x;
+		array queue_x = [
+			offset_self_x,
+			player x + (4 * diff / 5),
+			player x + (3 * diff / 5),
+			player x + (2 * diff / 5),
+			player x + (1 * diff / 5),
+			player x,
+			player x,
+			player x,
+			player x,
+			player x,
+		];
 	}
 	diff = get_diff(player y, offset_self_y);
 	if (player y > offset_self_y) {
-		queue_y1 = offset_self_y + (1 * diff / 5);
-		queue_y2 = offset_self_y + (2 * diff / 5);
-		queue_y3 = offset_self_y + (3 * diff / 5);
-		queue_y4 = offset_self_y + (4 * diff / 5);
+		delete array queue_y;
+		array queue_y = [
+			offset_self_y,
+			offset_self_y + (1 * diff / 5),
+			offset_self_y + (2 * diff / 5),
+			offset_self_y + (3 * diff / 5),
+			offset_self_y + (4 * diff / 5),
+			player y,
+			player y,
+			player y,
+			player y,
+			player y,
+		];
 	} else {
-		queue_y1 = player y + (4 * diff / 5);
-		queue_y2 = player y + (3 * diff / 5);
-		queue_y3 = player y + (2 * diff / 5);
-		queue_y4 = player y + (1 * diff / 5);
+		delete array queue_y;
+		array queue_y = [
+			offset_self_y *1,
+			player y + (4 * diff / 5),
+			player y + (3 * diff / 5),
+			player y + (2 * diff / 5),
+			player y + (1 * diff / 5),
+			player y,
+			player y,
+			player y,
+			player y,
+			player y,
+		];
 	}
 	// the rest of the queue is the followee's current pos
 	// (the player will fill these in as they get to them)
-	queue_x5 = player x;
-	queue_x6 = player x;
-	queue_x7 = player x;
-	queue_x8 = player x;
-	queue_x9 = player x;
-	queue_y5 = player y;
-	queue_y6 = player y;
-	queue_y7 = player y;
-	queue_y8 = player y;
-	queue_y9 = player y;
 	curr_self_queue = 0;
 	curr_player_queue = 6;
 }
 
-fn save_player_pos_if ($n, $xVar, $yVar) {
-	if (curr_player_queue == $n) {
-		$xVar = player x;
-		$yVar = player y;
-	}
-}
-// save_player_pos { // ARRAY VERSION
-// 	followingPlayerX[curr_player_queue] = player x;
-// 	followingPlayerY[curr_player_queue] = player y;
-// }
 save_player_pos {
-	save_player_pos_if(0, queue_x0, queue_y0)
-	save_player_pos_if(1, queue_x1, queue_y1)
-	save_player_pos_if(2, queue_x2, queue_y2)
-	save_player_pos_if(3, queue_x3, queue_y3)
-	save_player_pos_if(4, queue_x4, queue_y4)
-	save_player_pos_if(5, queue_x5, queue_y5)
-	save_player_pos_if(6, queue_x6, queue_y6)
-	save_player_pos_if(7, queue_x7, queue_y7)
-	save_player_pos_if(8, queue_x8, queue_y8)
-	save_player_pos_if(9, queue_x9, queue_y9)
+	queue_x[curr_player_queue] = player x;
+	queue_y[curr_player_queue] = player y;
 }
-fn load_self_pos_if ($n, $xVar, $yVar) {
-	if (curr_self_queue == $n) {
-		self x = $xVar;
-		self y = $yVar;
-	}
-}
-// load_self_pos { // ARRAY VERSION
-// 	self x = followingPlayerX[curr_self_queue];
-// 	self y = followingPlayerY[curr_self_queue];
-//	if (curr_follower == $nano) { self x += 8; }
-//	if (curr_follower == $emacs) { self x -= 8; }
-//	self y -= 1;
-// }
 load_self_pos {
-	load_self_pos_if(0, queue_x0, queue_y0)
-	load_self_pos_if(1, queue_x1, queue_y1)
-	load_self_pos_if(2, queue_x2, queue_y2)
-	load_self_pos_if(3, queue_x3, queue_y3)
-	load_self_pos_if(4, queue_x4, queue_y4)
-	load_self_pos_if(5, queue_x5, queue_y5)
-	load_self_pos_if(6, queue_x6, queue_y6)
-	load_self_pos_if(7, queue_x7, queue_y7)
-	load_self_pos_if(8, queue_x8, queue_y8)
-	load_self_pos_if(9, queue_x9, queue_y9)
+	self x = queue_x[curr_self_queue];
+	self y = queue_y[curr_self_queue];
 	if (curr_follower == $nano) { self x += 8; }
 	if (curr_follower == $emacs) { self x -= 8; }
 	self y -= 1;
@@ -195,11 +118,11 @@ follow_player {
 			self current_animation = 0;
 		}
 	} else {
-		save_player_pos()
+		save_player_pos();
 		curr_player_queue = (curr_player_queue + 1) % $queue_size;
 		if (!should_follow_player) {
 			should_follow_player = true;
-			follow_player_stack_init()
+			follow_player_stack_init();
 			follow_delay_tick = $follow_delay;
 		} else if (follow_delay_tick != 0) {
 			follow_delay_tick -= 1;
