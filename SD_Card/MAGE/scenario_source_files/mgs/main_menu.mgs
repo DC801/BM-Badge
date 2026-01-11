@@ -151,6 +151,11 @@ debug_commands {
 	command skip + "3" = debug_jump_to_round3;
 	command skip + "4" = debug_jump_to_round4;
 	command hanoi = {
+		serial_control = true;
+		ch2_has_artifact = true;
+		hex_control = true;
+		current_chapter = 2;
+		debug_finish_toot()
 		ch2_storyflag_round = 3;
 		ch2_jukebox_backstory = true;
 		load map "ch2-castle-34";
