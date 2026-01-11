@@ -233,6 +233,10 @@ fn accumulate ($n) { array_sum_test += $n; }
 array_unit_tests {
 	show serial_dialog spacer;
 	show serial_dialog { "<c>---ARRAY UNIT TESTS---</>\n "};
+	zero = 0;
+	one = 1;
+	two = 2;
+	three = 3;
 
 	// ARRAY OVERWRITING
 	array overwriting = [255];
@@ -249,6 +253,18 @@ array_unit_tests {
 	print_compared_values(arr[0], 3);
 	show serial_dialog {"READ FROM NUMBER INDEX"};
 	debug!(" ")
+
+	// READ FROM VARIABLE INDEX
+	print array arr;
+	print_compared_values(arr[zero], 3);
+	show serial_dialog {"READ FROM VARIABLE INDEX"};
+	debug!(" ")
+
+	// READ FROM VARIABLE (EXPRESSION) INDEX
+	print array arr;
+	print_compared_values(arr[arr.length()-1], 3);
+	show serial_dialog {"READ FROM (EXPRESSION) INDEX"};
+	debug!(" ")
 	
 	// PUSH VALUE
 	arr.push(1);
@@ -256,6 +272,18 @@ array_unit_tests {
 	print_compared_values(arr[1], 1);
 	show serial_dialog {"PUSH VALUE"};
 	debug!(" ")
+
+	// READ FROM VARIABLE (EXPRESSION) INDEX (AGAIN)
+	print array arr;
+	print_compared_values(arr[arr.length()-1], 1);
+	show serial_dialog {"READ FROM (EXPRESSION) INDEX (AGAIN)"};
+	debug!(" ")
+
+	// // READ FROM NUMBER (NEGTATIVE) INDEX
+	// print array arr;
+	// print_compared_values(arr[-1], 1);
+	// show serial_dialog {"READ FROM NUMBER (NEGTATIVE) INDEX"};
+	// debug!(" ")
 
 	// PUSH VARIABLE
 	v = 2;
@@ -473,8 +501,6 @@ array_unit_tests {
 	// delete array arr;
 
 	// // MAP SLICE VARIABLE
-	// one = 1;
-	// three = 3;
 	// array arr = [1,2,3,4];
 	// array sliced = arr.slice(one);
 	// // MAP SLICE VARIABLE (length)
