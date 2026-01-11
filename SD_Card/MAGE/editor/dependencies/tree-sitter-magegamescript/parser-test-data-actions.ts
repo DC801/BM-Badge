@@ -69,20 +69,19 @@ export const actionTests: Record<string, ActionTest> = {
 			`for_each_break_*B*:`,
 		],
 	},
-	// TODO cannot assign for_each though!
 	array_for_each_identifier: {
 		pre: `fn accumulateSum ($n) { sum += $n; }`,
-		input: [`sum = 0;`, `array a = b.for_each(accumulateSum);`],
+		input: [`sum = 0;`, `arr.for_each(accumulateSum);`],
 		expected: [
 			// should be the same as the lambda version
 			`sum = 0;`,
 			`__TEMP_0 = 0;`,
-			`__TEMP_1 = b.length();`,
+			`__TEMP_1 = arr.length();`,
 			`for_each_condition_*A*:`,
 			`if "__TEMP_0" < "__TEMP_1" then goto label for_each_body_*D*;`,
 			`goto label for_each_break_*B*;`,
 			`for_each_body_*D*:`,
-			`__TEMP_2 = b[__TEMP_0];`,
+			`__TEMP_2 = arr[__TEMP_0];`,
 			`sum += __TEMP_2;`,
 			`end_of_script_***:`,
 			`for_each_continue_*C*:`,
@@ -90,19 +89,20 @@ export const actionTests: Record<string, ActionTest> = {
 			`= 1;`,
 			`goto label for_each_condition_*A*;`,
 			`for_each_break_*B*:`,
+			`${RETURN} = 0;`, // (needs to be here because it's fn-ish, and they USUALLY return something, so RETURN has to be set back to 0, so even though RETURN isn't set we still set it to 0 (but then why doesn't .map() need it too??))
 		],
 	},
 	array_for_each_lambda: {
-		input: [`sum = 0;`, `array a = b.for_each(($n) { sum += $n; });`],
+		input: [`sum = 0;`, `arr.for_each(($n) { sum += $n; });`],
 		expected: [
 			`sum = 0;`,
 			`__TEMP_0 = 0;`, // i = 0;
-			`__TEMP_1 = b.length();`, // length = b.length();
+			`__TEMP_1 = arr.length();`, // length = b.length();
 			`for_each_condition_*A*:`,
 			`if "__TEMP_0" < "__TEMP_1" then goto label for_each_body_*D*;`, // (i < length)
 			`goto label for_each_break_*B*;`,
 			`for_each_body_*D*:`,
-			`__TEMP_2 = b[__TEMP_0];`, // curr = b[i];
+			`__TEMP_2 = arr[__TEMP_0];`, // curr = b[i];
 			`sum += __TEMP_2;`, // sum += curr;
 			`end_of_script_***:`,
 			`for_each_continue_*C*:`,
@@ -110,6 +110,7 @@ export const actionTests: Record<string, ActionTest> = {
 			`= 1;`,
 			`goto label for_each_condition_*A*;`,
 			`for_each_break_*B*:`,
+			`${RETURN} = 0;`, // (ditto)
 		],
 	},
 	array_map_identifier: {

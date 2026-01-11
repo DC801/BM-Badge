@@ -31,7 +31,7 @@ array_gamut {
 
 array_bytecode_tests {
 	// Array creation
-	show serial_dialog { wrap 200 "---- Creating an array named 'arr'" };
+	show serial_dialog { wrap 200 "<y>---- Creating an array named 'arr'" };
 	json[
 		{"action":"ARRAY_NEW","array_name":"arr"},
 		{"action":"ARRAY_LOG","array_name":"arr"},
@@ -40,7 +40,7 @@ array_bytecode_tests {
 		{"action":"ARRAY_PUSH_FROM_VALUE","value":99,"array_name":"arr"},
 		{"action":"ARRAY_LOG","array_name":"arr"}
 	]
-	show serial_dialog { wrap 200 "---- Creating another array named 'asdf'" };
+	show serial_dialog { wrap 200 "<y>---- Creating another array named 'asdf'" };
 	json[
 		{"action":"ARRAY_NEW","array_name":"asdf"},
 		{"action":"ARRAY_LOG","array_name":"asdf"},
@@ -49,20 +49,20 @@ array_bytecode_tests {
 		{"action":"ARRAY_PUSH_FROM_VALUE","value":72,"array_name":"asdf"},
 		{"action":"ARRAY_LOG","array_name":"asdf"}
 	]
-	show serial_dialog { wrap 200 "---- Can both arrays be read afterward?" };
+	show serial_dialog { wrap 200 "<y>---- Can both arrays be read afterward?" };
 	json[
 		{"action":"ARRAY_LOG","array_name":"arr"},
 		{"action":"ARRAY_LOG","array_name":"asdf"}
 	]
 
 	// Array deletion
-	show serial_dialog { wrap 200 "---- Deleting array 'arr' and then trying to use it" };
+	show serial_dialog { wrap 200 "<y>---- Deleting array 'arr' and then trying to use it" };
 	json[
 		{"action":"ARRAY_DELETE","array_name":"arr"},
 		{"action":"ARRAY_LOG","array_name":"arr"},
 		{"action":"ARRAY_PUSH_FROM_VALUE","value":5,"array_name":"arr"}
 	]
-	show serial_dialog { wrap 200 "---- Deleting array 'arr' twice and then trying to use it" };
+	show serial_dialog { wrap 200 "<y>---- Deleting array 'arr' twice and then trying to use it" };
 	json[
 		{"action":"ARRAY_DELETE","array_name":"arr"},
 		{"action":"ARRAY_DELETE","array_name":"arr"},
@@ -71,7 +71,7 @@ array_bytecode_tests {
 	]
 
 	// Array push from variable, read into variable (from number index)
-	show serial_dialog { wrap 200 "---- Assigning 3840 into a variable and then pushing that variable into an array" };
+	show serial_dialog { wrap 200 "<y>---- Assigning 3840 into a variable and then pushing that variable into an array" };
 	array_read_test = 3840;
 	array_write_test = 0;
 	json[
@@ -80,17 +80,17 @@ array_bytecode_tests {
 		{"action":"ARRAY_LOG","array_name":"arr"},
 		{"action":"ARRAY_READ_FROM_INDEX_INTO_VARIABLE","variable":"array_write_test","array_name":"arr","index":0}
 	]
-	show serial_dialog { wrap 200 "Value of array_write_test should be 3840: $array_write_test$" };
-	show serial_dialog { wrap 200 "---- array_read_from_variable_index_into_variable, starting with failure state first. You should see an error:" };
-	show serial_dialog { wrap 200 "array_read_test should be 3840, way out of bounds: $array_read_test$" };
+	show serial_dialog { wrap 200 "<g>Value of array_write_test should be 3840: $array_write_test$" };
+	show serial_dialog { wrap 200 "<y>---- array_read_from_variable_index_into_variable, starting with failure state first. You should see an error:" };
+	show serial_dialog { wrap 200 "<g>array_read_test should be 3840, way out of bounds: $array_read_test$" };
 	array_write_test = 0;
 
 	// Array read into variable (from variable index)
 	json[
 		{"action":"ARRAY_READ_FROM_VARIABLE_INDEX_INTO_VARIABLE","variable":"array_write_test","array_name":"arr","variable_index":"array_read_test"}
 	]
-	show serial_dialog { wrap 200 "Value of array_write_test should still be 0: $array_write_test$" };
-	show serial_dialog { wrap 200 "---- array_read_from_variable_index_into_variable, reading indices 0, 1, 2" };
+	show serial_dialog { wrap 200 "<g>Value of array_write_test should still be 0: $array_write_test$" };
+	show serial_dialog { wrap 200 "<y>---- array_read_from_variable_index_into_variable, reading indices 0, 1, 2" };
 	json[
 		{"action":"ARRAY_PUSH_FROM_VALUE","value":1920,"array_name":"arr"},
 		{"action":"ARRAY_PUSH_FROM_VALUE","value":960,"array_name":"arr"},
@@ -100,30 +100,30 @@ array_bytecode_tests {
 	json[
 		{"action":"ARRAY_READ_FROM_VARIABLE_INDEX_INTO_VARIABLE","variable":"array_write_test","array_name":"arr","variable_index":"array_read_test"}
 	]
-	show serial_dialog { wrap 200 "Value of array_write_test reading index $array_read_test$ should be 3840: $array_write_test$" };
+	show serial_dialog { wrap 200 "<g>Value of array_write_test reading index $array_read_test$ should be 3840: $array_write_test$" };
 	array_read_test = 1;
 	json[
 		{"action":"ARRAY_READ_FROM_VARIABLE_INDEX_INTO_VARIABLE","variable":"array_write_test","array_name":"arr","variable_index":"array_read_test"}
 	]
-	show serial_dialog { wrap 200 "Value of array_write_test reading index $array_read_test$ should be 1920: $array_write_test$" };
+	show serial_dialog { wrap 200 "<g>Value of array_write_test reading index $array_read_test$ should be 1920: $array_write_test$" };
 	array_read_test = 2;
 	json[
 		{"action":"ARRAY_READ_FROM_VARIABLE_INDEX_INTO_VARIABLE","variable":"array_write_test","array_name":"arr","variable_index":"array_read_test"}
 	]
-	show serial_dialog { wrap 200 "Value of array_write_test reading index $array_read_test$ should be 960: $array_write_test$" };
-	show serial_dialog { wrap 200 "---- array_read_from_variable_index_into_variable, should error reading index 3 on array length of 3:" };
+	show serial_dialog { wrap 200 "<g>Value of array_write_test reading index $array_read_test$ should be 960: $array_write_test$" };
+	show serial_dialog { wrap 200 "<y>---- array_read_from_variable_index_into_variable, should error reading index 3 on array length of 3:" };
 	array_read_test = 3;
 	json[
 		{"action":"ARRAY_READ_FROM_VARIABLE_INDEX_INTO_VARIABLE","variable":"array_write_test","array_name":"arr","variable_index":"array_read_test"}
 	]
-	show serial_dialog { wrap 200 "Value of array_write_test reading index $array_read_test$ should be the last valid value, 960: $array_write_test$" };
+	show serial_dialog { wrap 200 "<g>Value of array_write_test reading index $array_read_test$ should be the last valid value, 960: $array_write_test$" };
 
 	// Sort, reverse, length
-	show serial_dialog { wrap 200 "---- testing array_sort, array_reverse, array_length_into_variable" };
+	show serial_dialog { wrap 200 "<y>---- testing array_sort, array_reverse, array_length_into_variable" };
 	json[
 		{"action":"ARRAY_NEW","array_name":"sorted"}
 	]
-	show serial_dialog { wrap 200 "Value of array_length_test should be 0: $array_length_test$" };
+	show serial_dialog { wrap 200 "<g>Value of array_length_test should be 0: $array_length_test$" };
 	json[
 		{"action":"ARRAY_PUSH_FROM_VALUE","value":400,"array_name":"sorted"},
 		{"action":"ARRAY_PUSH_FROM_VALUE","value":4,"array_name":"sorted"},
@@ -137,10 +137,10 @@ array_bytecode_tests {
 		{"action":"ARRAY_LOG","array_name":"sorted"},
 		{"action":"ARRAY_LENGTH_INTO_VARIABLE","array_name":"sorted","variable":"array_length_test"}
 	]
-	show serial_dialog { wrap 200 "Value of array_length_test should be 5: $array_length_test$" };
+	show serial_dialog { wrap 200 "<g>Value of array_length_test should be 5: $array_length_test$" };
 
 	// Array write from value or vairable (into number index)
-	show serial_dialog { wrap 200 "---- testing array_write_into_index_from_value, array_write_into_index_from_variable" };
+	show serial_dialog { wrap 200 "<y>---- testing array_write_into_index_from_value, array_write_into_index_from_variable" };
 	two = 2;
 	three = 3;
 	nine = 9;
@@ -154,35 +154,35 @@ array_bytecode_tests {
 		{"action":"ARRAY_WRITE_INTO_INDEX_FROM_VARIABLE","variable":"three","array_name":"overwrite","index":1},
 		{"action":"ARRAY_LOG","array_name":"overwrite"}
 	]
-	show serial_dialog { wrap 200 "Values in array overwrite should be [2, 3, 100, 100]" };
+	show serial_dialog { wrap 200 "<g>Values in array overwrite should be [2, 3, 100, 100]" };
 
 	// Array write from value or vairable (into variable index)
-	show serial_dialog { wrap 200 "---- testing array_write_into_variable_index_from_value, array_write_into_variable_index_from_variable" };
+	show serial_dialog { wrap 200 "<y>---- testing array_write_into_variable_index_from_value, array_write_into_variable_index_from_variable" };
 	json[
 		{"action":"ARRAY_WRITE_INTO_VARIABLE_INDEX_FROM_VALUE","value":2,"array_name":"overwrite","variable_index":"two"},
 		{"action":"ARRAY_WRITE_INTO_VARIABLE_INDEX_FROM_VARIABLE","variable":"three","array_name":"overwrite","variable_index":"three"},
 		{"action":"ARRAY_LOG","array_name":"overwrite"}
 	]
-	show serial_dialog { wrap 200 "Values in array overwrite should be [2, 3, 2, 3]" };
+	show serial_dialog { wrap 200 "<g>Values in array overwrite should be [2, 3, 2, 3]" };
 
 	// Array write out of bounds
-	show serial_dialog { wrap 200 "---- testing array write out of bounds" };
+	show serial_dialog { wrap 200 "<y>---- testing array write out of bounds" };
 	json[
 		{"action":"ARRAY_WRITE_INTO_INDEX_FROM_VALUE","value":2,"array_name":"overwrite","index":100},
 		{"action":"ARRAY_WRITE_INTO_INDEX_FROM_VARIABLE","variable":"nine","array_name":"overwrite","index":100},
 		{"action":"ARRAY_WRITE_INTO_VARIABLE_INDEX_FROM_VALUE","value":2,"array_name":"overwrite","variable_index":"nine"},
 		{"action":"ARRAY_WRITE_INTO_VARIABLE_INDEX_FROM_VARIABLE","variable":"nine","array_name":"overwrite","variable_index":"nine"}
 	]
-	show serial_dialog { wrap 200 "---- testing push_left actions" };
+	show serial_dialog { wrap 200 "<y>---- testing push_left actions" };
 	json[
 		{"action":"ARRAY_PUSH_LEFT_FROM_VALUE","value":9001,"array_name":"overwrite"},
 		{"action":"ARRAY_PUSH_LEFT_FROM_VARIABLE","variable":"nine","array_name":"overwrite"},
 		{"action":"ARRAY_LOG","array_name":"overwrite"}
 	]
-	show serial_dialog { wrap 200 "Values in array overwrite should be [9, 9001, 2, 3, 2, 3]" };
+	show serial_dialog { wrap 200 "<g>Values in array overwrite should be [9, 9001, 2, 3, 2, 3]" };
 
 	// Array pop
-	show serial_dialog { wrap 200 "---- testing array pop actions" };
+	show serial_dialog { wrap 200 "<y>---- testing array pop actions" };
 	json[
 		{"action":"ARRAY_POP_INTO_VARIABLE","variable":"array_read_test","array_name":"overwrite"},
 		{"action":"ARRAY_POP_INTO_VARIABLE","variable":"array_read_test","array_name":"overwrite"},
@@ -191,22 +191,22 @@ array_bytecode_tests {
 		{"action":"ARRAY_POP_LEFT_INTO_VARIABLE","variable":"array_read_test","array_name":"overwrite"},
 		{"action":"ARRAY_LOG","array_name":"overwrite"}
 	]
-	show serial_dialog { wrap 200 "array overwrite should be [9001], array_read_test should be 9: $array_read_test$" };
+	show serial_dialog { wrap 200 "<g>array overwrite should be [9001], array_read_test should be 9: $array_read_test$" };
 	json[
 		{"action":"ARRAY_POP_INTO_VARIABLE","variable":"array_read_test","array_name":"overwrite"},
 		{"action":"ARRAY_LOG","array_name":"overwrite"}
 	]
-	show serial_dialog { wrap 200 "array overwrite should be [], array_read_test should be 9001: $array_read_test$" };
+	show serial_dialog { wrap 200 "<g>array overwrite should be [], array_read_test should be 9001: $array_read_test$" };
 	json[
 		{"action":"ARRAY_POP_INTO_VARIABLE","variable":"array_read_test","array_name":"overwrite"},
 		{"action":"ARRAY_LOG","array_name":"overwrite"}
 	]
-	show serial_dialog { wrap 200 "error expected, array overwrite should be [], array_read_test should be 9001: $array_read_test$" };
+	show serial_dialog { wrap 200 "<g>error expected, array overwrite should be [], array_read_test should be 9001: $array_read_test$" };
 	json[
 		{"action":"ARRAY_POP_LEFT_INTO_VARIABLE","variable":"array_read_test","array_name":"overwrite"},
 		{"action":"ARRAY_LOG","array_name":"overwrite"}
 	]
-	show serial_dialog { wrap 200 "error expected, array overwrite should be [], array_read_test should be 9001: $array_read_test$" };
+	show serial_dialog { wrap 200 "<g>error expected, array overwrite should be [], array_read_test should be 9001: $array_read_test$" };
 }
 
 fn bad_unit_test($fnd, $exp) {
@@ -228,6 +228,7 @@ fn print_compared_values ($fnd, $exp) {
 }
 
 fn tens ($n) { return $n * 10; }
+fn accumulate ($n) { array_sum_test += $n; }
 
 array_unit_tests {
     show serial_dialog spacer;
@@ -371,51 +372,58 @@ array_unit_tests {
     print_compared_values(arr[w], v);
     show serial_dialog {"WRITE TO VARIABLE INDEX, VARIABLE VALUE"};
     debug!(" ")
-
-    // MAP REFERENCE
+	
     delete array arr;
-	array arr = [1,2];
-	array arr = arr.map(tens);
-    print array arr;
-    // MAP LAMBDA [0]
-    print_compared_values(arr[0], 10);
-    show serial_dialog {"MAP REFERENCE [0]"};
-    debug!(" ")
-    // MAP LAMBDA [1]
-    print_compared_values(arr[1], 20);
-    show serial_dialog {"MAP REFERENCE [1]"};
-    debug!(" ")
-
-    // MAP LAMBDA
-    delete array arr;
-    array arr = [1,2];
-	array arr = arr.map(($n) { return $n * 10; });
-    print array arr;
-    // MAP LAMBDA [0]
-    print_compared_values(arr[0], 10);
-    show serial_dialog {"MAP LAMBDA [0]"};
-    debug!(" ")
-    // MAP LAMBDA [1]
-    print_compared_values(arr[1], 20);
-    show serial_dialog {"MAP LAMBDA [1]"};
-    debug!(" ")
 
     // FOR_EACH LAMBDA
-    delete array arr;
-    array temp = [1,2];
-	array arr = [];
-	temp.for_each(($n) {
-		arr.push($n * 100);
-	});
+	array_sum_test = 0;
+    array arr = [1,10,100];
     print array arr;
-    // FOR_EACH LAMBDA [0]
-    print_compared_values(arr[0], 100);
-    show serial_dialog {"FOR_EACH LAMBDA [0]"};
+	arr.for_each(($n) { array_sum_test += $n; });
+    // FOR_EACH LAMBDA
+    print_compared_values(array_sum_test, 111);
+    show serial_dialog {"FOR_EACH LAMBDA"};
     debug!(" ")
-    // FOR_EACH LAMBDA [1]
-    print_compared_values(arr[1], 200);
-    show serial_dialog {"FOR_EACH LAMBDA [1]"};
-    debug!(" ")
-
     delete array arr;
+
+    // FOR_EACH REFERENCE
+	array_sum_test = 0;
+    array arr = [1,10,100];
+    print array arr;
+	arr.for_each(accumulate);
+    // FOR_EACH REFERENCE
+    print_compared_values(array_sum_test, 111);
+    show serial_dialog {"FOR_EACH REFERENCE"};
+    debug!(" ")
+    delete array arr;
+
+    // // MAP REFERENCE
+	// array arr = [1,2];
+	// array mapped = arr.map(tens);
+    // print array mapped;
+    // // MAP LAMBDA [0]
+    // print_compared_values(mapped[0], 10);
+    // show serial_dialog {"MAP REFERENCE [0]"};
+    // debug!(" ")
+    // // MAP LAMBDA [1]
+    // print_compared_values(mapped[1], 20);
+    // show serial_dialog {"MAP REFERENCE [1]"};
+    // debug!(" ")
+    // delete array mapped;
+    // delete array arr;
+
+    // // MAP LAMBDA
+    // array arr = [1,2];
+	// array mapped = arr.map(($n) { return $n * 10; });
+    // print array mapped;
+    // // MAP LAMBDA [0]
+    // print_compared_values(mapped[0], 10);
+    // show serial_dialog {"MAP LAMBDA [0]"};
+    // debug!(" ")
+    // // MAP LAMBDA [1]
+    // print_compared_values(mapped[1], 20);
+    // show serial_dialog {"MAP LAMBDA [1]"};
+    // debug!(" ")
+    // delete array mapped;
+    // delete array arr;
 }

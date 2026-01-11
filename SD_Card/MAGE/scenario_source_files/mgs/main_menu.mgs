@@ -1,6 +1,7 @@
 include "header.mgs";
 
 on_load_main_menu {
+	show serial_dialog { "<y>command <c>ARRAY UNIT TESTS <y> available" };
 	command array + "unit tests" = array_unit_tests;
 	current_chapter = 0;
 	register_colors()
@@ -38,6 +39,9 @@ debug_commands {
 		"<y>></> <c>RNGTEST2</>: test RNG!() range syntax 20 times"
 		"<y>></> <c>BUFFER TEST</>: test serial messages sizes"
 		"<y>></> <c>CURSOR</>: go to the cursor (mouse) test room"
+		"<y>></> <c>ARRAY GAMUT</>: (test for encoder)"
+		"<y>></> <c>ARRAY BASICS</>: tests array bytecode actions"
+		"<y>></> <c>ARRAY UNIT TESTS</>: tests array bytecode actions"
 		"Go to the CH2 town for the <c>CUTBUG</> test"
 	};
 	command debug + "ch2" = {
@@ -57,7 +61,6 @@ debug_commands {
 			"<y>></> <c>KING</>: cutscene where the king meets his advisors"
 			"<y>></> <c>BOOT</>: boot the Gibson mainframe"
 			"<y>></> <c>POST</>: post credits scene"
-			"<y>></> <c>SKIP _</>: skip to storyflag round and set all prev flags"
 		};
 	};
 	command cursor = {
