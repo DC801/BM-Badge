@@ -254,6 +254,11 @@ array_unit_tests {
 	show serial_dialog {"READ FROM NUMBER INDEX"};
 	debug!(" ")
 
+	// READ OUT OF BOUNDS
+	print_compared_values(arr[1], $MAX_INT);
+	show serial_dialog {"READ OUT OF BOUNDS"};
+	debug!(" ")
+
 	// READ FROM VARIABLE INDEX
 	print array arr;
 	print_compared_values(arr[zero], 3);
