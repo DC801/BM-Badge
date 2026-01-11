@@ -18,56 +18,31 @@ set_follower_scripts {
 }
 
 $follow_delay = 2;
+$follow_distance = 7;
+
+fn init_follower_queue ($queue_name, $start, $end, $steps) {
+	diff = get_diff($end, $start);
+	delete array $queue_name; // needed until arrays will overwrite
+	array $queue_name = [ $start ];
+	if ($start < $end) {
+		for (i = 1; i < $steps; i+=1) {
+			$queue_name.push($start + (i * diff / $steps));
+		}
+	} else {
+		for (i = $steps-1; i > 0; i-=1) {
+			$queue_name.push($end + (i * diff / $steps));
+		}
+	}
+	$queue_name.push($end);
+}
 
 follow_player_stack_init {
 	offset_self_x = self x;
 	if (curr_follower == $nano) { offset_self_x -= 8; }
 	if (curr_follower == $emacs) { offset_self_x += 8; }
 	offset_self_y = self y + 1;
-	diff = get_diff(player x, offset_self_x);
-	if (player x > offset_self_x) {
-		delete array queue_x;
-		array queue_x = [
-			offset_self_x,
-			offset_self_x + (1 * diff / 5),
-			offset_self_x + (2 * diff / 5),
-			offset_self_x + (3 * diff / 5),
-			offset_self_x + (4 * diff / 5),
-			player x,
-		];
-	} else {
-		delete array queue_x;
-		array queue_x = [
-			offset_self_x,
-			player x + (4 * diff / 5),
-			player x + (3 * diff / 5),
-			player x + (2 * diff / 5),
-			player x + (1 * diff / 5),
-			player x,
-		];
-	}
-	diff = get_diff(player y, offset_self_y);
-	if (player y > offset_self_y) {
-		delete array queue_y;
-		array queue_y = [
-			offset_self_y,
-			offset_self_y + (1 * diff / 5),
-			offset_self_y + (2 * diff / 5),
-			offset_self_y + (3 * diff / 5),
-			offset_self_y + (4 * diff / 5),
-			player y,
-		];
-	} else {
-		delete array queue_y;
-		array queue_y = [
-			offset_self_y *1,
-			player y + (4 * diff / 5),
-			player y + (3 * diff / 5),
-			player y + (2 * diff / 5),
-			player y + (1 * diff / 5),
-			player y,
-		];
-	}
+	init_follower_queue(queue_x, offset_self_x, player x, $follow_distance);
+	init_follower_queue(queue_y, offset_self_y, player y, $follow_distance);
 }
 
 save_player_pos {
