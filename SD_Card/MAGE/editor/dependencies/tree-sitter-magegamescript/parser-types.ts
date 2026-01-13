@@ -152,6 +152,7 @@ const mathlangMessageTypes: Record<string, string> = {
 	'unexpected token': 'unexpected token',
 	'missing token': 'expected token not found', // can be warning, not error (e.g. missing ';')
 	'missing file': 'this file could not be found in this project',
+	'missing script': 'script not found',
 
 	// these are phrased this way because the order of definition doesn't matter
 	// (there isn't an "original," so we can't say "already defined")
