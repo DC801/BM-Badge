@@ -600,37 +600,37 @@ array_unit_tests {
 	debug!(" ")
 	delete array arr;
 
-	// // READ FROM NUMBER (NEGATIVE) INDEX
-	// array arr = [0,1,2,3,4,5,6,7,8,9];
-	// print array arr;
-	// print_compared_values(arr[-1], 9);
-	// show serial_dialog {"READ FROM NUMBER (NEGATIVE) INDEX [-1]"};
-	// print_compared_values(arr[-2], 8);
-	// show serial_dialog {"READ FROM NUMBER (NEGATIVE) INDEX [-2]"};
-	// print_compared_values(arr[-3], 7);
-	// show serial_dialog {"READ FROM NUMBER (NEGATIVE) INDEX [-3]"};
-	// print_compared_values(arr[-4], 6);
-	// show serial_dialog {"READ FROM NUMBER (NEGATIVE) INDEX [-4]"};
-	// print_compared_values(arr[-5], 5);
-	// show serial_dialog {"READ FROM NUMBER (NEGATIVE) INDEX [-5]"};
-	// print_compared_values(arr[-6], 4);
-	// show serial_dialog {"READ FROM NUMBER (NEGATIVE) INDEX [-6]"};
-	// print_compared_values(arr[-7], 3);
-	// show serial_dialog {"READ FROM NUMBER (NEGATIVE) INDEX [-7]"};
-	// print_compared_values(arr[-8], 2);
-	// show serial_dialog {"READ FROM NUMBER (NEGATIVE) INDEX [-8]"};
-	// print_compared_values(arr[-9], 1);
-	// show serial_dialog {"READ FROM NUMBER (NEGATIVE) INDEX [-9]"};
-	// print_compared_values(arr[-10], 0);
-	// show serial_dialog {"READ FROM NUMBER (NEGATIVE) INDEX [-10]"};
-	// print_compared_values(arr[-11], 9);
-	// show serial_dialog {"READ FROM NUMBER (NEGATIVE) INDEX [-11]"};
-	// print_compared_values(arr[10], 0);
-	// show serial_dialog {"READ FROM NUMBER (MODULO) INDEX [10]"};
-	// print_compared_values(arr[11], 1);
-	// show serial_dialog {"READ FROM NUMBER (MODULO) INDEX [11]"};
-	// debug!(" ")
-	// delete array arr;
+	// READ FROM NUMBER (NEGATIVE) INDEX
+	array arr = [0,1,2,3,4,5,6,7,8,9];
+	print array arr;
+	print_compared_values(arr[-1], 9);
+	show serial_dialog {"READ FROM NUMBER (NEGATIVE) INDEX [-1]"};
+	print_compared_values(arr[-2], 8);
+	show serial_dialog {"READ FROM NUMBER (NEGATIVE) INDEX [-2]"};
+	print_compared_values(arr[-3], 7);
+	show serial_dialog {"READ FROM NUMBER (NEGATIVE) INDEX [-3]"};
+	print_compared_values(arr[-4], 6);
+	show serial_dialog {"READ FROM NUMBER (NEGATIVE) INDEX [-4]"};
+	print_compared_values(arr[-5], 5);
+	show serial_dialog {"READ FROM NUMBER (NEGATIVE) INDEX [-5]"};
+	print_compared_values(arr[-6], 4);
+	show serial_dialog {"READ FROM NUMBER (NEGATIVE) INDEX [-6]"};
+	print_compared_values(arr[-7], 3);
+	show serial_dialog {"READ FROM NUMBER (NEGATIVE) INDEX [-7]"};
+	print_compared_values(arr[-8], 2);
+	show serial_dialog {"READ FROM NUMBER (NEGATIVE) INDEX [-8]"};
+	print_compared_values(arr[-9], 1);
+	show serial_dialog {"READ FROM NUMBER (NEGATIVE) INDEX [-9]"};
+	print_compared_values(arr[-10], 0);
+	show serial_dialog {"READ FROM NUMBER (NEGATIVE) INDEX [-10]"};
+	print_compared_values(arr[-11], 9);
+	show serial_dialog {"READ FROM NUMBER (NEGATIVE) INDEX [-11]"};
+	print_compared_values(arr[10], 0);
+	show serial_dialog {"READ FROM NUMBER (MODULO) INDEX [10]"};
+	print_compared_values(arr[11], 1);
+	show serial_dialog {"READ FROM NUMBER (MODULO) INDEX [11]"};
+	debug!(" ")
+	delete array arr;
 
 	// // MAP REFERENCE
 	// array arr = [1,2];
