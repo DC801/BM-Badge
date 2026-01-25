@@ -284,12 +284,6 @@ array_unit_tests {
 	show serial_dialog {"READ FROM (EXPRESSION) INDEX (AGAIN)"};
 	debug!(" ")
 
-	// READ FROM NUMBER (NEGATIVE) INDEX
-	print array arr;
-	print_compared_values(arr[-1], 1);
-	show serial_dialog {"READ FROM NUMBER (NEGATIVE) INDEX"};
-	debug!(" ")
-
 	// PUSH VARIABLE
 	v = 2;
 	arr.push(v);
@@ -438,83 +432,46 @@ array_unit_tests {
 	debug!(" ")
 	delete array arr;
 
-	// // LENGTH SUITE
-	// array arr = [];
-	// print array arr;
-	// print_compared_values(arr.length(), 0);
-	// show serial_dialog {"LENGTH SUITE (0)"};
-	// arr.push(0);
-	// print_compared_values(arr.length(), 1);
-	// show serial_dialog {"LENGTH SUITE (1)"};
-	// arr.push(1);
-	// print_compared_values(arr.length(), 2);
-	// show serial_dialog {"LENGTH SUITE (2)"};
-	// arr.push(2);
-	// print_compared_values(arr.length(), 3);
-	// show serial_dialog {"LENGTH SUITE (3)"};
-	// arr.push(3);
-	// print_compared_values(arr.length(), 4);
-	// show serial_dialog {"LENGTH SUITE (4)"};
-	// arr.push(4);
-	// print_compared_values(arr.length(), 5);
-	// show serial_dialog {"LENGTH SUITE (5)"};
-	// arr.push(5);
-	// print_compared_values(arr.length(), 6);
-	// show serial_dialog {"LENGTH SUITE (6)"};
-	// arr.push(6);
-	// print_compared_values(arr.length(), 7);
-	// show serial_dialog {"LENGTH SUITE (7)"};
-	// arr.push(7);
-	// print_compared_values(arr.length(), 8);
-	// show serial_dialog {"LENGTH SUITE (8)"};
-	// arr.push(8);
-	// print_compared_values(arr.length(), 9);
-	// show serial_dialog {"LENGTH SUITE (9)"};
-	// arr.push(9);
-	// print_compared_values(arr.length(), 10);
-	// show serial_dialog {"LENGTH SUITE (10)"};
-	// debug!(" ")
-	// delete array arr;
-
 	// READ FROM LAST INDEX
 	array arr = [];
 	print array arr;
 	print_compared_values(arr[-1], $MAX_INT);
-	show serial_dialog {"READ FROM LAST INDEX (i=NaN)"};
-	for (i = 0; i < 127; i += 1) {
+	show serial_dialog {"READ FROM LAST INDEX ([-1]) (len=0, i=NaN)"};
+	for (i = 0; i < 17; i += 1) {
 		arr.push(i);
 		print array arr;
 		print_compared_values(arr[-1], i);
-		show serial_dialog {"READ FROM LAST INDEX (i=$i$)"};
+		len = arr.length();
+		show serial_dialog {"READ FROM LAST INDEX ([-1]) (len=$len$, i=$i$)"};
 	}
 	debug!(" ")
 	delete array arr;
 
-	// // READ FROM NUMBER (NEGATIVE) INDEX
+	// // READ FROM INDEX [NEGATIVE]
 	array arr = [0,1,2,3,4,5,6,7,8,9];
 	print array arr;
 	print_compared_values(arr[-1], 9);
-	show serial_dialog {"READ FROM NUMBER (NEGATIVE) INDEX [-1]"};
+	show serial_dialog {"READ FROM INDEX [-1] (len=10, i=9)"};
 	print_compared_values(arr[-2], 8);
-	show serial_dialog {"READ FROM NUMBER (NEGATIVE) INDEX [-2]"};
+	show serial_dialog {"READ FROM INDEX [-2] (len=10, i=8)"};
 	print_compared_values(arr[-3], 7);
-	show serial_dialog {"READ FROM NUMBER (NEGATIVE) INDEX [-3]"};
+	show serial_dialog {"READ FROM INDEX [-3] (len=10, i=7)"};
 	print_compared_values(arr[-4], 6);
-	show serial_dialog {"READ FROM NUMBER (NEGATIVE) INDEX [-4]"};
+	show serial_dialog {"READ FROM INDEX [-4] (len=10, i=6)"};
 	print_compared_values(arr[-5], 5);
-	show serial_dialog {"READ FROM NUMBER (NEGATIVE) INDEX [-5]"};
+	show serial_dialog {"READ FROM INDEX [-5] (len=10, i=5)"};
 	print_compared_values(arr[-6], 4);
-	show serial_dialog {"READ FROM NUMBER (NEGATIVE) INDEX [-6]"};
+	show serial_dialog {"READ FROM INDEX [-6] (len=10, i=4)"};
 	print_compared_values(arr[-7], 3);
-	show serial_dialog {"READ FROM NUMBER (NEGATIVE) INDEX [-7]"};
+	show serial_dialog {"READ FROM INDEX [-7] (len=10, i=3)"};
 	print_compared_values(arr[-8], 2);
-	show serial_dialog {"READ FROM NUMBER (NEGATIVE) INDEX [-8]"};
+	show serial_dialog {"READ FROM INDEX [-8] (len=10, i=2)"};
 	print_compared_values(arr[-9], 1);
-	show serial_dialog {"READ FROM NUMBER (NEGATIVE) INDEX [-9]"};
+	show serial_dialog {"READ FROM INDEX [-9] (len=10, i=1)"};
 	print_compared_values(arr[-10], 0);
-	show serial_dialog {"READ FROM NUMBER (NEGATIVE) INDEX [-10]"};
+	show serial_dialog {"READ FROM INDEX [-10] (len=10, i=0)"};
 	print_compared_values(arr[-11], 9);
-	show serial_dialog {"READ FROM NUMBER (NEGATIVE) INDEX [-11]"};
+	show serial_dialog {"READ FROM INDEX [-11] (len=10, i=9)"};
 	debug!(" ")
 	delete array arr;
 

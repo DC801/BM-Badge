@@ -8,8 +8,8 @@ start_hanoi {
 	player_control = off;
 	hex_control = on;
 	show serial_dialog{"INIT HANOI"};
-	hanoi_init_game()
-	draw_hanoi()
+	hanoi_init_game();
+	draw_hanoi();
 	map on_tick = tick_hanoi;
 }
 
@@ -17,26 +17,11 @@ $winning_plate = 6;
 
 forecast_grip {
 	if (grip_col == 1) {
-		if (array1.length() == 0) {
-			return 0;
-		}
-		popped = array1.pop();
-		array1.push(popped);
-		return popped;
+		return array1[-1];
 	} else if (grip_col == 2) {
-		if (array2.length() == 0) {
-			return 0;
-		}
-		popped = array2.pop();
-		array2.push(popped);
-		return popped;
+		return array2[-1];
 	} else if (grip_col == 3) {
-		if (array3.length() == 0) {
-			return 0;
-		}
-		popped = array3.pop();
-		array3.push(popped);
-		return popped;
+		return array3[-1];
 	}
 }
 
@@ -62,7 +47,7 @@ hanoi_move {
 	// drop
 	} else {
 		top_plate = forecast_grip();
-		if (top_plate == 0 || grip_value < top_plate) {
+		if (top_plate == $MAX_INT || grip_value < top_plate) {
 			if (grip_col == 1) {
 				array1.push(grip_value);
 				grip_value = 0;
@@ -89,24 +74,24 @@ hanoi_move {
 tick_hanoi {
 	if (button HAX pressed) {
 		player_control = on;
-		hanoi_quit()
+		hanoi_quit();
 	} else if (
 		button LJOY_UP pressed
 		|| button RJOY_UP pressed
 		|| button LJOY_DOWN pressed
 		|| button RJOY_DOWN pressed
 	) {
-		hanoi_move()
+		hanoi_move();
 	} else if (button LJOY_RIGHT pressed || button RJOY_RIGHT pressed) {
 		if (grip_col == 1 || grip_col == 2) {
 			grip_col += 1;
 		}
-		draw_hanoi()
+		draw_hanoi();
 	} else if (button LJOY_LEFT pressed || button RJOY_LEFT pressed) {
 		if (grip_col == 2 || grip_col == 3) {
 			grip_col -= 1;
 		}
-		draw_hanoi()
+		draw_hanoi();
 	}
 }
 
@@ -263,21 +248,19 @@ draw_hanoi {
 	// ROW 1-7
 	for (row = 7; row >= 1; row -= 1) {
 		index = row - 1;
+		plate1 = 0;
+		plate2 = 0;
+		plate3 = 0;
 		if (array1.length() >= row) {
-			draw_value_in_cell(array1[index], 1, row);
-		} else {
-			draw_value_in_cell(0, 1, row);
+			plate1 = array1[index];
 		}
 		if (array2.length() >= row) {
-			draw_value_in_cell(array2[index], 2, row);
-		} else {
-			draw_value_in_cell(0, 2, row);
+			plate2 = array2[index];
 		}
 		if (array3.length() >= row) {
-			draw_value_in_cell(array3[index], 3, row);
-		} else {
-			draw_value_in_cell(0, 3, row);
+			plate3 = array3[index];
 		}
+		draw_plates_in_row(plate1, plate2, plate3, row);
 		concat serial_dialog newline;
 	}
 	concat serial_dialog newline;
@@ -337,9 +320,6 @@ hanoi_init_variables {
 	show serial_dialog { "<m>HANOI INIT VARIABLES"};
 	grip_col = 1;
 	grip_value = 0;
-	delete array array1;
-	delete array array2;
-	delete array array3;
 	array array1 = [ 6, 5, 4, 3, 2, 1 ];
 	array array2 = [];
 	array array3 = [];
@@ -376,7 +356,6 @@ hanoi_init_game {
 			goto draw_hanoi;
 		};
 	}
-	// debug!(hanoi_init_game)
 	light LED_USB = on;
 	entity Lights on_tick = {};
 }
