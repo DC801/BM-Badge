@@ -2876,9 +2876,16 @@ void array_length_into_variable(uint8_t * args, MageScriptState * resumeStateStr
 		"array_length_into_variable: Invalid arrayId: " + std::to_string(argStruct->arrayId)
 	);
 }
-uint8_t wrap_index_in_array(const int8_t index, const std::vector<uint16_t>* values) {
+uint8_t wrap_negative_index(const int8_t index, const std::vector<uint16_t>* values) {
 	const auto length = values->size();
-	return ((index % length) + length) % length;
+	int8_t fixed = index;
+	if (length == 0) {
+		return 0;
+	}
+	while (fixed < 0) {
+		fixed += length;
+	}
+	return fixed;
 }
 void array_read_from_index_into_variable(uint8_t * args, MageScriptState * resumeStateStruct)
 {
@@ -2893,8 +2900,11 @@ void array_read_from_index_into_variable(uint8_t * args, MageScriptState * resum
 	} ActionArrayReadFromIndexIntoVariable;
 	auto *argStruct = (ActionArrayReadFromIndexIntoVariable*)args;
 	if (const MageScriptArray* foundArray = get_array_by_id(argStruct->arrayId)) {
-		const auto wrappedIndex = wrap_index_in_array(argStruct->index, &foundArray->values);
-		const auto arrayValue = foundArray->values[wrappedIndex];
+		const auto wrappedIndex = wrap_negative_index(argStruct->index, &foundArray->values);
+		auto arrayValue = 65535; // out of bounds
+		if (wrappedIndex < foundArray->values.size()) {
+			arrayValue = foundArray->values[wrappedIndex];
+		}
 		MageCommand->debugScriptsPrintln(
 			"array_read_from_index_into_variable: array " + std::to_string(argStruct->arrayId) +
 			": Reading index " + std::to_string(wrappedIndex) +
@@ -2921,7 +2931,7 @@ void array_write_into_index_from_value(uint8_t * args, MageScriptState * resumeS
 	auto *argStruct = (ActionArrayWriteIntoIndexFromValue*)args;
 	ROM_ENDIAN_U2_BUFFER(&argStruct->value, 1);
 	if (MageScriptArray* foundArray = get_array_by_id(argStruct->arrayId)) {
-		const auto wrappedIndex = wrap_index_in_array(argStruct->index, &foundArray->values);
+		const auto wrappedIndex = wrap_negative_index(argStruct->index, &foundArray->values);
 		if (const auto arrayLength = foundArray->values.size(); wrappedIndex >= arrayLength) {
 			MageCommand->debugScriptsPrintln(
 				"array_write_into_index_from_value: ERROR! array " + std::to_string(argStruct->arrayId) +
@@ -2958,7 +2968,7 @@ void array_write_into_index_from_variable(uint8_t * args, MageScriptState * resu
 	if (MageScriptArray* foundArray = get_array_by_id(argStruct->arrayId)) {
 		const auto value = MageGame->currentSave.scriptVariables[argStruct->variableId];
 		const auto arrayLength = foundArray->values.size();
-		const auto wrappedIndex = wrap_index_in_array(argStruct->index, &foundArray->values);
+		const auto wrappedIndex = wrap_negative_index(argStruct->index, &foundArray->values);
 		if (wrappedIndex >= arrayLength) {
 			MageCommand->debugScriptsPrintln(
 				"array_write_into_index_from_variable: ERROR! array " + std::to_string(argStruct->arrayId) +
