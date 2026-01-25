@@ -148,21 +148,16 @@ Simon animations:
 simon_game_start {
 	player_control = off;
 	hex_control = off;
-	simon_pos1 = RNG!(=3); // 0, 1, 2, 3
-	simon_pos2 = RNG!(=3);
-	simon_pos3 = RNG!(=3);
-	simon_pos4 = RNG!(=3);
-	simon_pos5 = RNG!(=3);
-	simon_pos6 = RNG!(=3);
-	simon_pos7 = RNG!(=3);
-	if (ch2_simon_high) {
-		simon_pos1 += 2; // or 2, 3, 4, 5
-		simon_pos2 += 2;
-		simon_pos3 += 2;
-		simon_pos4 += 2;
-		simon_pos5 += 2;
-		simon_pos6 += 2;
-		simon_pos7 += 2;
+	array simon = []; // 0, 1, 2, 3
+	for (i=0; i<$roundcount; i+=1) {
+		simon.push(RNG!(=3));
+	}
+	if (ch2_simon_high) { // or 2, 3, 4, 5
+		for (i=0; i < simon.length(); i+=1) {
+			tempvar = simon[i];
+			tempvar += 2;
+			simon[i] = tempvar;
+		}
 	}
 	simon_round = 1;
 	lights_control = on;
@@ -216,13 +211,7 @@ simon_enemy_turn_start {
 	ch2_simon_move_fail = false;
 	wait 800ms;
 	for (i = 0; i < simon_round; i += 1) {
-		if (i == 0) { simon_pos_curr = simon_pos1 *1; }
-		else if (i == 1) { simon_pos_curr = simon_pos2 *1; }
-		else if (i == 2) { simon_pos_curr = simon_pos3 *1; }
-		else if (i == 3) { simon_pos_curr = simon_pos4 *1; }
-		else if (i == 4) { simon_pos_curr = simon_pos5 *1; }
-		else if (i == 5) { simon_pos_curr = simon_pos6 *1; }
-		else if (i == 6) { simon_pos_curr = simon_pos7 *1; }
+		simon_pos_curr = simon[i];
 		// see $roundcount
 
 		// loopy
@@ -270,13 +259,7 @@ simon_player_turn_loop_start {
 	if (i >= simon_round) {
 		goto simon_player_turn_end;
 	}
-	if (i == 0) { simon_pos_curr = simon_pos1 *1; }
-	else if (i == 1) { simon_pos_curr = simon_pos2 *1; }
-	else if (i == 2) { simon_pos_curr = simon_pos3 *1; }
-	else if (i == 3) { simon_pos_curr = simon_pos4 *1; }
-	else if (i == 4) { simon_pos_curr = simon_pos5 *1; }
-	else if (i == 5) { simon_pos_curr = simon_pos6 *1; }
-	else if (i == 6) { simon_pos_curr = simon_pos7 *1; }
+	simon_pos_curr = simon[i];
 	// see $roundcount
 
 	// loopy
@@ -508,6 +491,7 @@ simon_player_turn_end {
 simon_game_lose {
 	player_control = off;
 	lights_control = on;
+	delete array simon;
 	entity Keyboard on_tick = simon_rock;
 	if (ch2_ring_zero_enabled_in_castle || debug_mode) {
 		hex_control = on;
@@ -527,6 +511,7 @@ simon_game_lose {
 simon_game_win {
 	player_control = off;
 	lights_control = on;
+	delete array simon;
 	if (ch2_ring_zero_enabled_in_castle || debug_mode) {
 		hex_control = on;
 	}
