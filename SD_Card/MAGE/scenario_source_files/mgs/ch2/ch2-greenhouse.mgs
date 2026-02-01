@@ -159,18 +159,18 @@ ch2_capture_ethernettle8 {}
 dialog trekkie_ethernettle_reset  {
 	Trekkie "Oh, no you don't! Not after all that work, %PLAYER%! Put Ether Nettle back!"
 }
-fn check_ethernettle ($entityName, $geometry, $knownSecondaryID) {
+fn check_ethernettle ($e, $g, $knownSecondaryID) {
 	if (
-		!entity $entityName intersects geometry $geometry
-		|| entity $entityName primary_id != default_ethernettle_primary_id
-		|| entity $entityName secondary_id != $knownSecondaryID
-		|| entity $entityName primary_id_type != 0
+		!entity $e intersects geometry $g
+		|| entity $e primary_id != default_ethernettle_primary_id
+		|| entity $e secondary_id != $knownSecondaryID
+		|| entity $e primary_id_type != 0
 	) {
 		show dialog trekkie_ethernettle_reset;
-		entity $entityName position = geometry $geometry;
-		entity $entityName primary_id = tempvar;
-		entity $entityName secondary_id = $knownSecondaryID;
-		entity $entityName primary_id_type = 0;
+		entity $e position = geometry $g;
+		entity $e primary_id = default_ethernettle_primary_id;
+		entity $e secondary_id = $knownSecondaryID;
+		entity $e primary_id_type = 0;
 	}
 }
 

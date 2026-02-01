@@ -206,7 +206,6 @@ simon_game_start {
 	goto simon_enemy_turn_start;
 }
 
-// too: change to arrays!
 simon_enemy_turn_start {
 	ch2_simon_move_fail = false;
 	wait 800ms;

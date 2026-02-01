@@ -7,7 +7,6 @@ $lightsdefault = ch2_serial_light_manager;
 start_hanoi {
 	player_control = off;
 	hex_control = on;
-	show serial_dialog{"INIT HANOI"};
 	hanoi_init_game();
 	draw_hanoi();
 	map on_tick = tick_hanoi;

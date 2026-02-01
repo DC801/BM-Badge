@@ -36,7 +36,7 @@ follower_demo_stuff { // from map on_load
 	entity Nano on_tick = face_player;
 	entity Vim on_tick = face_player;
 	entity Emacs on_tick = face_player;
-	if (curr_follower == 0) {
+	if (curr_follower == $none) {
 		curr_follower = $nano;
 		// should remember what the prev follower was
 	}
