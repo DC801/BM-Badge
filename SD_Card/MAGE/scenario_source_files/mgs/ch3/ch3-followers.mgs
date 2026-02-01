@@ -1,129 +1,89 @@
 include "header.mgs";
+include "ch3-followers-generic.mgs";
 
-$nano = 0;
-$vim = 1;
-$emacs = 2;
+$none = 0;
+$nano = 1;
+$vim = 2;
+$emacs = 3;
 
-// NOTE: the on_load for the demo sets curr_follower to 0
-// TODO BUG? When switching in and out of debug mode, the on_load isn't run again when switching off, but is when switching on?
-set_follower_scripts {
+fn start_timmy_following ($followee) {
+	follow_entity(
+		"%SELF%",
+		$followee,
+		qx_ffollower,
+		qy_ffollower,
+		should_ffollower,
+		am_ffollower,
+		ffollower_countdown
+	);
+}
+init_timmy_following {
+	should_ffollower = false;
+	am_ffollower = false;
+	ffollower_countdown = 0;
+	entity Timmy on_tick = {
+		if (curr_follower == $nano) {
+			start_timmy_following(Nano);
+		} else if (curr_follower == $vim) {
+			start_timmy_following(Vim);
+		} else if (curr_follower == $emacs) {
+			start_timmy_following(Emacs);
+		}
+	};
+}
+
+follower_demo_stuff { // from map on_load
 	entity Nano on_tick = face_player;
 	entity Vim on_tick = face_player;
 	entity Emacs on_tick = face_player;
+	if (curr_follower == 0) {
+		curr_follower = $nano;
+		// should remember what the prev follower was
+	}
 	if (curr_follower == $nano) {
-		entity Nano on_tick = follow_player;
+		entity Nano on_tick = start_follow_player;
 	} else if (curr_follower == $vim) {
-		entity Vim on_tick = follow_player;
-	}if (curr_follower == $emacs) {
-		entity Emacs on_tick = follow_player;
+		entity Vim on_tick = start_follow_player;
+	} else if (curr_follower == $emacs) {
+		entity Emacs on_tick = start_follow_player;
 	}
+	// follower following
+	init_timmy_following();
 }
 
-$follow_delay = 2;
-$follow_distance = 5;
-
-fn init_follower_queue ($queue_name, $start, $end, $step_count) {
-	diff = get_diff($end, $start);
-	array $queue_name = [ $start ];
-	if ($start < $end) {
-		for (i = 1; i < $step_count; i+=1) {
-			$queue_name.push($start + (i * diff / $step_count));
-		}
-	} else {
-		for (i = $step_count-1; i > 0; i-=1) {
-			$queue_name.push($end + (i * diff / $step_count));
-		}
-	}
-	$queue_name.push($end);
+start_follow_player {
+	follow_entity(
+		"%SELF%",
+		"%PLAYER%",
+		qx_fplayer,
+		qy_fplayer,
+		should_fplayer,
+		am_fplayer,
+		fplayer_countdown
+	);
 }
 
-follow_player_queue_init {
-	offset_self_x = self x;
-	if (curr_follower == $nano) { offset_self_x -= 8; }
-	if (curr_follower == $emacs) { offset_self_x += 8; }
-	offset_self_y = self y + 1;
-	init_follower_queue(player_queue_x, offset_self_x, player x, $follow_distance);
-	init_follower_queue(player_queue_y, offset_self_y, player y, $follow_distance);
-}
-
-save_player_pos {
-	player_queue_x.push(player x);
-	player_queue_y.push(player y);
-}
-load_self_pos {
-	self x = player_queue_x.pop_left();
-	self y = player_queue_y.pop_left();
-	if (curr_follower == $nano) { self x += 8; }
-	if (curr_follower == $emacs) { self x -= 8; }
-	self y -= 1;
-}
-follow_player {
-	if (player current_animation != 1) {
-		if (should_follow_player) {
-			should_follow_player = false;
-			follow_delay_tick = $follow_delay;
-		} else if (follow_delay_tick != 0) {
-			follow_delay_tick -= 1;
-		} else if (am_following_player) {
-			am_following_player = false;
-			self current_animation = 0;
-		}
-	} else {
-		save_player_pos();
-		if (!should_follow_player) {
-			should_follow_player = true;
-			follow_player_queue_init();
-			follow_delay_tick = $follow_delay;
-		} else if (follow_delay_tick != 0) {
-			follow_delay_tick -= 1;
-		} else if (!am_following_player) {
-			am_following_player = true;
-			self current_animation = 1;
-		}
-	}
-
-	// MOVE FOLLOWER
-	if (am_following_player) {
-		my_old_x = self x;
-		my_old_y = self y;
-		// set follower position
-		load_self_pos()
-		// get the absolute value of the delta
-		my_diff_x = get_diff(self x, my_old_x);
-		my_diff_y = get_diff(self y, my_old_y);
-		// turn the entity NSEW - check which axis changed more
-		if (my_diff_x > my_diff_y) {
-			if (self x > my_old_x) {
-				self direction = east;
-			} else if (self x < my_old_x) {
-				self direction = west;
-			}
-		} else {
-			if (self y > my_old_y) {
-				self direction = south;
-			} else if (self y < my_old_y) {
-				self direction = north;
-			}
-			// if position is the same, don't turn at all (use current direction)
-		}
-	}
+fn stop_follow_player ($e) {
+	entity $e on_tick = face_player;
+	entity $e current_animation = 0;
+	should_fplayer = false;
+	am_fplayer = false;
+	fplayer_countdown = 0;
 }
 
 interact_demo_nano {
 	if (curr_follower != $nano) {
 		if (curr_follower == $vim) {
+			stop_follow_player(Vim);
 			show dialog vim_quit { Vim ":wq" };
-			entity Vim on_tick = face_player;
-			entity Vim current_animation = 0;
 		} else if (curr_follower == $emacs) {
+			stop_follow_player(Emacs);
 			show dialog emacs_quit { Emacs "You'll be back." };
-			entity Emacs on_tick = face_player;
-			entity Emacs current_animation = 0;
 		}
-		curr_follower = $nano;
-		follow_player_queue_init()
-		entity Nano on_tick = follow_player;
 		show dialog { SELF "I'll help now!" };
+		curr_follower = $nano;
+		entity Nano on_tick = start_follow_player;
+		init_timmy_following();
 	} else {
 		face_player()
 		show dialog { SELF "I like turtles." };
@@ -133,18 +93,16 @@ interact_demo_nano {
 interact_demo_vim {
 	if (curr_follower != $vim) {
 		if (curr_follower == $nano) {
+			stop_follow_player(Nano);
 			show dialog nano_quit { Nano "Writing out!" };
-			entity Nano on_tick = face_player;
-			entity Nano current_animation = 0;
 		} else if (curr_follower == $emacs) {
+			stop_follow_player(Emacs);
 			show dialog emacs_quit;
-			entity Emacs on_tick = face_player;
-			entity Emacs current_animation = 0;
 		}
-		curr_follower = $vim;
-		follow_player_queue_init()
-		entity Vim on_tick = follow_player;
 		show dialog { SELF ":e follow" };
+		curr_follower = $vim;
+		entity Vim on_tick = start_follow_player;
+		init_timmy_following();
 	} else {
 		face_player()
 		show dialog { SELF ":up" };
@@ -154,117 +112,18 @@ interact_demo_vim {
 interact_demo_emacs {
 	if (curr_follower != $emacs) {
 		if (curr_follower == $nano) {
+			stop_follow_player(Nano);
 			show dialog nano_quit;
-			entity Nano on_tick = face_player;
-			entity Nano current_animation = 0;
 		} else if (curr_follower == $vim) {
+			stop_follow_player(Vim);
 			show dialog vim_quit;
-			entity Vim on_tick = face_player;
-			entity Vim current_animation = 0;
 		}
-		curr_follower = $emacs;
-		follow_player_queue_init()
-		entity Emacs on_tick = follow_player;
 		show dialog { SELF "About time." };
+		curr_follower = $emacs;
+		entity Emacs on_tick = start_follow_player;
+		init_timmy_following();
 	} else {
 		face_player()
 		show dialog { SELF "'Sup?" };
-	}
-}
-
-// ------------------------- DOUBLE FOLLOWER QUICK HACK
-
-double_follower_queue_init {
-	offset_self_x = self x;
-	// if (curr_follower == $nano) { offset_self_x += 8; }
-	// else if (curr_follower == $emacs) { offset_self_x -= 8; }
-	offset_self_y = self y + 2;
-	if (curr_follower == $nano) {
-		init_follower_queue(follower_queue_x, offset_self_x, entity Nano x, $follow_distance);
-		init_follower_queue(follower_queue_y, offset_self_y, entity Nano y, $follow_distance);
-	} else if (curr_follower == $emacs) {
-		init_follower_queue(follower_queue_x, offset_self_x, entity Emacs x, $follow_distance);
-		init_follower_queue(follower_queue_y, offset_self_y, entity Emacs y, $follow_distance);
-	} else if (curr_follower == $vim) {
-		init_follower_queue(follower_queue_x, offset_self_x, entity Vim x, $follow_distance);
-		init_follower_queue(follower_queue_y, offset_self_y, entity Vim y, $follow_distance);
-	}
-}
-
-save_follower_pos {
-	if (curr_follower == $nano) {
-		follower_queue_x.push(entity Nano x - 8);
-		follower_queue_y.push(entity Nano y);
-	} else if (curr_follower == $emacs) {
-		follower_queue_x.push(entity Emacs x + 8);
-		follower_queue_y.push(entity Emacs y);
-	} else if (curr_follower == $vim) {
-		follower_queue_x.push(entity Vim x);
-		follower_queue_y.push(entity Vim y);
-	}
-}
-load_double_follower_pos {
-	self x = follower_queue_x.pop_left();
-	self y = follower_queue_y.pop_left();
-	self y -= 1;
-}
-
-follow_follower {
-	if (
-		(curr_follower == $nano && entity Nano current_animation != 1) ||
-		(curr_follower == $emacs && entity Emacs current_animation != 1) ||
-		(curr_follower == $vim && entity Vim current_animation != 1)
-	) {
-		if (should_follow_follower) {
-			should_follow_follower = false;
-			double_follow_delay_tick = $follow_delay;
-		} else if (double_follow_delay_tick != 0) {
-			double_follow_delay_tick -= 1;
-		} else if (am_following_follower) {
-			am_following_follower = false;
-			self current_animation = 0;
-		}
-	} else if (
-		(curr_follower == $nano && entity Nano current_animation == 1) ||
-		(curr_follower == $emacs && entity Emacs current_animation == 1) ||
-		(curr_follower == $vim && entity Vim current_animation == 1)
-	) {
-		save_follower_pos();
-		if (!should_follow_follower) {
-			should_follow_follower = true;
-			double_follower_queue_init();
-			double_follow_delay_tick = $follow_delay;
-		} else if (double_follow_delay_tick != 0) {
-			double_follow_delay_tick -= 1;
-		} else if (!am_following_follower) {
-			am_following_follower = true;
-			self current_animation = 1;
-		}
-	}
-
-	// MOVE FOLLOWER
-	if (am_following_follower) {
-		my_old_x = self x;
-		my_old_y = self y;
-		// set follower position
-		load_double_follower_pos()
-		// get the absolute value of the delta
-		my_diff_x = get_diff(self x, my_old_x);
-		my_diff_y = get_diff(self y, my_old_y);
-		// turn the entity NSEW - check which axis changed more
-		if (my_diff_x > my_diff_y) {
-			if (self x > my_old_x) {
-				self direction = east;
-			} else if (self x < my_old_x) {
-				self direction = west;
-			}
-		} else {
-			if (self y > my_old_y) {
-				self direction = south;
-			} else if (self y < my_old_y) {
-				self direction = north;
-			}
-			// if position is the same, don't turn at all (use current direction)
-		}
 	}
 }

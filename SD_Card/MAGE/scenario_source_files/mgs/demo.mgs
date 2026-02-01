@@ -1,9 +1,7 @@
 include "header.mgs";
 
 on_load_demo {
-	set_follower_scripts()
-	entity Timmy on_tick = follow_follower;
-	curr_follower = 0;
+	follower_demo_stuff();
 	command rtfm = command_rtfm;
 	if (!demo_cutseen_timewarp) {
 		camera fade out -> #000000 over 1ms;

@@ -21,7 +21,7 @@ fn set_hint_none_if_not_series ($n) {
 
 fn capture_entity_direction ($name) {
 	if (entity $name direction == north) { return 0; }
-	else if (entity$name direction == east) { return 1; }
+	else if (entity $name direction == east) { return 1; }
 	else if (entity $name direction == south) { return 2; }
 	else if (entity $name direction == west) { return 3; }
 }
