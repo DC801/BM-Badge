@@ -53,6 +53,9 @@ fn load_entity_pos ($queue_x, $queue_y, $e) {
 	v = $queue_x.pop_left();
 	entity $e x = offset_e_x_for_read_using_v($e, v);
 	entity $e y = $queue_y.pop_left();
+	if (entity $e type != mage) {
+		entity $e y -= 1;
+	}
 }
 fn save_entity_pos ($queue_x, $queue_y, $e) {
 	$queue_x.push(offset_e_x_for_write($e));
