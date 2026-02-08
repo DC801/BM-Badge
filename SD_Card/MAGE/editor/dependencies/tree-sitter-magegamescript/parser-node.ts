@@ -216,8 +216,16 @@ const nodeFns: Record<string, (debug: MathlangLocation) => AnyNode[]> = {
 				'not enough fn args',
 				`function ${name} requires ${definitionParamNodes.length} arguments; found ${callParamNodes.length}`,
 			);
-			// TODO: yellow squiggles when too many params are passed?
+			fnRecursion.pop();
+			return [];
+		}
+		if (callParamNodes.length > definitionParamNodes.length) {
 			// What if it's inside a .map() and you're not using all of them?
+			// I think map and for_each args are intercepted manually and bypass this (TODO verify this the case)
+			debug.quickError(
+				'too many fn args',
+				`function ${name} requires ${definitionParamNodes.length} arguments; found ${callParamNodes.length}`,
+			);
 			fnRecursion.pop();
 			return [];
 		}
@@ -242,7 +250,10 @@ const nodeFns: Record<string, (debug: MathlangLocation) => AnyNode[]> = {
 		});
 
 		// make local const registry based on what we were passed for this call
-		const localConstants: FunctionStackEntry = {};
+		const localConstants: FunctionStackEntry = {
+			consts: {},
+			debug: definition.debug,
+		};
 		callParams.forEach((callParam, i) => {
 			const paramDebug = debug.using(callParamNodes[i]);
 			const constantName = definition.params[i];
@@ -251,7 +262,7 @@ const nodeFns: Record<string, (debug: MathlangLocation) => AnyNode[]> = {
 					? BoolLiteral.quick(paramDebug, callParam)
 					: callParam;
 			const constantDefinition = ConstantDefinition.quick(paramDebug, constantName, value);
-			localConstants[constantName] = constantDefinition;
+			localConstants.consts[constantName] = constantDefinition;
 		});
 
 		// add const registry to top of fn stack

@@ -5228,6 +5228,14 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
         fnRecursion.pop();
         return [];
       }
+      if (callParamNodes.length > definitionParamNodes.length) {
+        debug.quickError(
+          "too many fn args",
+          `function ${name2} requires ${definitionParamNodes.length} arguments; found ${callParamNodes.length}`
+        );
+        fnRecursion.pop();
+        return [];
+      }
       const argSteps = [];
       let temporaryCount2 = 0;
       const callParams = callParamNodes.map((callParamNode) => {
@@ -5244,13 +5252,16 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
         debug.using(callParamNode).quickError("invalid fn arg", "function arg not an int epxression");
         return coerceToString(debug.using(callParamNode), capture, "fucntion param");
       });
-      const localConstants = {};
+      const localConstants = {
+        consts: {},
+        debug: definition.debug
+      };
       callParams.forEach((callParam, i2) => {
         const paramDebug = debug.using(callParamNodes[i2]);
         const constantName = definition.params[i2];
         const value = typeof callParam === "boolean" ? BoolLiteral.quick(paramDebug, callParam) : callParam;
         const constantDefinition = ConstantDefinition.quick(paramDebug, constantName, value);
-        localConstants[constantName] = constantDefinition;
+        localConstants.consts[constantName] = constantDefinition;
       });
       const stack = debug.f.currFunction;
       stack.unshift(localConstants);
@@ -5713,15 +5724,19 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
     }
   };
   const handleCapture = (debug) => {
-    var _a2;
     const grammarType = debug.node.grammarType;
     if (grammarType.endsWith("_expansion")) {
       return namedChildren(debug).filter((v) => v !== null).map((v) => handleCapture(debug.using(v))).flat();
     }
     if (grammarType === "CONSTANT") {
-      const lookup = ((_a2 = debug.f.currFunction[0]) == null ? void 0 : _a2[debug.node.text]) || debug.f.constants[debug.node.text];
+      const topFn = debug.f.currFunction[0];
+      const lookup = (topFn == null ? void 0 : topFn.consts[debug.node.text]) || debug.f.constants[debug.node.text];
       if (lookup === void 0) {
-        debug.quickError("undefined constant", `constant ${debug.node.text} is undefined`);
+        let useDebug = debug;
+        if (debug.f.currFunction[0]) {
+          useDebug = debug.f.currFunction[0].debug;
+        }
+        useDebug.quickError("undefined constant", `constant ${debug.node.text} is undefined`);
       }
       return (lookup == null ? void 0 : lookup.value) !== void 0 ? lookup == null ? void 0 : lookup.value : debug.node.text;
     }
@@ -6645,6 +6660,7 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
     "constant already defined": "cannot redefine constant in the same file scope",
     // fns
     "duplicate fn arg": "cannot use the same fn argument multiple times",
+    "too many fn args": "function call uses more args than were passed",
     "not enough fn args": "function requires more arguments than was provided",
     "invalid fn arg": "fn args must be constants (beginning with $) in a fn definition, and MGS primitive values in a fn call",
     "recursive fn call": `fns cannot call themselves (call stacks aren't real`,
@@ -10424,11 +10440,14 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
     const i2 = newTemporary();
     const length = newTemporary();
     const curr = newTemporary();
-    const localConstants = {};
+    const localConstants = {
+      consts: {},
+      debug
+    };
     const currArg = method.fn.params[0];
     if (currArg !== void 0) {
       const valueArgNode = method.fn.paramNodes[0];
-      localConstants[currArg] = ConstantDefinition.quick(
+      localConstants.consts[currArg] = ConstantDefinition.quick(
         debug.using(valueArgNode),
         currArg,
         curr
@@ -10437,12 +10456,16 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
     const indexArg = method.fn.params[1];
     if (indexArg !== void 0) {
       const indexArgNode = method.fn.paramNodes[1];
-      localConstants[indexArg] = ConstantDefinition.quick(debug.using(indexArgNode), indexArg, i2);
+      localConstants.consts[indexArg] = ConstantDefinition.quick(
+        debug.using(indexArgNode),
+        indexArg,
+        i2
+      );
     }
     const arrayArg = method.fn.params[2];
     if (arrayArg !== void 0) {
       const arrayArgNode = method.fn.paramNodes[1];
-      localConstants[arrayArg] = ConstantDefinition.quick(
+      localConstants.consts[arrayArg] = ConstantDefinition.quick(
         debug.using(arrayArgNode),
         arrayArg,
         sourceArray
@@ -14846,13 +14869,21 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
     const errCount = p.errors.length;
     const warnCount = p.warnings.length;
     if (errCount || warnCount) {
+      const printedWarning = /* @__PURE__ */ new Set();
       p.warnings.forEach((message) => {
         const str = ansiTags.yellow + printableMessage(p.fileMap, "Warning", message) + ansiTags.reset;
-        printWarnings += "\n" + str;
+        if (!printedWarning.has(str)) {
+          printWarnings += "\n" + str;
+          printedWarning.add(str);
+        }
       });
+      const printedErrors = /* @__PURE__ */ new Set();
       p.errors.forEach((message) => {
         const str = ansiTags.red + printableMessage(p.fileMap, "Error", message) + ansiTags.reset;
-        printErrors += "\n" + str;
+        if (!printedErrors.has(str)) {
+          printErrors += "\n" + str;
+          printedErrors.add(str);
+        }
       });
       p.mgsErrors = printErrors;
       p.mgsWarnings = printWarnings;

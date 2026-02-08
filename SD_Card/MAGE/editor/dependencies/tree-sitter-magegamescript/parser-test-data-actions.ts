@@ -7,6 +7,7 @@ export type ActionTest = {
 };
 
 export const actionTests: Record<string, ActionTest> = {
+	// TODO: const value lookup fallthrough in fn def/call
 	keyword_as_variable_name: {
 		input: [`"if" = 10;`],
 		expected: [`"if" = 10;`],

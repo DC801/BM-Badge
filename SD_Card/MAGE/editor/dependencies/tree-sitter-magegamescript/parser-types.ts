@@ -169,6 +169,7 @@ const mathlangMessageTypes: Record<string, string> = {
 
 	// fns
 	'duplicate fn arg': 'cannot use the same fn argument multiple times',
+	'too many fn args': 'function call uses more args than were passed',
 	'not enough fn args': 'function requires more arguments than was provided',
 	'invalid fn arg':
 		'fn args must be constants (beginning with $) in a fn definition, and MGS primitive values in a fn call',
@@ -4382,13 +4383,16 @@ const mapOrForEachBuilder = (
 	const curr = newTemporary();
 
 	// make local const registry based on what we were passed for this call
-	const localConstants: FunctionStackEntry = {};
+	const localConstants: FunctionStackEntry = {
+		consts: {},
+		debug: debug,
+	};
 	// first arg: the loop value
 	// TODO: given how this is set up, is this not required?
 	const currArg = method.fn.params[0];
 	if (currArg !== undefined) {
 		const valueArgNode = method.fn.paramNodes[0];
-		localConstants[currArg] = ConstantDefinition.quick(
+		localConstants.consts[currArg] = ConstantDefinition.quick(
 			debug.using(valueArgNode),
 			currArg,
 			curr,
@@ -4398,13 +4402,17 @@ const mapOrForEachBuilder = (
 	const indexArg = method.fn.params[1];
 	if (indexArg !== undefined) {
 		const indexArgNode = method.fn.paramNodes[1];
-		localConstants[indexArg] = ConstantDefinition.quick(debug.using(indexArgNode), indexArg, i);
+		localConstants.consts[indexArg] = ConstantDefinition.quick(
+			debug.using(indexArgNode),
+			indexArg,
+			i,
+		);
 	}
 	// third arg: the name of the array we're working on (so you can .length() etc)
 	const arrayArg = method.fn.params[2];
 	if (arrayArg !== undefined) {
 		const arrayArgNode = method.fn.paramNodes[1];
-		localConstants[arrayArg] = ConstantDefinition.quick(
+		localConstants.consts[arrayArg] = ConstantDefinition.quick(
 			debug.using(arrayArgNode),
 			arrayArg,
 			sourceArray,
