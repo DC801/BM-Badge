@@ -95,10 +95,16 @@ export const handleCapture = (debug: MathlangLocation): Capture | Capture[] => {
 	}
 	// swap out values of compile-time constants
 	if (grammarType === 'CONSTANT') {
-		const lookup =
-			debug.f.currFunction[0]?.[debug.node.text] || debug.f.constants[debug.node.text];
+		// if we're in a fn call, try the function definition first for the $_
+		const topFn = debug.f.currFunction[0];
+		const lookup = topFn?.consts[debug.node.text] || debug.f.constants[debug.node.text];
 		if (lookup === undefined) {
-			debug.quickError('undefined constant', `constant ${debug.node.text} is undefined`);
+			let useDebug = debug;
+			if (debug.f.currFunction[0]) {
+				// avoids "fn smuggling" (undefined constants error filename using the fn call filename, not fn definition filename)
+				useDebug = debug.f.currFunction[0].debug;
+			}
+			useDebug.quickError('undefined constant', `constant ${debug.node.text} is undefined`);
 		}
 		return lookup?.value !== undefined ? lookup?.value : debug.node.text;
 	}

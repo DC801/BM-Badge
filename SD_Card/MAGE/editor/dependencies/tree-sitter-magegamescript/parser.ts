@@ -209,18 +209,27 @@ export const parseProject = async (fileMap: FileMap, scenarioData: Record<string
 		if (warnCount) {
 			messages.push(ansi.yellow + `${warnCount} warning${plural(warnCount)}` + ansi.reset);
 		}
-		// console.log(`Issues found: ${messages.join(', ')}`);
+
+		const printedWarning: Set<string> = new Set();
 		p.warnings.forEach((message) => {
 			const str = ansi.yellow + printableMessage(p.fileMap, 'Warning', message) + ansi.reset;
-			printWarnings += '\n' + str;
-			// .replace(/\u001B\[\d+m/g, '');
-			// console.warn(str);
+			if (!printedWarning.has(str)) {
+				printWarnings += '\n' + str;
+				// .replace(/\u001B\[\d+m/g, '');
+				// console.warn(str);
+				printedWarning.add(str);
+			}
 		});
+
+		const printedErrors: Set<string> = new Set();
 		p.errors.forEach((message) => {
 			const str = ansi.red + printableMessage(p.fileMap, 'Error', message) + ansi.reset;
-			printErrors += '\n' + str;
-			// .replace(/\u001B\[\d+m/g, '');
-			// console.error(str);
+			if (!printedErrors.has(str)) {
+				printErrors += '\n' + str;
+				// .replace(/\u001B\[\d+m/g, '');
+				// console.error(str);
+				printedErrors.add(str);
+			}
 		});
 		p.mgsErrors = printErrors;
 		p.mgsWarnings = printWarnings;

@@ -17,7 +17,10 @@ type Constant = {
 	value: MGSPrimitive;
 	debug: MathlangLocation;
 };
-export type FunctionStackEntry = Record<string, ConstantDefinition>;
+export type FunctionStackEntry = {
+	consts: Record<string, ConstantDefinition>;
+	debug: MathlangLocation;
+};
 export type FileStateDialogSettings = {
 	default: DialogSettings;
 	entity: Record<string, DialogSettings>;

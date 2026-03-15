@@ -69,6 +69,7 @@ export const errorTests: Record<string, ErrorTest> = {
 		expectedWarnings: [],
 		expectedErrors: ['invalid fn arg'],
 	},
+	// too many fn args TODO (warn)
 	not_enough_fn_args: {
 		testText: `
 			fn _($a, $b, $c) {}
