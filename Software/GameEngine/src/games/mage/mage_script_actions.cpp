@@ -2725,6 +2725,21 @@ MageScriptArray* get_array_by_id(const uint8_t arrayId) {
 	}
 	return result;
 }
+MageScriptArray* make_or_reset_array_by_id(uint8_t arrayId) {
+	// WARNING! Calling scriptArrays.push_back later in this function invalidates all previous pointers to items inside MageGame->scriptArrays!
+	// If you need to allocate a new array, DO THAT FIRST, even before trying to find another array ID, because if you did,
+	// that previous array reference is corrupted now. get_array_by_id again AFTER this function is called, get valid reference.
+	if (MageScriptArray* foundArray = get_array_by_id(arrayId)) {
+		foundArray->values.clear();
+		return foundArray;
+	}
+	const MageScriptArray scriptArray = {
+		.arrayId = arrayId,
+		.values = std::vector<uint16_t>()
+	};
+	MageGame->scriptArrays.push_back(scriptArray);
+	return get_array_by_id(arrayId);
+}
 void array_new(uint8_t * args, MageScriptState * resumeStateStruct)
 {
 	typedef struct {
@@ -2737,15 +2752,7 @@ void array_new(uint8_t * args, MageScriptState * resumeStateStruct)
 		uint8_t paddingG;
 	} ActionArrayNew;
 	auto *argStruct = (ActionArrayNew*)args;
-	if (MageScriptArray* foundArray = get_array_by_id(argStruct->arrayId)) {
-		foundArray->values.clear();
-		return;
-	}
-	const MageScriptArray scriptArray = {
-		.arrayId = argStruct->arrayId,
-		.values = std::vector<uint16_t>()
-	};
-	MageGame->scriptArrays.push_back(scriptArray);
+	make_or_reset_array_by_id(argStruct->arrayId);
 }
 void array_delete(uint8_t * args, MageScriptState * resumeStateStruct)
 {
@@ -3207,6 +3214,39 @@ void array_push_left_from_variable(uint8_t * args, MageScriptState * resumeState
 		"array_push_left_from_variable: Invalid arrayId: " + std::to_string(argStruct->arrayId)
 	);
 }
+void array_slice(uint8_t * args, MageScriptState * resumeStateStruct)
+{
+	typedef struct {
+		uint8_t arraySource;
+		uint8_t arrayDestination;
+		int8_t index;
+		uint8_t paddingD;
+		uint8_t paddingE;
+		uint8_t paddingF;
+		uint8_t paddingG;
+	} ActionArraySlice;
+	auto *argStruct = (ActionArraySlice*)args;
+	const auto destinationArray = make_or_reset_array_by_id(argStruct->arrayDestination);
+	if (const MageScriptArray* sourceArray = get_array_by_id(argStruct->arraySource)) {
+		const auto sourceLength = sourceArray->values.size();
+		const auto wrappedIndex = wrap_negative_index(argStruct->index, &sourceArray->values);
+		for (size_t i = wrappedIndex; i < sourceLength; i++) {
+			const auto value = sourceArray->values[i];
+			destinationArray->values.push_back(value);
+		}
+		MageCommand->debugScriptsPrintln(
+			"array_slice: arraySource " + std::to_string(argStruct->arraySource) +
+			": arrayDestination " + std::to_string(argStruct->arrayDestination) +
+			" wrappedIndex " + std::to_string(wrappedIndex) +
+			" sourceLength " + std::to_string(sourceLength) +
+			" destinationArray->values.size() " + std::to_string(destinationArray->values.size())
+		);
+		return;
+	}
+	MageCommand->debugScriptsPrintln(
+		"array_slice: Invalid arraySource: " + std::to_string(argStruct->arraySource)
+	);
+}
 void array_pop_into_variable(uint8_t * args, MageScriptState * resumeStateStruct)
 {
 	typedef struct {
@@ -3400,7 +3440,7 @@ ActionFunctionPointer actionFunctions[MageScriptActionTypeId::NUM_ACTIONS] = {
 	&array_push_from_variable,
 	&array_push_left_from_value,
 	&array_push_left_from_variable,
-	NULL, //&array_slice,
+	&array_slice,
 	NULL, //&array_slice_by_variable,
 	NULL, //&array_slice_twice,
 	NULL, //&array_slice_twice_by_variable,

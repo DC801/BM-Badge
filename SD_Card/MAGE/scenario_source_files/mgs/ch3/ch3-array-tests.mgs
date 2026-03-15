@@ -505,29 +505,33 @@ array_unit_tests {
 	// delete array mapped;
 	// delete array arr;
 
-	// // SLICE NUMBER
-	// array arr = [1,2,3,4];
-	// array sliced = arr.slice(1);
-	// // SLICE NUMBER (length)
-	// print_compared_values(sliced.length(), 3);
-	// show serial_dialog {"SLICE NUMBER (length)"};
-	// // SLICE NUMBER [0]
-	// print_compared_values(sliced[0], 2);
-	// show serial_dialog {"SLICE NUMBER [0]"};
-	// delete array sliced;
-	// delete array arr;
+	// SLICE POSITIVE
+	array arr = [1,2,3,4];
+	print array arr;
+	array sliced = arr.slice(1);
+	print array sliced;
+	// SLICE POSITIVE (length)
+	print_compared_values(sliced.length(), 3);
+	show serial_dialog {"SLICE POSITIVE (length)"};
+	// SLICE POSITIVE [0]
+	print_compared_values(sliced[0], 2);
+	show serial_dialog {"SLICE POSITIVE [0]"};
+	delete array sliced;
+	delete array arr;
 
-	// // SLICE NUMBER NEGATIVE
-	// array arr = [1,2,3,4];
-	// array sliced = arr.slice(-1);
-	// // SLICE NUMBER NEGATIVE (length)
-	// print_compared_values(sliced.length, 1);
-	// show serial_dialog {"SLICE NUMBER (length)"};
-	// // SLICE NUMBER NEGATIVE [0]
-	// print_compared_values(sliced[0], 4);
-	// show serial_dialog {"SLICE NUMBER [0]"};
-	// delete array sliced;
-	// delete array arr;
+	// SLICE NEGATIVE
+	array arr = [1,2,3,4];
+	print array arr;
+	array sliced = arr.slice(-1);
+	print array sliced;
+	// SLICE NEGATIVE (length)
+	print_compared_values(sliced.length(), 1);
+	show serial_dialog {"SLICE NEGATIVE (length)"};
+	// SLICE NEGATIVE [0]
+	print_compared_values(sliced[0], 4);
+	show serial_dialog {"SLICE NEGATIVE [0]"};
+	delete array sliced;
+	delete array arr;
 
 	// // SLICE TWICE NUMBER
 	// array arr = [1,2,3,4];
