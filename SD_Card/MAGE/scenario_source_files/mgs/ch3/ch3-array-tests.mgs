@@ -475,35 +475,35 @@ array_unit_tests {
 	debug!(" ")
 	delete array arr;
 
-	// // MAP REFERENCE
-	// array arr = [1,2];
-	// array mapped = arr.map(tens);
-	// print array mapped;
-	// // MAP LAMBDA [0]
-	// print_compared_values(mapped[0], 10);
-	// show serial_dialog {"MAP REFERENCE [0]"};
-	// debug!(" ")
-	// // MAP LAMBDA [1]
-	// print_compared_values(mapped[1], 20);
-	// show serial_dialog {"MAP REFERENCE [1]"};
-	// debug!(" ")
-	// delete array mapped;
-	// delete array arr;
+	// MAP REFERENCE
+	array arr = [1,2];
+	array mapped = arr.map(tens);
+	print array mapped;
+	// MAP LAMBDA [0]
+	print_compared_values(mapped[0], 10);
+	show serial_dialog {"MAP REFERENCE [0]"};
+	debug!(" ")
+	// MAP LAMBDA [1]
+	print_compared_values(mapped[1], 20);
+	show serial_dialog {"MAP REFERENCE [1]"};
+	debug!(" ")
+	delete array mapped;
+	delete array arr;
 
-	// // MAP LAMBDA
-	// array arr = [1,2];
-	// array mapped = arr.map(($n) { return $n * 10; });
-	// print array mapped;
-	// // MAP LAMBDA [0]
-	// print_compared_values(mapped[0], 10);
-	// show serial_dialog {"MAP LAMBDA [0]"};
-	// debug!(" ")
-	// // MAP LAMBDA [1]
-	// print_compared_values(mapped[1], 20);
-	// show serial_dialog {"MAP LAMBDA [1]"};
-	// debug!(" ")
-	// delete array mapped;
-	// delete array arr;
+	// MAP LAMBDA
+	array arr = [1,2];
+	array mapped = arr.map(($n) { return $n * 10; });
+	print array mapped;
+	// MAP LAMBDA [0]
+	print_compared_values(mapped[0], 10);
+	show serial_dialog {"MAP LAMBDA [0]"};
+	debug!(" ")
+	// MAP LAMBDA [1]
+	print_compared_values(mapped[1], 20);
+	show serial_dialog {"MAP LAMBDA [1]"};
+	debug!(" ")
+	delete array mapped;
+	delete array arr;
 
 	// SLICE POSITIVE
 	array arr = [1,2,3,4];

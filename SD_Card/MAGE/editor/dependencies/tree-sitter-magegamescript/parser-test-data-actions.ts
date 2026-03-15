@@ -8,6 +8,16 @@ export type ActionTest = {
 
 export const actionTests: Record<string, ActionTest> = {
 	// TODO: const value lookup fallthrough in fn def/call
+	const_value_lookup_fallthrough_with_fns: {
+		pre: [`$const = 0;`, `fn fallthrough ($arg) {`, `   return $const + $arg;`, `}`],
+		input: [`fallthrough(100);`],
+		expected: [
+			`__TEMP_0 = 0;`,
+			`__TEMP_0 += 100;`,
+			`__RETURN_ = __TEMP_0;`,
+			`end_of_script_***:`,
+		],
+	},
 	keyword_as_variable_name: {
 		input: [`"if" = 10;`],
 		expected: [`"if" = 10;`],
@@ -394,16 +404,19 @@ export const actionTests: Record<string, ActionTest> = {
 			// `"__TEMP_ARRAY_1".rename("a")`,
 			`array a = __TEMP_ARRAY_1.slice();`,
 			`delete array __TEMP_ARRAY_1;`,
+
 			`array __TEMP_ARRAY_1 = [];`,
 			`array __TEMP_ARRAY_1 = d.slice();`,
 			// `"__TEMP_ARRAY_1".rename("c")`,
 			`array c = __TEMP_ARRAY_1.slice();`,
 			`delete array __TEMP_ARRAY_1;`,
+
 			`array __TEMP_ARRAY_1 = [];`,
 			`array __TEMP_ARRAY_1 = f.slice(1);`,
 			// `"__TEMP_ARRAY_1".rename("e")`,
 			`array e = __TEMP_ARRAY_1.slice();`,
 			`delete array __TEMP_ARRAY_1;`,
+
 			`array __TEMP_ARRAY_1 = [];`,
 			`array __TEMP_ARRAY_1 = h.slice(2, 3);`,
 			// `"__TEMP_ARRAY_1".rename("g")`,
