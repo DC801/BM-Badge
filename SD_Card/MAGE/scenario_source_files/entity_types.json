@@ -5331,5 +5331,77 @@
 				}
 			]
 		}
+	},
+	"NULL": {
+		"type": "NULL",
+		"tileset": "entity-null.json",
+		"animations": {
+			"idle": [
+				{
+					"tileid": 0,
+					"flip_x": false,
+					"flip_y": false
+				},
+				{
+					"tileid": 0,
+					"flip_x": false,
+					"flip_y": false
+				},
+				{
+					"tileid": 0,
+					"flip_x": false,
+					"flip_y": false
+				},
+				{
+					"tileid": 0,
+					"flip_x": false,
+					"flip_y": false
+				}
+			],
+			"walk": [
+				{
+					"tileid": 0,
+					"flip_x": false,
+					"flip_y": false
+				},
+				{
+					"tileid": 0,
+					"flip_x": false,
+					"flip_y": false
+				},
+				{
+					"tileid": 0,
+					"flip_x": false,
+					"flip_y": false
+				},
+				{
+					"tileid": 0,
+					"flip_x": false,
+					"flip_y": false
+				}
+			],
+			"action": [
+				{
+					"tileid": 0,
+					"flip_x": false,
+					"flip_y": false
+				},
+				{
+					"tileid": 0,
+					"flip_x": false,
+					"flip_y": false
+				},
+				{
+					"tileid": 0,
+					"flip_x": false,
+					"flip_y": false
+				},
+				{
+					"tileid": 0,
+					"flip_x": false,
+					"flip_y": false
+				}
+			]
+		}
 	}
 }

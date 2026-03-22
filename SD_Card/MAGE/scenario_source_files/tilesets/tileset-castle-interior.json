@@ -289,7 +289,6 @@
          "objectgroup":
             {
              "draworder":"index",
-             "id":2,
              "name":"",
              "objects":[
                     {
@@ -449,7 +448,6 @@
          "objectgroup":
             {
              "draworder":"index",
-             "id":2,
              "name":"",
              "objects":[
                     {
@@ -5843,31 +5841,6 @@
                      "visible":true,
                      "width":12,
                      "x":20,
-                     "y":0
-                    }],
-             "opacity":1,
-             "type":"objectgroup",
-             "visible":true,
-             "x":0,
-             "y":0
-            }
-        }, 
-        {
-         "id":305,
-         "objectgroup":
-            {
-             "draworder":"index",
-             "name":"",
-             "objects":[
-                    {
-                     "class":"",
-                     "height":32,
-                     "id":1,
-                     "name":"",
-                     "rotation":0,
-                     "visible":true,
-                     "width":32,
-                     "x":0,
                      "y":0
                     }],
              "opacity":1,
