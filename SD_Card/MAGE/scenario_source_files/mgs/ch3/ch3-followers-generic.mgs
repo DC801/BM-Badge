@@ -1,5 +1,5 @@
-$follow_delay = 2;
-$follow_distance = 5;
+// $follow_delay = 2;
+// $follow_distance = 5;
 
 // make array that interpolates between x1 and x2 (or y1 and y2)
 fn init_queue ($queue_name, $start, $end, $step_count) {
@@ -25,6 +25,7 @@ fn offset_e_x_for_read_using_v ($e, $v) {
 	} else if (
 		entity $e type == eye_faerie
 		|| entity $e type == emacs
+		|| entity $e type == goose
 	) {
 		v -= 8;
 	}
@@ -37,11 +38,28 @@ fn offset_e_x_for_write_using_v ($e, $v) {
 	} else if (
 		entity $e type == eye_faerie
 		|| entity $e type == emacs
+		|| entity $e type == goose
 	) {
 		v += 8;
 	}
 	return v;
 }
+fn offset_e_y_for_read_using_v ($e, $v) {
+	v = $v +0;
+	// make sure the mage is always drawn on top
+	if (entity $e type != mage) { // TODO: check action for entity is_player?
+		v -= 1;
+	}
+	return v;
+}
+fn offset_e_y_for_write_using_v ($e, $v) {
+	v = $v +0;
+	if (entity $e type != mage) {
+		v += 1;
+	}
+	return v;
+}
+
 
 // adjust value using the entity's offset and the same entity's current position
 fn offset_e_x_for_read ($e) {
@@ -50,21 +68,25 @@ fn offset_e_x_for_read ($e) {
 fn offset_e_x_for_write ($e) {
 	return offset_e_x_for_write_using_v($e, entity $e x);
 }
+fn offset_e_y_for_read ($e) {
+	return offset_e_y_for_read_using_v($e, entity $e y);
+}
+fn offset_e_y_for_write ($e) {
+	return offset_e_y_for_write_using_v($e, entity $e y);
+}
+
 
 // take queued position and apply to the given entity
 fn load_entity_pos ($queue_x, $queue_y, $e) {
 	v = $queue_x.pop_left();
 	entity $e x = offset_e_x_for_read_using_v($e, v);
-	entity $e y = $queue_y.pop_left();
-	// make sure the mage is always drawn on top
-	if (entity $e type != mage) {
-		entity $e y -= 1;
-	}
+	v = $queue_y.pop_left();
+	entity $e y = offset_e_y_for_read_using_v($e, v);
 }
 // take entity position and save in the queue
 fn save_entity_pos ($queue_x, $queue_y, $e) {
 	$queue_x.push(offset_e_x_for_write($e));
-	$queue_y.push(entity $e y);
+	$queue_y.push(offset_e_y_for_write($e));
 }
 
 // create an entity position queue (one for x, one for y) for a target follower and followee
@@ -77,8 +99,8 @@ fn init_double_queue ($x, $y, $fwer, $fwee, $step_count) {
 	);
 	init_queue(
 		$y,
-		entity $fwer y,
-		entity $fwee y,
+		offset_e_y_for_write($fwer), 
+		offset_e_y_for_write($fwee),
 		$step_count
 	);
 }
@@ -87,7 +109,7 @@ fn init_double_queue ($x, $y, $fwer, $fwee, $step_count) {
 // Follower and followee names should be the entity "given name" (on Tiled)
 // Because this isn't moving an entity along a path (it's setting the x/y manually)
 // you need to change the animation to walk/idle manually
-fn follow_entity ($fwer, $fwee, $qx, $qy, $should_follow, $am_following, $countdown) {
+fn follow_entity ($fwer, $fwee, $qx, $qy, $should_follow, $am_following, $countdown, $follow_delay, $follow_distance) {
 	// followee is not currently walking
 	if (entity $fwee current_animation != 1) {
 		if ($should_follow) {

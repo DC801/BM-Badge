@@ -415,6 +415,29 @@
          "objects":[
                 {
                  "class":"",
+                 "gid":706,
+                 "height":32,
+                 "id":48,
+                 "name":"Bub",
+                 "properties":[
+                        {
+                         "name":"is_player",
+                         "type":"bool",
+                         "value":true
+                        }, 
+                        {
+                         "name":"on_tick",
+                         "type":"string",
+                         "value":"check_if_player_is_goat_high_demo_map"
+                        }],
+                 "rotation":0,
+                 "visible":true,
+                 "width":32,
+                 "x":543,
+                 "y":435
+                }, 
+                {
+                 "class":"",
                  "gid":260,
                  "height":48,
                  "id":6,
@@ -423,7 +446,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"show_dialog_goose_demo_map"
+                         "value":"goose_train"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -791,29 +814,6 @@
                 }, 
                 {
                  "class":"",
-                 "gid":706,
-                 "height":32,
-                 "id":48,
-                 "name":"Bub",
-                 "properties":[
-                        {
-                         "name":"is_player",
-                         "type":"bool",
-                         "value":true
-                        }, 
-                        {
-                         "name":"on_tick",
-                         "type":"string",
-                         "value":"check_if_player_is_goat_high_demo_map"
-                        }],
-                 "rotation":0,
-                 "visible":true,
-                 "width":32,
-                 "x":543,
-                 "y":435
-                }, 
-                {
-                 "class":"",
                  "gid":25,
                  "height":32,
                  "id":53,
@@ -948,6 +948,52 @@
                  "width":48,
                  "x":563,
                  "y":390
+                }, 
+                {
+                 "class":"",
+                 "gid":260,
+                 "height":48,
+                 "id":89,
+                 "name":"Goose ",
+                 "properties":[
+                        {
+                         "name":"animation_frame",
+                         "type":"int",
+                         "value":3
+                        }, 
+                        {
+                         "name":"on_interact",
+                         "type":"string",
+                         "value":""
+                        }],
+                 "rotation":0,
+                 "visible":true,
+                 "width":48,
+                 "x":534,
+                 "y":704
+                }, 
+                {
+                 "class":"",
+                 "gid":260,
+                 "height":48,
+                 "id":90,
+                 "name":"Goose  ",
+                 "properties":[
+                        {
+                         "name":"animation_frame",
+                         "type":"int",
+                         "value":7
+                        }, 
+                        {
+                         "name":"on_interact",
+                         "type":"string",
+                         "value":""
+                        }],
+                 "rotation":0,
+                 "visible":true,
+                 "width":48,
+                 "x":536,
+                 "y":742
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -1118,7 +1164,7 @@
          "y":0
         }],
  "nextlayerid":8,
- "nextobjectid":89,
+ "nextobjectid":91,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.9.2",

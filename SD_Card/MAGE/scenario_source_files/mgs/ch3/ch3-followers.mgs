@@ -14,7 +14,9 @@ fn start_timmy_following ($followee) {
 		qy_ffollower,
 		should_ffollower,
 		am_ffollower,
-		ffollower_countdown
+		ffollower_countdown,
+		2,
+		5,
 	);
 }
 init_timmy_following {
@@ -59,7 +61,9 @@ start_follow_player {
 		qy_fplayer,
 		should_fplayer,
 		am_fplayer,
-		fplayer_countdown
+		fplayer_countdown,
+		2,
+		5,
 	);
 }
 
@@ -126,4 +130,67 @@ interact_demo_emacs {
 		face_player()
 		show dialog { SELF "'Sup?" };
 	}
+}
+
+// GOOSE TRAIN EXPERIMENT
+
+goose_train {
+	show dialog {
+		Goose "HONK! (Starting the goose train...)"
+	};
+
+	[entity Nano, entity Vim, entity Emacs] on_tick = face_player;
+	entity Nano on_interact = {
+		show dialog { SELF "Goose times."};
+	};
+	entity Vim on_interact = {
+		show dialog { name "" "(Vim stares at you, inscrutable as always.)"};
+	};
+	entity Emacs on_interact = {
+		show dialog { SELF "Don't look at me. You chose to start the goose train."};
+	};
+	entity Nano current_animation = 0;
+	entity Vim current_animation = 0;
+	entity Emacs current_animation = 0;
+
+	entity Goose on_tick = {
+		follow_entity(
+			"Goose",
+			"%PLAYER%",
+			qx_goose1,
+			qy_goose1,
+			should_goose1,
+			am_goose1,
+			goose1_countdown,
+			2,
+			5,
+		);
+	};
+	entity "Goose " on_tick = {
+		follow_entity(
+			"Goose ",
+			"%PLAYER%",
+			qx_goose2,
+			qy_goose2,
+			should_goose2,
+			am_goose2,
+			goose2_countdown,
+			4,
+			10,
+		);
+	};
+	entity "Goose  " on_tick = {
+		follow_entity(
+			"Goose  ",
+			"%PLAYER%",
+			qx_goose3,
+			qy_goose3,
+			should_goose3,
+			am_goose3,
+			goose3_countdown,
+			6,
+			15,
+		);
+	};
+	entity Goose on_interact = { show dialog { SELF "HONK!" }; };
 }
