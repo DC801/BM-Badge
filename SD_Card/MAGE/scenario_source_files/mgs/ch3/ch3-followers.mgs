@@ -192,5 +192,7 @@ goose_train {
 			15,
 		);
 	};
-	entity Goose on_interact = { show dialog { SELF "HONK!" }; };
+	entity Goose on_interact = say_honk { show dialog { SELF "HONK!" }; };
+	entity "Goose " on_interact = say_honk;
+	entity "Goose  " on_interact = say_honk;
 }

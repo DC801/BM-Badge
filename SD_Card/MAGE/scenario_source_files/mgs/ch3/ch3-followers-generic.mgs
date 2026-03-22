@@ -26,6 +26,7 @@ fn offset_e_x_for_read_using_v ($e, $v) {
 		entity $e type == eye_faerie
 		|| entity $e type == emacs
 		|| entity $e type == goose
+		|| entity $e type == "goose-bow"
 	) {
 		v -= 8;
 	}
@@ -39,6 +40,7 @@ fn offset_e_x_for_write_using_v ($e, $v) {
 		entity $e type == eye_faerie
 		|| entity $e type == emacs
 		|| entity $e type == goose
+		|| entity $e type == "goose-bow"
 	) {
 		v += 8;
 	}
@@ -160,5 +162,7 @@ fn follow_entity ($fwer, $fwee, $qx, $qy, $should_follow, $am_following, $countd
 			}
 			// if position is the same, don't turn at all (use current direction)
 		}
+	} else {
+		face_player();
 	}
 }
