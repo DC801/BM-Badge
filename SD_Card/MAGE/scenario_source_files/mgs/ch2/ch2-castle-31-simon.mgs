@@ -153,11 +153,7 @@ simon_game_start {
 		simon.push(RNG!(=3));
 	}
 	if (ch2_simon_high) { // or 2, 3, 4, 5
-		for (i=0; i < simon.length(); i+=1) {
-			tempvar = simon[i];
-			tempvar += 2;
-			simon[i] = tempvar;
-		}
+		array simon = simon.map(($n) { return $n + 2; });
 	}
 	simon_round = 1;
 	lights_control = on;

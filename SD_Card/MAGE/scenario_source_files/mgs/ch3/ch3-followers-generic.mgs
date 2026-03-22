@@ -1,7 +1,7 @@
 $follow_delay = 2;
 $follow_distance = 5;
 
-// make array that interpolates between x1 and x2 (or y1 and y2) 
+// make array that interpolates between x1 and x2 (or y1 and y2)
 fn init_queue ($queue_name, $start, $end, $step_count) {
 	diff = get_diff($end, $start);
 	array $queue_name = [ $start ];
@@ -17,6 +17,7 @@ fn init_queue ($queue_name, $start, $end, $step_count) {
 	// $queue_name.push($end);
 }
 
+// adjust value using the entity's offset but an arbitrary position value
 fn offset_e_x_for_read_using_v ($e, $v) {
 	v = $v +0;
 	if (entity $e type == nano) {
@@ -42,6 +43,7 @@ fn offset_e_x_for_write_using_v ($e, $v) {
 	return v;
 }
 
+// adjust value using the entity's offset and the same entity's current position
 fn offset_e_x_for_read ($e) {
 	return offset_e_x_for_read_using_v($e, entity $e x);
 }
@@ -49,34 +51,44 @@ fn offset_e_x_for_write ($e) {
 	return offset_e_x_for_write_using_v($e, entity $e x);
 }
 
+// take queued position and apply to the given entity
 fn load_entity_pos ($queue_x, $queue_y, $e) {
 	v = $queue_x.pop_left();
 	entity $e x = offset_e_x_for_read_using_v($e, v);
 	entity $e y = $queue_y.pop_left();
+	// make sure the mage is always drawn on top
 	if (entity $e type != mage) {
 		entity $e y -= 1;
 	}
 }
+// take entity position and save in the queue
 fn save_entity_pos ($queue_x, $queue_y, $e) {
 	$queue_x.push(offset_e_x_for_write($e));
 	$queue_y.push(entity $e y);
 }
-fn init_double_queue ($x, $y, $fwer, $fwee, $pad) {
+
+// create an entity position queue (one for x, one for y) for a target follower and followee
+fn init_double_queue ($x, $y, $fwer, $fwee, $step_count) {
 	init_queue(
 		$x,
 		offset_e_x_for_write($fwer), 
 		offset_e_x_for_write($fwee),
-		$pad
+		$step_count
 	);
 	init_queue(
 		$y,
 		entity $fwer y,
 		entity $fwee y,
-		$pad
+		$step_count
 	);
 }
 
+// Variable names must be unique for each follower/followee pair
+// Follower and followee names should be the entity "given name" (on Tiled)
+// Because this isn't moving an entity along a path (it's setting the x/y manually)
+// you need to change the animation to walk/idle manually
 fn follow_entity ($fwer, $fwee, $qx, $qy, $should_follow, $am_following, $countdown) {
+	// followee is not currently walking
 	if (entity $fwee current_animation != 1) {
 		if ($should_follow) {
 			$should_follow = false;
@@ -87,6 +99,7 @@ fn follow_entity ($fwer, $fwee, $qx, $qy, $should_follow, $am_following, $countd
 			$am_following = false;
 			entity $fwer current_animation = 0;
 		}
+	// followee is currently walking
 	} else {
 		if (!$should_follow) {
 			$should_follow = true;
@@ -101,7 +114,7 @@ fn follow_entity ($fwer, $fwee, $qx, $qy, $should_follow, $am_following, $countd
 		save_entity_pos($qx, $qy, $fwee);
 	}
 
-	// MOVE FOLLOWER
+	// move follower
 	if ($am_following) {
 		my_old_x = entity $fwer x;
 		my_old_y = entity $fwer y;
@@ -110,7 +123,7 @@ fn follow_entity ($fwer, $fwee, $qx, $qy, $should_follow, $am_following, $countd
 		// get the absolute value of the delta
 		my_diff_x = get_diff(entity $fwer x, my_old_x);
 		my_diff_y = get_diff(entity $fwer y, my_old_y);
-		// turn the entity NSEW - check which axis changed more
+		// turn the entity NSEW manually (based on which axis changed more)
 		if (my_diff_x > my_diff_y) {
 			if (entity $fwer x > my_old_x) {
 				entity $fwer direction = east;
