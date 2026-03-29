@@ -3247,6 +3247,115 @@ void array_slice(uint8_t * args, MageScriptState * resumeStateStruct)
 		"array_slice: Invalid arraySource: " + std::to_string(argStruct->arraySource)
 	);
 }
+void array_slice_by_variable(uint8_t * args, MageScriptState * resumeStateStruct)
+{
+	typedef struct {
+		uint8_t arraySource;
+		uint8_t arrayDestination;
+		uint8_t variableStart;
+		uint8_t paddingD;
+		uint8_t paddingE;
+		uint8_t paddingF;
+		uint8_t paddingG;
+	} ActionArraySlice;
+	auto *argStruct = (ActionArraySlice*)args;
+	uint16_t variableValue = MageGame->currentSave.scriptVariables[argStruct->variableStart];
+	const auto destinationArray = make_or_reset_array_by_id(argStruct->arrayDestination);
+	if (const MageScriptArray* sourceArray = get_array_by_id(argStruct->arraySource)) {
+		const auto sourceLength = sourceArray->values.size();
+		const auto wrappedIndex = wrap_negative_index(variableValue % 127, &sourceArray->values);
+		for (size_t i = wrappedIndex; i < sourceLength; i++) {
+			const auto value = sourceArray->values[i];
+			destinationArray->values.push_back(value);
+		}
+		MageCommand->debugScriptsPrintln(
+			"array_slice_by_variable: arraySource " + std::to_string(argStruct->arraySource) +
+			": arrayDestination " + std::to_string(argStruct->arrayDestination) +
+			" variableValue " + std::to_string(variableValue) +
+			" wrappedIndex " + std::to_string(wrappedIndex) +
+			" sourceLength " + std::to_string(sourceLength) +
+			" destinationArray->values.size() " + std::to_string(destinationArray->values.size())
+		);
+		return;
+	}
+	MageCommand->debugScriptsPrintln(
+		"array_slice_by_variable: Invalid arraySource: " + std::to_string(argStruct->arraySource)
+	);
+}
+void array_slice_twice(uint8_t * args, MageScriptState * resumeStateStruct)
+{
+	typedef struct {
+		uint8_t arraySource;
+		uint8_t arrayDestination;
+		int8_t indexStart;
+		int8_t indexEnd;
+		uint8_t paddingE;
+		uint8_t paddingF;
+		uint8_t paddingG;
+	} ActionArraySliceTwice;
+	auto *argStruct = (ActionArraySliceTwice*)args;
+	const auto destinationArray = make_or_reset_array_by_id(argStruct->arrayDestination);
+	if (const MageScriptArray* sourceArray = get_array_by_id(argStruct->arraySource)) {
+		const auto startIndex = wrap_negative_index(argStruct->indexStart, &sourceArray->values);
+		const auto endIndex = wrap_negative_index(argStruct->indexEnd, &sourceArray->values);
+		for (size_t i = startIndex; i < endIndex; i++) {
+			const auto value = sourceArray->values[i];
+			destinationArray->values.push_back(value);
+		}
+		MageCommand->debugScriptsPrintln(
+			"array_slice_twice: arraySource " + std::to_string(argStruct->arraySource) +
+			": arrayDestination " + std::to_string(argStruct->arrayDestination) +
+			" wrappedIndex " + std::to_string(startIndex) +
+			" endIndex " + std::to_string(endIndex) +
+			" destinationArray->values.size() " + std::to_string(destinationArray->values.size())
+		);
+		return;
+	}
+	MageCommand->debugScriptsPrintln(
+		"array_slice_twice: Invalid arraySource: " + std::to_string(argStruct->arraySource)
+	);
+}
+void array_slice_twice_by_variable(uint8_t * args, MageScriptState * resumeStateStruct)
+{
+	/*
+	{propertyName: 'array_source', size: 1},
+	{propertyName: 'array_destination', size: 1},
+	{propertyName: 'variable_start', size: 1},
+	{propertyName: 'variable_end', size: 1},
+	*/
+	typedef struct {
+		uint8_t arraySource;
+		uint8_t arrayDestination;
+		uint8_t variableStart;
+		uint8_t variableEnd;
+		uint8_t paddingE;
+		uint8_t paddingF;
+		uint8_t paddingG;
+	} ActionArraySliceTwiceByVariable;
+	auto *argStruct = (ActionArraySliceTwiceByVariable*)args;
+	const auto destinationArray = make_or_reset_array_by_id(argStruct->arrayDestination);
+	if (const MageScriptArray* sourceArray = get_array_by_id(argStruct->arraySource)) {
+		const uint16_t indexStart = MageGame->currentSave.scriptVariables[argStruct->variableStart];
+		const uint16_t indexEnd = MageGame->currentSave.scriptVariables[argStruct->variableEnd];
+		const auto startIndex = wrap_negative_index(indexStart % 127, &sourceArray->values);
+		const auto endIndex = wrap_negative_index(indexEnd % 127, &sourceArray->values);
+		for (size_t i = startIndex; i < endIndex; i++) {
+			const auto value = sourceArray->values[i];
+			destinationArray->values.push_back(value);
+		}
+		MageCommand->debugScriptsPrintln(
+			"array_slice_twice: arraySource " + std::to_string(argStruct->arraySource) +
+			": arrayDestination " + std::to_string(argStruct->arrayDestination) +
+			" wrappedIndex " + std::to_string(startIndex) +
+			" endIndex " + std::to_string(endIndex) +
+			" destinationArray->values.size() " + std::to_string(destinationArray->values.size())
+		);
+		return;
+	}
+	MageCommand->debugScriptsPrintln(
+		"array_slice_twice: Invalid arraySource: " + std::to_string(argStruct->arraySource)
+	);
+}
 void array_pop_into_variable(uint8_t * args, MageScriptState * resumeStateStruct)
 {
 	typedef struct {
@@ -3441,9 +3550,9 @@ ActionFunctionPointer actionFunctions[MageScriptActionTypeId::NUM_ACTIONS] = {
 	&array_push_left_from_value,
 	&array_push_left_from_variable,
 	&array_slice,
-	NULL, //&array_slice_by_variable,
-	NULL, //&array_slice_twice,
-	NULL, //&array_slice_twice_by_variable,
+	&array_slice_by_variable,
+	&array_slice_twice,
+	&array_slice_twice_by_variable,
 	&array_pop_into_variable,
 	&array_pop_left_into_variable,
 };

@@ -491,9 +491,9 @@ var actionFieldsMap = {
 		{propertyName: 'index_start', size: 1, dataViewMethodName: 'setInt8'},
 	],
 	ARRAY_SLICE_BY_VARIABLE: [
-		{propertyName: 'variable_start', size: 2},
 		{propertyName: 'array_source', size: 1},
 		{propertyName: 'array_destination', size: 1},
+		{propertyName: 'variable_start', size: 1},
 	],
 	ARRAY_SLICE_TWICE: [
 		{propertyName: 'array_source', size: 1},
@@ -502,10 +502,10 @@ var actionFieldsMap = {
 		{propertyName: 'index_end', size: 1, dataViewMethodName: 'setInt8'},
 	],
 	ARRAY_SLICE_TWICE_BY_VARIABLE: [
-		{propertyName: 'variable_start', size: 2},
-		{propertyName: 'variable_end', size: 2},
 		{propertyName: 'array_source', size: 1},
 		{propertyName: 'array_destination', size: 1},
+		{propertyName: 'variable_start', size: 1},
+		{propertyName: 'variable_end', size: 1},
 	],
 	ARRAY_POP_INTO_VARIABLE: [
 		{propertyName: 'array_name', size: 1},

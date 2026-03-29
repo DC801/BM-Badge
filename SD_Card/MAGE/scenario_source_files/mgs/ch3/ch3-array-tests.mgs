@@ -533,41 +533,43 @@ array_unit_tests {
 	delete array sliced;
 	delete array arr;
 
-	// // SLICE TWICE NUMBER
-	// array arr = [1,2,3,4];
-	// array sliced = arr.slice(1, 3);
-	// // SLICE TWICE NUMBER (length)
-	// print_compared_values(sliced.length, 2);
-	// show serial_dialog {"SLICE TWICE NUMBER (length)"};
-	// // SLICE TWICE NUMBER [last]
-	// sliced.reverse();
-	// print_compared_values(sliced[0], 3);
-	// show serial_dialog {"SLICE TWICE NUMBER [last]"};
-	// delete array sliced;
-	// delete array arr;
+	// SLICE TWICE NUMBER
+	array arr = [1,2,3,4];
+	array sliced = arr.slice(1, 3);
+	// SLICE TWICE NUMBER (length)
+	print_compared_values(sliced.length(), 2);
+	show serial_dialog {"SLICE TWICE NUMBER (length)"};
+	// SLICE TWICE NUMBER [last]
+	print_compared_values(sliced[0], 2);
+	show serial_dialog {"SLICE TWICE NUMBER [0]"};
+	print_compared_values(sliced[1], 3);
+	show serial_dialog {"SLICE TWICE NUMBER [1]"};
+	delete array sliced;
+	delete array arr;
 
-	// // SLICE VARIABLE
-	// array arr = [1,2,3,4];
-	// array sliced = arr.slice(one);
-	// // SLICE VARIABLE (length)
-	// print_compared_values(sliced.length, 3);
-	// show serial_dialog {"SLICE VARIABLE (length)"};
-	// // SLICE VARIABLE [0]
-	// print_compared_values(sliced[0], 2);
-	// show serial_dialog {"SLICE VARIABLE [0]"};
-	// delete array sliced;
-	// delete array arr;
+	// SLICE VARIABLE
+	array arr = [1,2,3,4];
+	array sliced = arr.slice(one);
+	// SLICE VARIABLE (length)
+	print_compared_values(sliced.length(), 3);
+	show serial_dialog {"SLICE VARIABLE (length)"};
+	// SLICE VARIABLE [0]
+	print_compared_values(sliced[0], 2);
+	show serial_dialog {"SLICE VARIABLE [0]"};
+	delete array sliced;
+	delete array arr;
 
-	// // SLICE TWICE VARIABLE
-	// array arr = [1,2,3,4];
-	// array sliced = arr.slice(one, three);
-	// // SLICE TWICE VARIABLE (length)
-	// print_compared_values(sliced.length, 2);
-	// show serial_dialog {"SLICE TWICE VARIABLE (length)"};
-	// // SLICE TWICE VARIABLE [last]
-	// sliced.reverse();
-	// print_compared_values(sliced[0], 3);
-	// show serial_dialog {"SLICE TWICE VARIABLE [last]"};
-	// delete array sliced;
-	// delete array arr;
+	// SLICE TWICE VARIABLE
+	array arr = [1,2,3,4];
+	array sliced = arr.slice(one, three);
+	// SLICE TWICE VARIABLE (length)
+	print_compared_values(sliced.length(), 2);
+	show serial_dialog {"SLICE TWICE VARIABLE (length)"};
+	// SLICE TWICE VARIABLE [last]
+	print_compared_values(sliced[0], 2);
+	show serial_dialog {"SLICE TWICE VARIABLE [0]"};
+	print_compared_values(sliced[1], 3);
+	show serial_dialog {"SLICE TWICE VARIABLE [1]"};
+	delete array sliced;
+	delete array arr;
 }
