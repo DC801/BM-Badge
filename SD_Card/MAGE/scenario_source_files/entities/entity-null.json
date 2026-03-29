@@ -6,7 +6,7 @@
  "name":"entity-null",
  "spacing":0,
  "tilecount":2,
- "tiledversion":"1.4.3",
+ "tiledversion":"1.9.2",
  "tileheight":32,
  "tiles":[
         {
@@ -19,10 +19,10 @@
                  "duration":1000,
                  "tileid":0
                 }],
-         "id":0,
-         "type":"null"
+         "class":"NULL",
+         "id":0
         }],
  "tilewidth":32,
  "type":"tileset",
- "version":1.4
+ "version":"1.9"
 }

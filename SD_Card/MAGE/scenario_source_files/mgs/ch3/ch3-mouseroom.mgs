@@ -1,18 +1,5 @@
 include "header.mgs";
 
-/* ---------- LOOK SCRIPTS ---------- */
-
-// to trigger with hover
-
-// look_ch2_lambda_crt
-// look_ch2_lambda_books
-// look_ch2_lambda_ration
-// look_ch2_lambda_poster
-// look_ch2_lambda_drawer
-// look_ch2_lambda_computer
-// look_ch2_lambda_box
-
-
 /* ---------- ON_TICK ---------- */
 
 on_tick_ch3_mouseroom {
@@ -23,39 +10,82 @@ capture_entity_position ($e, $x, $y, $dir) {
 	$dir = capture_entity_direction($e);
 	$x = entity $e x;
 	$y = entity $e y;
-	log_x = $x *1;
-	log_y = $y *1;
-	// debug!("Capturing $log_x$, $log_y$")
+	// log_x = $x *1;
+	// log_y = $y *1;
+	// log_dir = $dir;
+	// debug!("Capturing $log_x$, $log_y$ ($log_dir$)")
 }
 
 restore_entity_position ($e, $x, $y, $dir) {
 	restore_entity_direction($e, $dir);
 	entity $e x = $x;
 	entity $e y = $y;
-	log_x = $x *1;
-	log_y = $y *1;
-	// debug!("Restoring $log_x$, $log_y$")
+	// log_x = $x *1;
+	// log_y = $y *1;
+	// log_dir = $dir;
+	// debug!("Restoring $log_x$, $log_y$ ($log_dir$)")
 }
+
+$arrow = 0;
+$eye = 3;
+
+// On my main dev box, if this is between 50-80ms, everything behaves correctly.
+// Below 50ms the teleportations seem to fall victim to 1+ race conditions, and the entities swap completely incorrectly
+// Above 80ms there appears to be a blankgap during the teleportations.
+// Actual solution is what?
+$wait = 50ms;
 
 on_tick_ch3_mouseroom_walk {
 	if (button PAGE pressed) {
 		player_control = off;
 		show serial_dialog {"\nCursor mode!"};
-		player type = cursor;
-		entity cursor type = mage;
 
-		// show serial_dialog {"Player:"};
-		capture_entity_position("%PLAYER%", player_x, player_y, player_dir);
-		// show serial_dialog {"Cursor:"};
-		capture_entity_position(cursor, cursor_x, cursor_y, cursor_dir);
-		// show serial_dialog {"Player:"};
-		restore_entity_position("%PLAYER%", cursor_x, cursor_y, player_dir);
-		// show serial_dialog {"Cursor:"};
-		restore_entity_position(cursor, player_x, player_y, player_dir);
+		// debug!("Make player look invisible")
+		player type = NULL;
 
-		print_x = player x;
-		print_y = player y;
-		// show serial_dialog {"PLAYER POS: $print_x$, $print_y$"};
+		// debug!("Move NULL to player")
+		entity NULL position = player position;
+
+		wait $wait;
+
+		// debug!("Move player to cursor")
+		player position = entity cursor position;
+
+		// debug!("Make NULL watch cursor")
+		entity NULL on_tick = {
+			entity NULL direction = entity cursor;
+		};
+
+		// debug!("Make NULL look like mage")
+		entity NULL type = mage;
+
+		// debug!("Make cursor follow player")
+		entity cursor on_tick = {
+			entity cursor position = player position;
+			if (entity cursor intersects geometry NW) {
+				entity cursor current_animation = $eye;
+				if (button RJOY_RIGHT pressed) {
+					show dialog { name "" "These sky blue tiles can brighten up a bathroom or kitchen for a vintage, 50s look." };
+				}
+			} else if (entity cursor intersects geometry SW) {
+				entity cursor current_animation = $eye;
+				if (button RJOY_RIGHT pressed) {
+					show dialog { name "" alignment TL "Bare concrete may be suitable for the unfinished basement or laundry room if you want to save money." };
+				}
+			} else if (entity cursor intersects geometry NE) {
+				entity cursor current_animation = $eye;
+				if (button RJOY_RIGHT pressed) {
+					show dialog { name "" "A rarer offering: crimson shag carpet for a lush, luxorious look." };
+				}
+			} else if (entity cursor intersects geometry SE) {
+				entity cursor current_animation = $eye;
+				if (button RJOY_RIGHT pressed) {
+					show dialog { name "" alignment TL "Can't go wrong with faux oak vinyl flooring. It's like real hardwood but easier to maintain." };
+				}
+			} else {
+				entity cursor current_animation = $arrow;
+			}
+		};
 	
 		player_control = on;
 		self on_tick = on_tick_ch3_mouseroom_mouse;
@@ -65,21 +95,36 @@ on_tick_ch3_mouseroom_mouse {
 	if (button PAGE pressed) {
 		player_control = off;
 		show serial_dialog {"\nPlayer mode!"};
+
+		// debug!("Make NULL do nothing anymore")
+		entity NULL on_tick = {};
+
+		// debug!("Make cursor do nothing anymore")
+		entity cursor on_tick = {};
+
+		// debug!("Make NULL look invisible")
+		entity NULL type = NULL;
+
+		// debug!("Make player jump to NULL position")
+		player position = entity NULL position;
+
+		wait $wait;
+
+		// debug!("Move NULL to cursor")
+		entity NULL position = entity cursor position;
+
+		// debug!("Make player look like mage")
 		player type = mage;
-		entity cursor type = cursor;
 
-		// show serial_dialog {"Player:"};
-		capture_entity_position("%PLAYER%", player_x, player_y, player_dir);
-		// show serial_dialog {"Cursor:"};
-		capture_entity_position(cursor, cursor_x, cursor_y, cursor_dir);
-		// show serial_dialog {"Player:"};
-		restore_entity_position("%PLAYER%", cursor_x, cursor_y, cursor_dir);
-		// show serial_dialog {"Cursor:"};
-		restore_entity_position(cursor, player_x, player_y, cursor_dir);
-
-		print_x = player x;
-		print_y = player y;
-		// show serial_dialog {"PLAYER POS: $print_x$, $print_y$"};
+		if (entity NULL direction == north) {
+			player direction = north;
+		} else if (entity NULL direction == east) {
+			player direction = east;
+		} else if (entity NULL direction == south) {
+			player direction = south;
+		} else if (entity NULL direction == west) {
+			player direction = west;
+		}
 
 		player_control = on;
 		self on_tick = on_tick_ch3_mouseroom_walk;
@@ -90,12 +135,151 @@ on_tick_ch3_mouseroom_mouse {
 /* ---------- ON_LOAD ---------- */
 
 on_load_ch3_mouseroom {
-	// room unique stuff
+	player direction = south;
 	camera = geometry camera;
+	hex_control = on;
+	entity NULL position = entity cursor position;
 	show serial_dialog spacer;
 	show serial_dialog {
 		"Welcome to the <y>CURSOR TEST</>!"
 		" "
 		"Hit the <c>PAGE</> button to switch between controlling the mage and controlling the mouse."
 	};
+	if (debug_mode) {
+		show serial_dialog {
+			"Command <c>TELEPORT TEST</> to check changing entity X/Y"
+		};
+		command teleport + test = teleport_test;
+	}
+}
+
+report_positions {
+	cursor_x = entity cursor x;
+	cursor_y = entity cursor y;
+	null_x = entity NULL x;
+	null_y = entity NULL y;
+	player_x = player x;
+	player_y = player y;
+	show serial_dialog {
+		wrap 80
+		"Cursor: $cursor_x$,$cursor_y$ - Player: $player_x$,$player_y$ - NULL: $null_x$,$null_y$\n"
+	};
+}
+
+$player_x_orig = 170;
+$player_y_orig = 198;
+$cursor_x_orig = 218;
+$cursor_y_orig = 220;
+$null_x_orig = 218;
+$null_y_orig = 220;
+
+teleport_test {
+	show serial_dialog spacer;
+	show serial_dialog {
+		"<y>CURSOR/PLAYER SWAP TELEPORTATION DEBUG TEST</>"
+		" "
+		"ORIGINAL POSITIONS:"
+	};
+	report_positions();
+
+	wait 100ms;
+
+	show serial_dialog {
+		" "
+		">> SWITCHING TO CURSOR MODE"
+		"Cursor: 218,220 - Player: 218,220 - NULL: 170,198 (TARGET)"
+	};
+	player type = NULL;
+	entity NULL position = player position;
+	player position = entity cursor position;
+	entity NULL on_tick = {
+		entity NULL direction = entity cursor;
+	};
+	entity NULL type = mage;
+	entity cursor on_tick = {
+		entity cursor position = player position;
+	};
+	report_positions();
+	if (
+		player x == $cursor_x_orig
+		&& player y == $cursor_y_orig
+		&& entity NULL x == $player_x_orig
+		&& entity NULL y == $player_y_orig
+	) {
+		show serial_dialog { "<g>Works instantly</>" };
+	} else {
+		show serial_dialog { "<r>DOES NOT WORK instantly</>" };
+	}
+
+	wait 100ms;
+
+	show serial_dialog {
+		" "
+		">> SWITCHING TO MAGE MODE"
+		"Cursor: 218,220 - Player: 170,198 - NULL: 218,220 (TARGET)"
+	};
+	entity NULL on_tick = {};
+	entity cursor on_tick = {};
+	entity NULL type = NULL;
+	player position = entity NULL position;
+	entity NULL position = entity cursor position;
+	player type = mage;
+	report_positions();
+	if (
+		player x == $player_x_orig
+		&& player y == $player_y_orig
+		&& entity NULL x == $cursor_x_orig
+		&& entity NULL y == $cursor_y_orig
+	) {
+		show serial_dialog { "<g>Works instantly</>" };
+	} else {
+		show serial_dialog { "<r>DOES NOT WORK instantly</>" };
+	}
+
+	wait 100ms;
+
+	show serial_dialog {
+		" "
+		">> MATHLANG PRETEND POSITION ASSIGNMENT"
+		// "`player position = entity cursor position;`"
+	};
+	player position = entity cursor position;
+	report_positions();
+	if (player x == entity cursor x && player y == entity cursor y) {
+		show serial_dialog { "<g>Works instantly</>" };
+	} else {
+		show serial_dialog { "<r>DOES NOT WORK instantly</>" };
+	}
+
+	wait 100ms;
+
+	show serial_dialog {
+		" "
+		">> TELEPORTATION TEST"
+		// "`entity cursor position = geometry teleport;`"
+	};
+	entity cursor position = geometry teleport;
+	report_positions();
+	if (entity cursor x == 100 && entity cursor y == 100) {
+		show serial_dialog { "<g>Works instantly</>" };
+	} else {
+		show serial_dialog { "<r>DOES NOT WORK instantly</>" };
+	}
+
+	wait 100ms;
+
+	show serial_dialog {
+		" "
+		">> CHANGING VALUES MANUALLY TEST"
+		// "`player x = 100;`"
+		// "`player y = 100;`"
+	};
+	player x = 100;
+	player y = 100;
+	report_positions();
+	if (player x == 100 && player y == 100) {
+		show serial_dialog { "<g>Works instantly</>" };
+	} else {
+		show serial_dialog { "<r>DOES NOT WORK instantly</>" };
+	}
 }
