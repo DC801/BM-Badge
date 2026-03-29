@@ -123,6 +123,18 @@
                  "width":32,
                  "x":218,
                  "y":220
+                }, 
+                {
+                 "class":"",
+                 "height":0,
+                 "id":99,
+                 "name":"teleport",
+                 "point":true,
+                 "rotation":0,
+                 "visible":true,
+                 "width":0,
+                 "x":116,
+                 "y":92
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -299,7 +311,7 @@
          "y":0
         }],
  "nextlayerid":10,
- "nextobjectid":99,
+ "nextobjectid":100,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.9.2",
