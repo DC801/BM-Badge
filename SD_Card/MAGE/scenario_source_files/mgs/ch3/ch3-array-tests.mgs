@@ -572,4 +572,23 @@ array_unit_tests {
 	show serial_dialog {"SLICE TWICE VARIABLE [1]"};
 	delete array sliced;
 	delete array arr;
+
+	/*
+	// ARRAY RENAME
+	array arr = [1,2,3,4];
+	array destination = [0];
+	json[
+		"action": "ARRAY_RENAME",
+		"array_source": "arr",
+		"array_destination": "destination"
+	];
+	// ARRAY RENAME (move)
+	print_compared_values(arr[0], $MAX_INT);
+	show serial_dialog {"ARRAY RENAME (move)"};
+	// ARRAY RENAME (overwrite)
+	print_compared_values(destination[0], 1);
+	show serial_dialog {"ARRAY RENAME (overwrite)"};
+	delete array destination;
+	delete array arr;
+	*/
 }

@@ -143,14 +143,82 @@ on_load_ch3_mouseroom {
 	show serial_dialog {
 		"Welcome to the <y>CURSOR TEST</>!"
 		" "
-		"Hit the <c>PAGE</> button to switch between controlling the mage and controlling the mouse."
+		"Hit the <c>PAGE</> button to switch between controlling the mage and controlling the mouse using a convoluted multiple-entity swap system."
+		" "
+		"Or, type <c>SWAP</> to switch between the player and the cursor."
 	};
+	command swap = swap;
 	if (debug_mode) {
 		show serial_dialog {
 			"Command <c>TELEPORT TEST</> to check changing entity X/Y"
 		};
 		command teleport + test = teleport_test;
 	}
+}
+
+swap {
+	/*
+	if (!cursor_init) {
+		show serial_dialog spacer;
+		show serial_dialog {
+			"Disabling manually implemented entity swaps; switching to changing `is_player` flag"
+			" "
+			"(Type <c>SWAP</> to swap back and forth)"
+		};
+		map on_tick = {};
+		player on_tick = {};
+		entity cursor on_tick = {};
+		entity null on_tick = {
+			entity cursor position = entity null position;
+		};
+		cursor_init = true;
+	}
+	if (!is_cursor) {
+		show serial_dialog { "CURSOR MODE" };
+		entity cursor on_tick = {};
+		json[
+			"action": "SET_PLAYER_ENTITY",
+			"entity": "cursor"
+		];
+		player on_tick = {
+			player direction = entity cursor position;
+		};
+		is_cursor = true;
+	} else {
+		show serial_dialog { "MAGE MODE" };
+		player on_tick = {};
+		json[
+			"action": "SET_PLAYER_ENTITY",
+			"entity": "Bub"
+		];
+		entity cursor on_tick = {
+			if (self intersects geometry NW) {
+				self current_animation = $eye;
+				if (button RJOY_RIGHT pressed) {
+					show dialog { name "" "These sky blue tiles can brighten up a bathroom or kitchen for a vintage, 50s look." };
+				}
+			} else if (self intersects geometry SW) {
+				self current_animation = $eye;
+				if (button RJOY_RIGHT pressed) {
+					show dialog { name "" alignment TL "Bare concrete may be suitable for the unfinished basement or laundry room if you want to save money." };
+				}
+			} else if (self intersects geometry NE) {
+				self current_animation = $eye;
+				if (button RJOY_RIGHT pressed) {
+					show dialog { name "" "A rarer offering: crimson shag carpet for a lush, luxorious look." };
+				}
+			} else if (self intersects geometry SE) {
+				self current_animation = $eye;
+				if (button RJOY_RIGHT pressed) {
+					show dialog { name "" alignment TL "Can't go wrong with faux oak vinyl flooring. It's like real hardwood but easier to maintain." };
+				}
+			} else {
+				self current_animation = $arrow;
+			}
+			is_cursor = false;
+		}
+	}
+	*/
 }
 
 report_positions {
