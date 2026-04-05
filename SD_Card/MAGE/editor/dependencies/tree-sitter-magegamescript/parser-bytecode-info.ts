@@ -3451,19 +3451,27 @@ export class ARRAY_SORT extends Action {
 export class ARRAY_RENAME extends Action {
 	// TODO: NOT OFFICIAL YET
 	action: 'ARRAY_RENAME';
-	array_name: string;
-	new_name: string;
+	array_source: string;
+	array_destination: string;
 	constructor(args: GenericObj, debug?: MathlangLocation) {
 		super(args);
 		this.action = 'ARRAY_RENAME';
-		this.array_name = tryString(args.array_name, 'ARRAY_RENAME param "array_name"', debug);
-		this.new_name = tryString(args.new_name, 'ARRAY_RENAME param "new_name"', debug);
+		this.array_source = tryString(
+			args.array_source,
+			'ARRAY_RENAME param "array_source"',
+			debug,
+		);
+		this.array_destination = tryString(
+			args.array_destination,
+			'ARRAY_RENAME param "array_destination"',
+			debug,
+		);
 	}
-	static quick(array_name: string, new_name: string) {
-		return new ARRAY_RENAME({ array_name, new_name });
+	static quick(array_source: string, array_destination: string) {
+		return new ARRAY_RENAME({ array_source, array_destination });
 	}
 	print() {
-		return `"${this.array_name}".rename("${this.new_name}");`;
+		return `"${this.array_source}".rename("${this.array_destination}");`;
 	}
 }
 

@@ -13905,17 +13905,25 @@ To silence this warning, turn the RHS into a passthrough int expression (which w
       super(args2);
       // TODO: NOT OFFICIAL YET
       __publicField(this, "action");
-      __publicField(this, "array_name");
-      __publicField(this, "new_name");
+      __publicField(this, "array_source");
+      __publicField(this, "array_destination");
       this.action = "ARRAY_RENAME";
-      this.array_name = tryString(args2.array_name, 'ARRAY_RENAME param "array_name"', debug);
-      this.new_name = tryString(args2.new_name, 'ARRAY_RENAME param "new_name"', debug);
+      this.array_source = tryString(
+        args2.array_source,
+        'ARRAY_RENAME param "array_source"',
+        debug
+      );
+      this.array_destination = tryString(
+        args2.array_destination,
+        'ARRAY_RENAME param "array_destination"',
+        debug
+      );
     }
-    static quick(array_name, new_name) {
-      return new ARRAY_RENAME({ array_name, new_name });
+    static quick(array_source, array_destination) {
+      return new ARRAY_RENAME({ array_source, array_destination });
     }
     print() {
-      return `"${this.array_name}".rename("${this.new_name}");`;
+      return `"${this.array_source}".rename("${this.array_destination}");`;
     }
   }
   const isHasVariables = (v) => {
