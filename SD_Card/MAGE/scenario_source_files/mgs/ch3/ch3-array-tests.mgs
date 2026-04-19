@@ -573,18 +573,18 @@ array_unit_tests {
 	delete array sliced;
 	delete array arr;
 
+	// READ VALUES FROM DELETED ARRAY
+	print_compared_values(arr[0], $MAX_INT);
+	show serial_dialog {"READ VALUES FROM DELETED ARRAY"};
+
 	// ARRAY RENAME
 	array arr = [1,2,3,4];
 	array destination = [0];
-	json[
-		/*
-		{
-			"action": "ARRAY_RENAME",
-			"array_source": "arr",
-			"array_destination": "destination"
-		}
-		*/
-	];
+	json[{
+		"action": "ARRAY_RENAME",
+		"array_source": "arr",
+		"array_destination": "destination"
+	}];
 	// ARRAY RENAME (move)
 	print_compared_values(arr[0], $MAX_INT);
 	show serial_dialog {"ARRAY RENAME (move)"};

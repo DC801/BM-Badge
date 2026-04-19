@@ -146,6 +146,9 @@ typedef enum : uint8_t {
 	ARRAY_SLICE_TWICE_BY_VARIABLE,
 	ARRAY_POP_INTO_VARIABLE,
 	ARRAY_POP_LEFT_INTO_VARIABLE,
+	ARRAY_RENAME,
+	SET_PLAYER_ENTITY,
+	SET_ENTITY_FLOATING,
 	//this tracks the number of actions we're at:
 	NUM_ACTIONS
 } MageScriptActionTypeId;

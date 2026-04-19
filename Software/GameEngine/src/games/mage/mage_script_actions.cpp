@@ -2754,19 +2754,7 @@ void array_new(uint8_t * args, MageScriptState * resumeStateStruct)
 	auto *argStruct = (ActionArrayNew*)args;
 	make_or_reset_array_by_id(argStruct->arrayId);
 }
-void array_delete(uint8_t * args, MageScriptState * resumeStateStruct)
-{
-	typedef struct {
-		uint8_t arrayId;
-		uint8_t paddingB;
-		uint8_t paddingC;
-		uint8_t paddingD;
-		uint8_t paddingE;
-		uint8_t paddingF;
-		uint8_t paddingG;
-	} ActionArrayDelete;
-	const auto *argStruct = (ActionArrayDelete*)args;
-	const uint8_t arrayId = argStruct->arrayId;
+bool array_delete_shared(const uint8_t arrayId) {
 	const auto scriptArrays = &MageGame->scriptArrays;
 	const size_t sizeBeforeFilter = scriptArrays->size();
 	scriptArrays->erase(
@@ -2780,13 +2768,29 @@ void array_delete(uint8_t * args, MageScriptState * resumeStateStruct)
 	const std::string message = "array_delete: arrayId " + std::to_string(arrayId);
 	if (sizeBeforeFilter != scriptArrays->size()) {
 		MageCommand->debugScriptsPrintln(
-			 message + " successfully deleted"
+			message + " successfully deleted"
 		);
-		return;
+		return true;
 	}
 	MageCommand->debugScriptsPrintln(
 		message + " is invalid and was not deleted"
 	);
+	return false;
+}
+void array_delete(uint8_t * args, MageScriptState * resumeStateStruct)
+{
+	typedef struct {
+		uint8_t arrayId;
+		uint8_t paddingB;
+		uint8_t paddingC;
+		uint8_t paddingD;
+		uint8_t paddingE;
+		uint8_t paddingF;
+		uint8_t paddingG;
+	} ActionArrayDelete;
+	const auto *argStruct = (ActionArrayDelete*)args;
+	const uint8_t arrayId = argStruct->arrayId;
+	array_delete_shared(arrayId);
 }
 void array_log(uint8_t * args, MageScriptState * resumeStateStruct)
 {
@@ -2908,7 +2912,7 @@ void array_read_from_index_into_variable(uint8_t * args, MageScriptState * resum
 	auto *argStruct = (ActionArrayReadFromIndexIntoVariable*)args;
 	if (const MageScriptArray* foundArray = get_array_by_id(argStruct->arrayId)) {
 		const auto wrappedIndex = wrap_negative_index(argStruct->index, &foundArray->values);
-		auto arrayValue = 65535; // out of bounds
+		auto arrayValue = INVALID_ARRAY_INDEX; // out of bounds
 		if (wrappedIndex < foundArray->values.size()) {
 			arrayValue = foundArray->values[wrappedIndex];
 		}
@@ -2924,6 +2928,7 @@ void array_read_from_index_into_variable(uint8_t * args, MageScriptState * resum
 	MageCommand->debugScriptsPrintln(
 		"array_read_from_index_into_variable: Invalid arrayId: " + std::to_string(argStruct->arrayId)
 	);
+	MageGame->currentSave.scriptVariables[argStruct->variableId] = INVALID_ARRAY;
 }
 void array_write_into_index_from_value(uint8_t * args, MageScriptState * resumeStateStruct)
 {
@@ -3430,6 +3435,54 @@ void array_pop_left_into_variable(uint8_t * args, MageScriptState * resumeStateS
 		"array_pop_left_into_variable: Invalid arrayId: " + std::to_string(argStruct->arrayId)
 	);
 }
+void array_rename(uint8_t * args, MageScriptState * resumeStateStruct)
+{
+	typedef struct {
+		uint8_t arraySource;
+		uint8_t arrayDestination;
+		uint8_t paddingC;
+		uint8_t paddingD;
+		uint8_t paddingE;
+		uint8_t paddingF;
+		uint8_t paddingG;
+	} ActionArrayRename;
+	auto *argStruct = (ActionArrayRename*)args;
+	array_delete_shared(argStruct->arrayDestination);
+	if (MageScriptArray* sourceArray = get_array_by_id(argStruct->arraySource)) {
+		sourceArray->arrayId = argStruct->arrayDestination;
+		MageScriptArray* newDestinationArray = get_array_by_id(argStruct->arrayDestination);
+		MageCommand->debugScriptsPrintln(
+			"array_rename: arraySource " + std::to_string(argStruct->arraySource) +
+			": arrayDestination " + std::to_string(argStruct->arrayDestination) +
+			": sourceArray->arrayId " + std::to_string(sourceArray->arrayId) +
+			": is memory address same? " + std::to_string(newDestinationArray == sourceArray)
+		);
+		return;
+	}
+	MageCommand->debugScriptsPrintln(
+		"array_rename: Invalid arraySource: " + std::to_string(argStruct->arraySource)
+	);
+}
+void set_player_entity(uint8_t * args, MageScriptState * resumeStateStruct)
+{
+	typedef struct {
+		uint8_t entityId;
+		uint8_t paddingB;
+		uint8_t paddingC;
+		uint8_t paddingD;
+		uint8_t paddingE;
+		uint8_t paddingF;
+		uint8_t paddingG;
+	} ActionSetPlayerEntity;
+	auto *argStruct = (ActionSetPlayerEntity*)args;
+	auto before = MageGame->playerEntityIndex;
+	MageGame->playerEntityIndex = argStruct->entityId;
+	debug_print(
+		"set_player_entity before: %d, after: %d",
+		before,
+		MageGame->playerEntityIndex
+	);
+}
 
 
 ActionFunctionPointer actionFunctions[MageScriptActionTypeId::NUM_ACTIONS] = {
@@ -3555,6 +3608,9 @@ ActionFunctionPointer actionFunctions[MageScriptActionTypeId::NUM_ACTIONS] = {
 	&array_slice_twice_by_variable,
 	&array_pop_into_variable,
 	&array_pop_left_into_variable,
+	&array_rename,
+	&set_player_entity,
+	nullptr // &set_entity_floating,
 };
 
 uint16_t getUsefulGeometryIndexFromActionGeometryId(

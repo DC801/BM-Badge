@@ -515,6 +515,17 @@ var actionFieldsMap = {
 		{propertyName: 'array_name', size: 1},
 		{propertyName: 'variable', size: 1},
 	],
+	ARRAY_RENAME: [
+		{propertyName: 'array_source', size: 1},
+		{propertyName: 'array_destination', size: 1},
+	],
+	SET_PLAYER_ENTITY: [
+		{propertyName: 'entity', size: 1},
+	],
+	SET_ENTITY_FLOATING: [
+		{propertyName: 'entity', size: 1},
+		{propertyName: 'bool_value', size: 1},
+	],
 };
 
 var actionNames = [
@@ -640,6 +651,9 @@ var actionNames = [
 	'ARRAY_SLICE_TWICE_BY_VARIABLE',
 	'ARRAY_POP_INTO_VARIABLE',
 	'ARRAY_POP_LEFT_INTO_VARIABLE',
+	'ARRAY_RENAME',
+	'SET_PLAYER_ENTITY',
+	'SET_ENTITY_FLOATING',
 ];
 
 var specialKeywordsEnum = {

@@ -157,7 +157,6 @@ on_load_ch3_mouseroom {
 }
 
 swap {
-	/*
 	if (!cursor_init) {
 		show serial_dialog spacer;
 		show serial_dialog {
@@ -168,29 +167,29 @@ swap {
 		map on_tick = {};
 		player on_tick = {};
 		entity cursor on_tick = {};
-		entity null on_tick = {
-			entity cursor position = entity null position;
+		entity NULL on_tick = {
+			entity cursor position = entity NULL position;
 		};
 		cursor_init = true;
 	}
 	if (!is_cursor) {
 		show serial_dialog { "CURSOR MODE" };
 		entity cursor on_tick = {};
-		json[
+		json[{
 			"action": "SET_PLAYER_ENTITY",
 			"entity": "cursor"
-		];
+		}];
 		player on_tick = {
-			player direction = entity cursor position;
+			player direction = entity cursor;
 		};
 		is_cursor = true;
 	} else {
 		show serial_dialog { "MAGE MODE" };
 		player on_tick = {};
-		json[
+		json[{
 			"action": "SET_PLAYER_ENTITY",
 			"entity": "Bub"
-		];
+		}];
 		entity cursor on_tick = {
 			if (self intersects geometry NW) {
 				self current_animation = $eye;
@@ -216,9 +215,8 @@ swap {
 				self current_animation = $arrow;
 			}
 			is_cursor = false;
-		}
+		};
 	}
-	*/
 }
 
 report_positions {

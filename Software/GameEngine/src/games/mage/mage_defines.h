@@ -25,7 +25,7 @@ all of the old code used as the foundation of this badge.
 //it will automatically be loaded.
 #define MAGE_GAME_DAT_PATH "MAGE/game.dat"
 
-#define ENGINE_VERSION 13
+#define ENGINE_VERSION 14
 
 #define MAP_GO_DIRECTION_NAME_LENGTH 12
 
@@ -56,6 +56,12 @@ all of the old code used as the foundation of this badge.
 //this is a value used in the entityId in actions that refers to the
 //current playerEntityId for the MageGameControl object.
 #define MAGE_ENTITY_PATH 65535
+
+//when a script tries to read a value from an uninitialized/deleted array
+#define INVALID_ARRAY 65535
+
+//when a script tries to read a value from an uninitialized/deleted array index
+#define INVALID_ARRAY_INDEX 65535
 
 //these are the failover values that the game will use when an invalid hacked entity state is found:
 #define MAGE_TILESET_FAILOVER_ID 0

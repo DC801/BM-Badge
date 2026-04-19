@@ -6,7 +6,7 @@ seq:
     contents: MAGEGAME
   - id: engine_version
     type: u4
-    valid: 13
+    valid: 14
     doc: If your engine versions mismatch with the ksy version, you are going to have a bad time. This validity check will stop parsing _really early_ if they do not match up.
   - id: dat_file_content_crc32
     type: u4
@@ -776,6 +776,9 @@ enums:
     119: array_slice_twice_by_variable
     120: array_pop_into_variable
     121: array_pop_left_into_variable
+    122: array_rename
+    123: set_player_entity
+    124: set_entity_floating
 
   dialog_screen_alignment_type:
     0: bottom_left
