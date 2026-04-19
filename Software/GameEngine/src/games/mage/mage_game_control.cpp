@@ -623,6 +623,10 @@ void MageGameControl::applyUniversalInputs()
 		MageScript->mapLoadId = currentSave.currentMapId;
 	}
 	if (
+		(EngineInput_Activated.op_xor && EngineInput_Buttons.mem0) ||
+		(EngineInput_Activated.mem0 && EngineInput_Buttons.op_xor)
+	) { isCollisionDebugOn = !isCollisionDebugOn; }
+	if (
 		(EngineInput_Activated.op_xor && EngineInput_Buttons.mem1) ||
 		(EngineInput_Activated.mem1 && EngineInput_Buttons.op_xor)
 		) {
@@ -653,10 +657,6 @@ void MageGameControl::applyUniversalInputs()
 	if (EngineInput_Activated.bit_4  ) { MageHex->runHex(0b00000100); }
 	if (EngineInput_Activated.bit_2  ) { MageHex->runHex(0b00000010); }
 	if (EngineInput_Activated.bit_1  ) { MageHex->runHex(0b00000001); }
-	if (
-		(EngineInput_Activated.op_xor && EngineInput_Buttons.mem0) ||
-		(EngineInput_Activated.mem0 && EngineInput_Buttons.op_xor)
-	) { isCollisionDebugOn = !isCollisionDebugOn; }
 }
 
 void MageGameControl::applyGameModeInputs(uint32_t deltaTime)
