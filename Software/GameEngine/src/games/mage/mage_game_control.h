@@ -247,13 +247,14 @@ public:
 	//this will update the current entities based on the current state of their state variables
 	void UpdateEntities(uint32_t deltaTime);
 
-	void computeEntityYAxisSort(
+	void computeEntityRenderOrder(
 		uint8_t *entitySortOrder,
-		uint8_t filteredEntityCountOnThisMap
+		uint8_t &entitiesToDraw,
+		bool floatingLayer
 	);
 
 	//this will draw the entities over the current state of the screen
-	void DrawEntities();
+	void DrawEntities(bool floatingLayer = false);
 
 	//this will draw the current map's geometry over the current state of the screen
 	void DrawGeometry();

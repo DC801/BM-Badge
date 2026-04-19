@@ -48,7 +48,7 @@ struct RenderFlags {
 	bool diagonal:1;
 	bool vertical:1;
 	bool horizontal:1;
-	bool paddingA:1;
+	bool floating:1;
 	bool paddingB:1;
 	bool paddingC:1;
 	bool debug:1;

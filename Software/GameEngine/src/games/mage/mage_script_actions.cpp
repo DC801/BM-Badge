@@ -3484,6 +3484,38 @@ void set_player_entity(uint8_t * args, MageScriptState * resumeStateStruct)
 	);
 }
 
+void action_set_entity_floating(uint8_t * args, MageScriptState * resumeStateStruct)
+{
+	typedef struct {
+		uint8_t entityId;
+		uint8_t isFloating;
+		uint8_t paddingC;
+		uint8_t paddingD;
+		uint8_t paddingE;
+		uint8_t paddingF;
+		uint8_t paddingG;
+	} ActionSetEntityFloating;
+	auto *argStruct = (ActionSetEntityFloating*)args;
+
+	int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(
+		argStruct->entityId,
+		MageScript->currentEntityId
+	);
+	if(entityIndex != NO_PLAYER) {
+		MageEntity *entity = MageGame->getEntityByMapLocalId(entityIndex);
+		entity->direction = (MageEntityAnimationDirection) (
+			(entity->direction & ~RENDER_FLAGS_IS_FLOATING)
+			| (argStruct->isFloating * RENDER_FLAGS_IS_FLOATING)
+		);
+		MageGame->updateEntityRenderableData(entityIndex);
+	}
+	debug_print(
+		"set_entity_floating: ent %d floating %s",
+		entityIndex,
+		argStruct->isFloating ? "true" : "false"
+	);
+}
+
 
 ActionFunctionPointer actionFunctions[MageScriptActionTypeId::NUM_ACTIONS] = {
 	&action_null_action,
@@ -3610,7 +3642,7 @@ ActionFunctionPointer actionFunctions[MageScriptActionTypeId::NUM_ACTIONS] = {
 	&array_pop_left_into_variable,
 	&array_rename,
 	&set_player_entity,
-	nullptr // &set_entity_floating,
+	&action_set_entity_floating,
 };
 
 uint16_t getUsefulGeometryIndexFromActionGeometryId(

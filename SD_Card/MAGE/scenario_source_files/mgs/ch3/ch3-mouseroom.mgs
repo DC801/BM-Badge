@@ -148,6 +148,11 @@ on_load_ch3_mouseroom {
 		"Or, type <c>SWAP</> to switch between the player and the cursor."
 	};
 	command swap = swap;
+	json[{
+		"action": "SET_ENTITY_FLOATING",
+		"entity": "cursor",
+		"bool_value": true
+	}];
 	if (debug_mode) {
 		show serial_dialog {
 			"Command <c>TELEPORT TEST</> to check changing entity X/Y"

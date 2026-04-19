@@ -255,7 +255,7 @@ void GameRender()
 
 		if (layerCount > 1)
 		{
-			//draw the final layer above the entities.
+			//draw the final layer above the (non-floating) entities.
 			MageGame->DrawMap(layerCount - 1);
 			#ifdef TIMING_DEBUG
 				diff = millis() - now;
@@ -263,6 +263,14 @@ void GameRender()
 				now = millis();
 			#endif
 		}
+
+		//draw any entities with the floating bit set
+		MageGame->DrawEntities(true);
+		#ifdef TIMING_DEBUG
+			diff = millis() - now;
+			debug_print("Floating Entity Time: %d",diff);
+			now = millis();
+		#endif
 
 		if (MageGame->isCollisionDebugOn) {
 			MageGame->DrawGeometry();

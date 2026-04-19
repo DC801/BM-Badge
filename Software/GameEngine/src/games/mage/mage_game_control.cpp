@@ -1038,6 +1038,12 @@ Point MageGameControl::getPushBackFromTilesThatCollideWithPlayer()
 	MageEntityRenderableData *playerRenderableData = getEntityRenderableDataByMapLocalId(
 		playerEntityIndex
 	);
+	if(
+		playerEntityIndex != NO_PLAYER &&
+		(entities[playerEntityIndex].direction & RENDER_FLAGS_IS_FLOATING)
+	) {
+		return {0, 0};
+	}
 	uint32_t tilesPerLayer = map.Cols() * map.Rows();
 	uint32_t layerAddress = 0;
 	uint32_t address = 0;
@@ -1355,6 +1361,7 @@ MageEntityAnimationDirection MageGameControl::updateDirectionAndPreserveFlags(
 		| (previous & RENDER_FLAGS_RELATIVE_DIRECTION)
 		| (previous & RENDER_FLAGS_IS_DEBUG)
 		| (previous & RENDER_FLAGS_IS_GLITCHED)
+		| (previous & RENDER_FLAGS_IS_FLOATING)
 	);
 }
 
@@ -1591,22 +1598,31 @@ void MageGameControl::UpdateEntities(uint32_t deltaTime)
 	}
 }
 
-void MageGameControl::computeEntityYAxisSort(
+void MageGameControl::computeEntityRenderOrder(
 	uint8_t *entitySortOrder,
-	uint8_t filteredEntityCountOnThisMap
+	uint8_t &entitiesToDraw,
+	bool floatingLayer
 ) {
 	//init index array:
+	entitiesToDraw = 0;
 	for(uint8_t i = 0; i < filteredEntityCountOnThisMap; i++) {
-		entitySortOrder[i] = i;
+		// should we draw this entity?
+		if((entities[i].direction & RENDER_FLAGS_IS_FLOATING) == (floatingLayer ? 0 : RENDER_FLAGS_IS_FLOATING)) {
+			continue;
+		}
+		entitySortOrder[entitiesToDraw++] = i;
 	}
 
+#define DRAWS_BEHIND(a, b) ( \
+		(a).y < (b).y \
+)
 	// One by one move boundary of unsorted subarray
-	for (uint8_t i = 0; i < filteredEntityCountOnThisMap - 1; i++) {
+	for (uint8_t i = 0; i < entitiesToDraw - 1; i++) {
 
 		// Find the minimum element in unsorted array
 		uint8_t min_idx = i;
-		for (uint8_t j = i + 1; j < filteredEntityCountOnThisMap; j++) {
-			if (entities[entitySortOrder[j]].y < entities[entitySortOrder[min_idx]].y) {
+		for (uint8_t j = i + 1; j < entitiesToDraw; j++) {
+			if (DRAWS_BEHIND(entities[entitySortOrder[j]], entities[entitySortOrder[min_idx]])) {
 				min_idx = j;
 			}
 		}
@@ -1619,19 +1635,20 @@ void MageGameControl::computeEntityYAxisSort(
 	}
 }
 
-void MageGameControl::DrawEntities()
+void MageGameControl::DrawEntities(bool floatingLayer)
 {
 	int32_t cameraX = adjustedCameraPosition.x;
 	int32_t cameraY = adjustedCameraPosition.y;
 	//first sort entities by their y values:
 	uint8_t entitySortOrder[filteredEntityCountOnThisMap];
-	computeEntityYAxisSort(entitySortOrder, filteredEntityCountOnThisMap);
+	uint8_t entitiesToDraw = filteredEntityCountOnThisMap;
+	computeEntityRenderOrder(entitySortOrder, entitiesToDraw, floatingLayer);
 
 	uint8_t filteredPlayerEntityIndex = getFilteredEntityId(playerEntityIndex);
 
 	//now that we've got a sorted array with the lowest y values first,
 	//iterate through it and draw the entities one by one:
-	for(uint8_t i = 0; i < filteredEntityCountOnThisMap; i++) {
+	for(uint8_t i = 0; i < entitiesToDraw; i++) {
 		uint8_t entityIndex = entitySortOrder[i];
 		MageEntity *entity = &entities[entityIndex];
 		MageEntityRenderableData *renderableData = &entityRenderableData[entityIndex];
