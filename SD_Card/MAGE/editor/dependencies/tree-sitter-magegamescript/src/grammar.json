@@ -120,12 +120,23 @@
         "value": "\"(?:[^\"\\\\]|\\\\.)*\""
       }
     },
+    "TEMPLATE_STRING": {
+      "type": "TOKEN",
+      "content": {
+        "type": "PATTERN",
+        "value": "`(?:[^`\\\\]|\\\\.)*`"
+      }
+    },
     "STRING": {
       "type": "CHOICE",
       "members": [
         {
           "type": "SYMBOL",
           "name": "QUOTED_STRING"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "TEMPLATE_STRING"
         },
         {
           "type": "SYMBOL",
@@ -336,6 +347,10 @@
         },
         {
           "type": "SYMBOL",
+          "name": "TEMPLATE_STRING"
+        },
+        {
+          "type": "SYMBOL",
           "name": "BAREWORD"
         }
       ]
@@ -362,6 +377,10 @@
         {
           "type": "SYMBOL",
           "name": "QUOTED_STRING"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "TEMPLATE_STRING"
         },
         {
           "type": "SYMBOL",
@@ -535,6 +554,10 @@
         {
           "type": "SYMBOL",
           "name": "QUOTED_STRING"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "TEMPLATE_STRING"
         },
         {
           "type": "SYMBOL",

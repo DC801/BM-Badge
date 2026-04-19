@@ -87,26 +87,11 @@ export const handleCapture = (debug: MathlangLocation): Capture | Capture[] => {
 	const grammarType = debug.node.grammarType;
 	debugLog(`-->> Capturing: ${grammarType}`);
 	if (grammarType.endsWith('_expansion')) {
-		// fwiw, cannot become recursive according to the grammar (1 level deep only)
+		// fwiw, these cannot become recursive according to the grammar (1 level deep only)
 		return namedChildren(debug)
 			.filter((v) => v !== null)
 			.map((v) => handleCapture(debug.using(v)))
 			.flat();
-	}
-	// swap out values of compile-time constants
-	if (grammarType === 'CONSTANT') {
-		// if we're in a fn call, try the function definition first for the $_
-		const topFn = debug.f.currFunction[0];
-		const lookup = topFn?.consts[debug.node.text] || debug.f.constants[debug.node.text];
-		if (lookup === undefined) {
-			let useDebug = debug;
-			if (debug.f.currFunction[0]) {
-				// avoids "fn smuggling" (undefined constants error filename using the fn call filename, not fn definition filename)
-				useDebug = debug.f.currFunction[0].debug;
-			}
-			useDebug.quickError('undefined constant', `constant ${debug.node.text} is undefined`);
-		}
-		return lookup?.value !== undefined ? lookup?.value : debug.node.text;
 	}
 	// do the thing
 	const fn = captureFns[grammarType];
@@ -114,7 +99,10 @@ export const handleCapture = (debug: MathlangLocation): Capture | Capture[] => {
 	return fn(debug);
 };
 
-const captureFns: Record<string, (debug: MathlangLocation) => AnyNode | Capture | Capture[]> = {
+const captureFns: Record<
+	string,
+	(debug: MathlangLocation, bonus?: any) => AnyNode | Capture | Capture[]
+> = {
 	BOOL: (debug): BoolLiteral => {
 		const text = debug.node.text;
 		if (text === 'true') return BoolLiteral.quick(debug, true);
@@ -129,6 +117,17 @@ const captureFns: Record<string, (debug: MathlangLocation) => AnyNode | Capture 
 	},
 	BAREWORD: (debug): string => debug.node.text,
 	QUOTED_STRING: (debug): string => debug.node.text.slice(1, -1),
+	TEMPLATE_STRING: (debug): string => {
+		const noQuotes = debug.node.text.slice(1, -1);
+		const replaced = noQuotes.replace(/\{\$[_a-zA-Z0-9]+\}/g, (inner: string) => {
+			const replaced = captureFns.CONSTANT(debug, inner.slice(1, -1));
+			if (replaced instanceof BoolLiteral) {
+				return String(replaced.value);
+			}
+			return String(replaced);
+		});
+		return replaced;
+	},
 	NUMBER: (debug): number => Number(debug.node.text),
 	DURATION: (debug): number => {
 		const suffix = optionalTextForField(debug, 'suffix');
@@ -168,7 +167,21 @@ const captureFns: Record<string, (debug: MathlangLocation) => AnyNode | Capture 
 		}
 		return node.text;
 	},
-	CONSTANT: (debug): string => debug.node.text,
+	CONSTANT: (debug, constName: string = debug.node.text): string | number | BoolLiteral => {
+		// if we're in a fn call, try the function definition first for the $_
+		const topFn = debug.f.currFunction[0];
+		const lookup = topFn?.consts[constName] || debug.f.constants[constName];
+		if (lookup === undefined) {
+			let useDebug = debug;
+			if (debug.f.currFunction[0]) {
+				// avoids "fn smuggling" (undefined constants error filename using the fn call filename, not fn definition filename)
+				useDebug = debug.f.currFunction[0].debug;
+			}
+			useDebug.quickError('undefined constant', `constant ${constName} is undefined`);
+			return constName;
+		}
+		return lookup.value;
+	},
 	AND: (debug): string => debug.node.text,
 	OR: (debug): string => debug.node.text,
 	'!': (debug): string => debug.node.text,

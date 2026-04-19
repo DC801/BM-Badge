@@ -61,7 +61,8 @@ export default grammar({
 		BOOL: () => token(choice('true', 'false', 'on', 'off', 'open', 'closed', 'up', 'down')),
 		BAREWORD: () => token(/[_a-zA-Z][_a-zA-Z0-9]*/),
 		QUOTED_STRING: () => token(/"(?:[^"\\]|\\.)*"/),
-		STRING: ($) => choice($.QUOTED_STRING, $.BAREWORD),
+		TEMPLATE_STRING: () => token(/`(?:[^`\\]|\\.)*`/),
+		STRING: ($) => choice($.QUOTED_STRING, $.TEMPLATE_STRING, $.BAREWORD),
 		NUMBER: () => token(/-?[0-9]+/),
 		duration_suffix: () => token.immediate(/m?s/),
 		DURATION: ($) =>
@@ -93,6 +94,7 @@ export default grammar({
 				$.CONSTANT,
 				$.COLOR,
 				$.QUOTED_STRING,
+				$.TEMPLATE_STRING,
 				$.BAREWORD,
 			),
 		_CONSTANT_VALUE_MINI: ($) =>
@@ -102,6 +104,7 @@ export default grammar({
 				$.CONSTANT,
 				$.COLOR,
 				$.QUOTED_STRING,
+				$.TEMPLATE_STRING,
 				$.BAREWORD,
 			),
 
@@ -114,7 +117,7 @@ export default grammar({
 		bareword_expansion: ($) =>
 			seq('[', optional(seq($.bareword, repeat(seq(',', $.bareword)), optional(','))), ']'),
 
-		quoted_string: ($) => choice($.QUOTED_STRING, $.CONSTANT),
+		quoted_string: ($) => choice($.QUOTED_STRING, $.TEMPLATE_STRING, $.CONSTANT),
 		quoted_string_expandable: ($) => choice($.quoted_string, $.quoted_string_expansion),
 		quoted_string_expansion: ($) =>
 			seq(

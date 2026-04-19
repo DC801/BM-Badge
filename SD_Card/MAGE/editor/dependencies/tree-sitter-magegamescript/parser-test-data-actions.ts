@@ -8,6 +8,50 @@ export type ActionTest = {
 
 export const actionTests: Record<string, ActionTest> = {
 	// TODO: const value lookup fallthrough in fn def/call
+	template_string_flag_name: {
+		pre: [
+			// linter, stop
+			'$flagName = BLOB;',
+		],
+		input: [
+			// linter, stop
+			'`flag{$flagName}` = debug_mode;',
+		],
+		expected: [
+			// linter, stop
+			'if debug_mode then goto label if_true_*A*;',
+			'"flagBLOB" = false;',
+			'goto label rendezvous_*A*',
+			'if_true_*A*:',
+			'"flagBLOB" = true;',
+			'rendezvous_*A*:',
+		],
+	},
+	template_string_bare_condition: {
+		pre: [
+			// linter, stop
+			'$alt = FLAG_NAME;',
+		],
+		input: [
+			// linter, stop
+			'if (`{$alt}`) {',
+			'	wait 1;',
+			'}',
+		],
+		expected: [
+			// linter, stop
+			'if "FLAG_NAME" then goto label if_true_*B*;',
+			'goto label if_chain_rendezvous_*D*',
+			'if_true_*C*:',
+			'wait 1ms;',
+			'rendezvous_*D*:',
+		],
+	},
+	template_string_basic: {
+		pre: ['$inner = SPACE_STATION;'],
+		input: ['player name = `some kind of {$inner}!`;'],
+		expected: ['player name = "some kind of SPACE_STATION!";'],
+	},
 	const_value_lookup_fallthrough_with_fns: {
 		pre: [`$const = 0;`, `fn fallthrough ($arg) {`, `   return $const + $arg;`, `}`],
 		input: [`fallthrough(100);`],

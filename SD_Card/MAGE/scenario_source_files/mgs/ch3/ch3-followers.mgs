@@ -6,23 +6,37 @@ $nano = 1;
 $vim = 2;
 $emacs = 3;
 
+follower_demo_stuff { // from map on_load
+	entity Nano on_tick = face_player;
+	entity Vim on_tick = face_player;
+	entity Emacs on_tick = face_player;
+	if (curr_follower == $none) {
+		curr_follower = $nano;
+		// should remember what the prev follower was
+	}
+	if (curr_follower == $nano) {
+		entity Nano on_tick = {
+			start_simple_follow_player(Nano);
+		};
+	} else if (curr_follower == $vim) {
+		entity Vim on_tick = {
+			start_simple_follow_player(Vim);
+		};
+	} else if (curr_follower == $emacs) {
+		entity Emacs on_tick = {
+			start_simple_follow_player(Emacs);
+		};
+	}
+	init_timmy_following();
+}
+
+// VERSION A: second follower follows the first follower
+// Makes Timmy appear to zoop once in a while
+// Requires convulted logic to determine who the middle follower is
 fn start_timmy_following ($followee) {
-	follow_entity(
-		"%SELF%",
-		$followee,
-		qx_ffollower,
-		qy_ffollower,
-		should_ffollower,
-		am_ffollower,
-		ffollower_countdown,
-		2,
-		5,
-	);
+	follow_entity( "%SELF%", $followee, 2, 5, "timmy");
 }
 init_timmy_following {
-	should_ffollower = false;
-	am_ffollower = false;
-	ffollower_countdown = 0;
 	entity Timmy on_tick = {
 		if (curr_follower == $nano) {
 			start_timmy_following(Nano);
@@ -34,59 +48,18 @@ init_timmy_following {
 	};
 }
 
-follower_demo_stuff { // from map on_load
-	entity Nano on_tick = face_player;
-	entity Vim on_tick = face_player;
-	entity Emacs on_tick = face_player;
-	if (curr_follower == $none) {
-		curr_follower = $nano;
-		// should remember what the prev follower was
-	}
-	if (curr_follower == $nano) {
-		entity Nano on_tick = start_follow_player;
-	} else if (curr_follower == $vim) {
-		entity Vim on_tick = start_follow_player;
-	} else if (curr_follower == $emacs) {
-		entity Emacs on_tick = start_follow_player;
-	}
-	// follower following
-	init_timmy_following();
-}
-
-start_follow_player {
-	follow_entity(
-		"%SELF%",
-		"%PLAYER%",
-		qx_fplayer,
-		qy_fplayer,
-		should_fplayer,
-		am_fplayer,
-		fplayer_countdown,
-		2,
-		5,
-	);
-}
-
-fn stop_follow_player ($e) {
-	entity $e on_tick = face_player;
-	entity $e current_animation = 0;
-	should_fplayer = false;
-	am_fplayer = false;
-	fplayer_countdown = 0;
-}
-
 interact_demo_nano {
 	if (curr_follower != $nano) {
 		if (curr_follower == $vim) {
-			stop_follow_player(Vim);
+			stop_simple_follow_player(Vim);
 			show dialog vim_quit { Vim ":wq" };
 		} else if (curr_follower == $emacs) {
-			stop_follow_player(Emacs);
+			stop_simple_follow_player(Emacs);
 			show dialog emacs_quit { Emacs "You'll be back." };
 		}
 		show dialog { SELF "I'll help now!" };
 		curr_follower = $nano;
-		entity Nano on_tick = start_follow_player;
+		entity Nano on_tick = { start_simple_follow_player(Nano); };
 		init_timmy_following();
 	} else {
 		face_player()
@@ -97,15 +70,15 @@ interact_demo_nano {
 interact_demo_vim {
 	if (curr_follower != $vim) {
 		if (curr_follower == $nano) {
-			stop_follow_player(Nano);
+			stop_simple_follow_player(Nano);
 			show dialog nano_quit { Nano "Writing out!" };
 		} else if (curr_follower == $emacs) {
-			stop_follow_player(Emacs);
+			stop_simple_follow_player(Emacs);
 			show dialog emacs_quit;
 		}
 		show dialog { SELF ":e follow" };
 		curr_follower = $vim;
-		entity Vim on_tick = start_follow_player;
+		entity Vim on_tick = { start_simple_follow_player(Vim); };
 		init_timmy_following();
 	} else {
 		face_player()
@@ -116,15 +89,15 @@ interact_demo_vim {
 interact_demo_emacs {
 	if (curr_follower != $emacs) {
 		if (curr_follower == $nano) {
-			stop_follow_player(Nano);
+			stop_simple_follow_player(Nano);
 			show dialog nano_quit;
 		} else if (curr_follower == $vim) {
-			stop_follow_player(Vim);
+			stop_simple_follow_player(Vim);
 			show dialog vim_quit;
 		}
 		show dialog { SELF "About time." };
 		curr_follower = $emacs;
-		entity Emacs on_tick = start_follow_player;
+		entity Emacs on_tick = { start_simple_follow_player(Emacs); };
 		init_timmy_following();
 	} else {
 		face_player()
@@ -132,7 +105,11 @@ interact_demo_emacs {
 	}
 }
 
-// GOOSE TRAIN EXPERIMENT
+// VERSION B: GOOSE TRAIN EXPERIMENT
+// All entities follow the player, but at different distances and delay
+// Results in organic clumping behavior
+// Entities don't need to know who the other followers are
+// THIS ONE IS CLEARLY BETTER
 
 goose_train {
 	show dialog {
@@ -157,39 +134,27 @@ goose_train {
 		follow_entity(
 			"Goose",
 			"%PLAYER%",
-			qx_goose1,
-			qy_goose1,
-			should_goose1,
-			am_goose1,
-			goose1_countdown,
 			2,
 			5,
+			"goose1"
 		);
 	};
 	entity "Goose " on_tick = {
 		follow_entity(
 			"Goose ",
 			"%PLAYER%",
-			qx_goose2,
-			qy_goose2,
-			should_goose2,
-			am_goose2,
-			goose2_countdown,
 			4,
 			10,
+			"goose2"
 		);
 	};
 	entity "Goose  " on_tick = {
 		follow_entity(
 			"Goose  ",
 			"%PLAYER%",
-			qx_goose3,
-			qy_goose3,
-			should_goose3,
-			am_goose3,
-			goose3_countdown,
 			6,
 			15,
+			"goose3"
 		);
 	};
 	entity Goose on_interact = say_honk { show dialog { SELF "HONK!" }; };
