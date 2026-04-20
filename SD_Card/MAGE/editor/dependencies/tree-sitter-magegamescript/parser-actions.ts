@@ -45,6 +45,7 @@ import {
 	SCREEN_FADE_OUT,
 	SET_SCRIPT_PAUSE,
 	SET_WARP_STATE,
+	SET_PLAYER_ENTITY,
 	PLAY_ENTITY_ANIMATION,
 	SET_CONNECT_SERIAL_DIALOG,
 	REGISTER_SERIAL_DIALOG_COMMAND_ALIAS,
@@ -509,6 +510,10 @@ const actionData: Record<string, actionDataEntry> = {
 	action_set_warp_state: {
 		captures: ['string'],
 		handle: (v, debug) => new SET_WARP_STATE(v, debug),
+	},
+	action_set_player: {
+		captures: ['entity'],
+		handle: (v, debug) => new SET_PLAYER_ENTITY(v, debug),
 	},
 	action_set_serial_connect: {
 		captures: ['serial_dialog'],

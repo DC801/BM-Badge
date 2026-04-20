@@ -1901,6 +1901,36 @@
     }
   },
   {
+    "type": "action_set_player",
+    "named": true,
+    "fields": {
+      "entity": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "entity_identifier",
+            "named": true
+          },
+          {
+            "type": "entity_identifier_expansion",
+            "named": true
+          }
+        ]
+      }
+    },
+    "children": {
+      "multiple": false,
+      "required": true,
+      "types": [
+        {
+          "type": "assignment_operator",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
     "type": "action_set_position",
     "named": true,
     "fields": {
@@ -4651,6 +4681,10 @@
             "named": true
           },
           {
+            "type": "action_set_player",
+            "named": true
+          },
+          {
             "type": "action_set_position",
             "named": true
           },
@@ -4842,6 +4876,10 @@
           },
           {
             "type": "action_set_int",
+            "named": true
+          },
+          {
+            "type": "action_set_player",
             "named": true
           },
           {
@@ -5913,6 +5951,10 @@
           "named": true
         },
         {
+          "type": "action_set_player",
+          "named": true
+        },
+        {
           "type": "action_set_position",
           "named": true
         },
@@ -6283,6 +6325,10 @@
           "named": true
         },
         {
+          "type": "action_set_player",
+          "named": true
+        },
+        {
           "type": "action_set_position",
           "named": true
         },
@@ -6527,6 +6573,10 @@
         },
         {
           "type": "action_set_int",
+          "named": true
+        },
+        {
+          "type": "action_set_player",
           "named": true
         },
         {

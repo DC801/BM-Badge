@@ -101,7 +101,7 @@ export const handleCapture = (debug: MathlangLocation): Capture | Capture[] => {
 
 const captureFns: Record<
 	string,
-	(debug: MathlangLocation, bonus?: any) => AnyNode | Capture | Capture[]
+	(debug: MathlangLocation, bonus?: string) => AnyNode | Capture | Capture[]
 > = {
 	BOOL: (debug): BoolLiteral => {
 		const text = debug.node.text;

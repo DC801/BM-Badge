@@ -2696,6 +2696,10 @@
         },
         {
           "type": "SYMBOL",
+          "name": "action_set_player"
+        },
+        {
+          "type": "SYMBOL",
           "name": "action_set_serial_connect"
         },
         {
@@ -6570,6 +6574,27 @@
           "content": {
             "type": "SYMBOL",
             "name": "string_expandable"
+          }
+        }
+      ]
+    },
+    "action_set_player": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "STRING",
+          "value": "player"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "assignment_operator"
+        },
+        {
+          "type": "FIELD",
+          "name": "entity",
+          "content": {
+            "type": "SYMBOL",
+            "name": "entity_identifier_expandable"
           }
         }
       ]

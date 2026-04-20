@@ -397,6 +397,7 @@ export default grammar({
 				$.action_set_bool,
 				$.action_set_direction,
 				$.action_set_warp_state,
+				$.action_set_player,
 				$.action_set_serial_connect,
 				$.action_set_alias,
 				$.action_set_command,
@@ -1045,6 +1046,8 @@ export default grammar({
 				$.assignment_operator,
 				field('string', $.string_expandable),
 			),
+		action_set_player: ($) =>
+			seq('player', $.assignment_operator, field('entity', $.entity_identifier_expandable)),
 		action_set_serial_connect: ($) =>
 			seq(
 				field('serial_connect', 'serial_connect'),

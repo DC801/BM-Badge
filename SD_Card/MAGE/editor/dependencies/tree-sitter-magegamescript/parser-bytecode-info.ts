@@ -838,6 +838,18 @@ export class SET_WARP_STATE extends Action {
 		return `warp_state = "${this.string}";`;
 	}
 }
+export class SET_PLAYER_ENTITY extends Action {
+	action: 'SET_PLAYER_ENTITY';
+	entity: string;
+	constructor(args: GenericObj, debug?: MathlangLocation) {
+		super(args);
+		this.action = 'SET_PLAYER_ENTITY';
+		this.entity = tryString(args.entity, `${this.action} param "entity"`, debug);
+	}
+	print() {
+		return `player = ${printEntityIdentifier(this.entity)};`;
+	}
+}
 export class SET_HEX_EDITOR_STATE extends ActionSetBool {
 	action: 'SET_HEX_EDITOR_STATE';
 	bool_value: boolean;
@@ -3605,6 +3617,7 @@ export const actionConstructorLookup: Record<
 	SET_MAP_TICK_SCRIPT: (args, debug) => new SET_MAP_TICK_SCRIPT(args, debug),
 	SET_HEX_CURSOR_LOCATION: (args, debug) => new SET_HEX_CURSOR_LOCATION(args, debug),
 	SET_WARP_STATE: (args, debug) => new SET_WARP_STATE(args, debug),
+	SET_PLAYER_ENTITY: (args, debug) => new SET_PLAYER_ENTITY(args, debug),
 	SET_HEX_EDITOR_STATE: (args, debug) => new SET_HEX_EDITOR_STATE(args, debug),
 	SET_HEX_EDITOR_DIALOG_MODE: (args, debug) => new SET_HEX_EDITOR_DIALOG_MODE(args, debug),
 	SET_HEX_EDITOR_CONTROL: (args, debug) => new SET_HEX_EDITOR_CONTROL(args, debug),

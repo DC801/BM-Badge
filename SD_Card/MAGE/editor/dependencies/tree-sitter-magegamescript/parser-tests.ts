@@ -20,7 +20,7 @@ const actionArrayToScript = (
 };
 
 // if there are any entries in any of these, the only the listed tests will be run
-const onlyDoTheseActionTests: string[] = ['set_bool_exp_ok'];
+const onlyDoTheseActionTests: string[] = [];
 const onlyDoTheseFileTests: string[] = [];
 const onlyDoTheseErrorTests: string[] = [];
 const doErrorTests = true;

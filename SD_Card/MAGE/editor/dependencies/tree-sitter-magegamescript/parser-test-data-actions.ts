@@ -1026,6 +1026,8 @@ export const actionTests: Record<string, ActionTest> = {
 		input: [
 			// SET_WARP_STATE
 			'warp_state = goat;',
+			// SET_PLAYER_ENTITY
+			'player = entity Bob;',
 			// SET_ENTITY_NAME
 			'player name = goat;',
 			'self name = goat;',

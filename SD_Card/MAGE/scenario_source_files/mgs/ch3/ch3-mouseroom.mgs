@@ -176,10 +176,7 @@ swap {
 	if (!is_cursor) {
 		show serial_dialog { "CURSOR MODE" };
 		entity cursor on_tick = {};
-		json[{
-			"action": "SET_PLAYER_ENTITY",
-			"entity": "cursor"
-		}];
+		player = entity cursor;
 		player on_tick = {
 			player direction = entity cursor;
 		};
@@ -187,10 +184,7 @@ swap {
 	} else {
 		show serial_dialog { "MAGE MODE" };
 		player on_tick = {};
-		json[{
-			"action": "SET_PLAYER_ENTITY",
-			"entity": "Bub"
-		}];
+		player = entity Bub;
 		entity cursor on_tick = {
 			if (self intersects geometry NW) {
 				self current_animation = $eye;
