@@ -167,24 +167,19 @@ swap {
 		};
 		map on_tick = {};
 		player on_tick = {};
-		entity cursor on_tick = {};
+		entity NULL on_tick = {};
 		entity NULL on_tick = {
 			entity cursor position = entity NULL position;
 		};
 		cursor_init = true;
 	}
 	if (!is_cursor) {
-		show serial_dialog { "CURSOR MODE" };
-		entity cursor on_tick = {};
-		player = entity cursor;
-		player on_tick = {
-			player direction = entity cursor;
-		};
 		is_cursor = true;
-	} else {
-		show serial_dialog { "MAGE MODE" };
-		player on_tick = {};
-		player = entity Bub;
+		show serial_dialog { "CURSOR MODE" };
+		player on_tick = {
+			self direction = entity cursor;
+		};
+		player = entity NULL;
 		entity cursor on_tick = {
 			if (self intersects geometry NW) {
 				self current_animation = $eye;
@@ -209,8 +204,13 @@ swap {
 			} else {
 				self current_animation = $arrow;
 			}
-			is_cursor = false;
 		};
+
+	} else {
+		is_cursor = false;
+		show serial_dialog { "MAGE MODE" };
+		player = entity Bub;
+		player on_tick = {};
 	}
 }
 
