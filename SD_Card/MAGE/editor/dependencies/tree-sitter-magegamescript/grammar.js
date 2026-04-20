@@ -410,6 +410,7 @@ export default grammar({
 				$.action_new_array,
 				$.action_delete_array,
 				$.action_array_expression,
+				$.action_rename_array,
 			),
 		action_break_statement: () => 'break',
 		action_continue_statement: () => 'continue',
@@ -1141,6 +1142,14 @@ export default grammar({
 		set_entity_string_field: () => choice('name', 'type', 'path'),
 		action_array_expression: ($) => field('array_expression', $.array_expression),
 		action_print_array: ($) => seq('print', 'array', field('array_name', $.string_expandable)),
+		action_rename_array: ($) =>
+			seq(
+				'array',
+				field('array_source', $.string_expandable),
+				'name',
+				'=',
+				field('array_destination', $.string_expandable),
+			),
 		action_new_array: ($) =>
 			seq(
 				'array',

@@ -3523,9 +3523,6 @@ export class ArrayMethodChain extends MathlangNode {
 		const steps: AnyNode[] = [];
 		let currArray = this.identifier;
 		let currArrayIsTemp = false;
-		// if (this.return_type === 'array') {
-		// 	steps.push(ACTION.ARRAY_NEW.quick(destination));
-		// }
 		this.chain.forEach((method) => {
 			if (method instanceof ArrayMethodReturningNothing) {
 				steps.push(...method.toSteps(currArray));

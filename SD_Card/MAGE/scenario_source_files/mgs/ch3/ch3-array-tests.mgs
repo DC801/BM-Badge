@@ -580,11 +580,7 @@ array_unit_tests {
 	// ARRAY RENAME
 	array arr = [1,2,3,4];
 	array destination = [0];
-	json[{
-		"action": "ARRAY_RENAME",
-		"array_source": "arr",
-		"array_destination": "destination"
-	}];
+	array arr name = destination;
 	// ARRAY RENAME (move)
 	print_compared_values(arr[0], $MAX_INT);
 	show serial_dialog {"ARRAY RENAME (move)"};

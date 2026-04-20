@@ -85,6 +85,7 @@ import {
 	ARRAY_WRITE_INTO_VARIABLE_INDEX_FROM_VARIABLE,
 	ARRAY_WRITE_INTO_INDEX_FROM_VARIABLE,
 	ARRAY_WRITE_INTO_VARIABLE_INDEX_FROM_VALUE,
+	ARRAY_RENAME,
 } from './parser-bytecode-info.ts';
 import {
 	AnyNode,
@@ -515,6 +516,10 @@ const actionData: Record<string, actionDataEntry> = {
 	action_print_array: {
 		captures: ['array_name'],
 		handle: (v, debug) => new ARRAY_LOG(v, debug),
+	},
+	action_rename_array: {
+		captures: ['array_source', 'array_destination'],
+		handle: (v, debug) => new ARRAY_RENAME(v, debug),
 	},
 	action_delete_array: {
 		captures: ['array'],

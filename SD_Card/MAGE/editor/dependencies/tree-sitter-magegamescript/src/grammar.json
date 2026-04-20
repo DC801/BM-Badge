@@ -2745,6 +2745,10 @@
         {
           "type": "SYMBOL",
           "name": "action_array_expression"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "action_rename_array"
         }
       ]
     },
@@ -7072,6 +7076,39 @@
         {
           "type": "FIELD",
           "name": "array_name",
+          "content": {
+            "type": "SYMBOL",
+            "name": "string_expandable"
+          }
+        }
+      ]
+    },
+    "action_rename_array": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "STRING",
+          "value": "array"
+        },
+        {
+          "type": "FIELD",
+          "name": "array_source",
+          "content": {
+            "type": "SYMBOL",
+            "name": "string_expandable"
+          }
+        },
+        {
+          "type": "STRING",
+          "value": "name"
+        },
+        {
+          "type": "STRING",
+          "value": "="
+        },
+        {
+          "type": "FIELD",
+          "name": "array_destination",
           "content": {
             "type": "SYMBOL",
             "name": "string_expandable"

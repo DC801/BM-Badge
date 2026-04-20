@@ -3449,7 +3449,6 @@ export class ARRAY_SORT extends Action {
 	}
 }
 export class ARRAY_RENAME extends Action {
-	// TODO: NOT OFFICIAL YET
 	action: 'ARRAY_RENAME';
 	array_source: string;
 	array_destination: string;
@@ -3471,7 +3470,7 @@ export class ARRAY_RENAME extends Action {
 		return new ARRAY_RENAME({ array_source, array_destination });
 	}
 	print() {
-		return `"${this.array_source}".rename("${this.array_destination}");`;
+		return `array "${this.array_source}" name = "${this.array_destination}";`;
 	}
 }
 

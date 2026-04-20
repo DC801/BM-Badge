@@ -1082,6 +1082,64 @@
     }
   },
   {
+    "type": "action_rename_array",
+    "named": true,
+    "fields": {
+      "array_destination": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "BAREWORD",
+            "named": true
+          },
+          {
+            "type": "CONSTANT",
+            "named": true
+          },
+          {
+            "type": "QUOTED_STRING",
+            "named": true
+          },
+          {
+            "type": "TEMPLATE_STRING",
+            "named": true
+          },
+          {
+            "type": "string_expansion",
+            "named": true
+          }
+        ]
+      },
+      "array_source": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "BAREWORD",
+            "named": true
+          },
+          {
+            "type": "CONSTANT",
+            "named": true
+          },
+          {
+            "type": "QUOTED_STRING",
+            "named": true
+          },
+          {
+            "type": "TEMPLATE_STRING",
+            "named": true
+          },
+          {
+            "type": "string_expansion",
+            "named": true
+          }
+        ]
+      }
+    }
+  },
+  {
     "type": "action_return_statement",
     "named": true,
     "fields": {
@@ -4537,6 +4595,10 @@
             "named": true
           },
           {
+            "type": "action_rename_array",
+            "named": true
+          },
+          {
             "type": "action_return_statement",
             "named": true
           },
@@ -4724,6 +4786,10 @@
           },
           {
             "type": "action_print_array",
+            "named": true
+          },
+          {
+            "type": "action_rename_array",
             "named": true
           },
           {
@@ -5791,6 +5857,10 @@
           "named": true
         },
         {
+          "type": "action_rename_array",
+          "named": true
+        },
+        {
           "type": "action_return_statement",
           "named": true
         },
@@ -6157,6 +6227,10 @@
           "named": true
         },
         {
+          "type": "action_rename_array",
+          "named": true
+        },
+        {
           "type": "action_return_statement",
           "named": true
         },
@@ -6397,6 +6471,10 @@
         },
         {
           "type": "action_print_array",
+          "named": true
+        },
+        {
+          "type": "action_rename_array",
           "named": true
         },
         {

@@ -8,6 +8,9 @@ export type ActionTest = {
 
 export const actionTests: Record<string, ActionTest> = {
 	// TODO: const value lookup fallthrough in fn def/call
+	rename_array: {
+		input: [`array "asdf" name = "jkl";`],
+	},
 	template_string_flag_name: {
 		pre: [
 			// linter, stop
