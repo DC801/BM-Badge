@@ -5176,6 +5176,27 @@
           "members": [
             {
               "type": "FIELD",
+              "name": "entity_identifier",
+              "content": {
+                "type": "SYMBOL",
+                "name": "entity_identifier"
+              }
+            },
+            {
+              "type": "FIELD",
+              "name": "type",
+              "content": {
+                "type": "STRING",
+                "value": "floating"
+              }
+            }
+          ]
+        },
+        {
+          "type": "SEQ",
+          "members": [
+            {
+              "type": "FIELD",
               "name": "type",
               "content": {
                 "type": "STRING",

@@ -3272,6 +3272,10 @@
         "required": false,
         "types": [
           {
+            "type": "floating",
+            "named": false
+          },
+          {
             "type": "glitched",
             "named": false
           },
@@ -7291,6 +7295,10 @@
   },
   {
     "type": "flag",
+    "named": false
+  },
+  {
+    "type": "floating",
     "named": false
   },
   {

@@ -837,6 +837,7 @@ export default grammar({
 				field('type', 'hex_clipboard'),
 				field('type', 'serial_control'),
 				seq(field('entity_identifier', $.entity_identifier), field('type', 'glitched')),
+				seq(field('entity_identifier', $.entity_identifier), field('type', 'floating')),
 				seq(field('type', 'light'), field('light', $.string_expandable)),
 				seq(optional('flag'), field('flag', $.string)),
 			),

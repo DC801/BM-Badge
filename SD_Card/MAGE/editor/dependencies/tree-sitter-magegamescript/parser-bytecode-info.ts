@@ -655,6 +655,33 @@ export class SET_ENTITY_GLITCHED extends ActionSetBool {
 		return printSetBoolAction(this, `${printEntityIdentifier(this.entity)} glitched`);
 	}
 }
+export class SET_ENTITY_FLOATING extends ActionSetBool {
+	action: 'SET_ENTITY_FLOATING';
+	entity: string;
+	bool_value: boolean;
+	constructor(args: GenericObj, debug?: MathlangLocation) {
+		super(args);
+		this.action = 'SET_ENTITY_FLOATING';
+		this.entity = tryString(args.entity, `${this.action} param "entity"`, debug);
+		this.bool_value = tryBool(args.bool_value, `${this.action} param "bool_value"`, debug);
+	}
+	updateProp(v: boolean) {
+		this.bool_value = v;
+	}
+	getProp() {
+		return this.bool_value;
+	}
+	invert() {
+		this.bool_value = !this.bool_value;
+		return this;
+	}
+	static quick(entity: string, bool_value: boolean) {
+		return new SET_ENTITY_FLOATING({ entity, bool_value });
+	}
+	print() {
+		return printSetBoolAction(this, `${printEntityIdentifier(this.entity)} floating`);
+	}
+}
 export class SET_ENTITY_PATH extends Action {
 	action: 'SET_ENTITY_PATH';
 	entity: string;
@@ -3571,6 +3598,7 @@ export const actionConstructorLookup: Record<
 		return new SET_ENTITY_DIRECTION_TARGET_GEOMETRY(args, debug);
 	},
 	SET_ENTITY_GLITCHED: (args, debug) => new SET_ENTITY_GLITCHED(args, debug),
+	SET_ENTITY_FLOATING: (args, debug) => new SET_ENTITY_FLOATING(args, debug),
 	SET_ENTITY_PATH: (args, debug) => new SET_ENTITY_PATH(args, debug),
 	SET_SAVE_FLAG: (args, debug) => new SET_SAVE_FLAG(args, debug),
 	SET_PLAYER_CONTROL: (args, debug) => new SET_PLAYER_CONTROL(args, debug),

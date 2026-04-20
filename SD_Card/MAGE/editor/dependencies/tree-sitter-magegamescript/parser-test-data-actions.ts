@@ -1080,6 +1080,8 @@ export const actionTests: Record<string, ActionTest> = {
 			'light MEM1 = true;',
 			// SET_ENTITY_GLITCHED
 			'entity Bob glitched = false;',
+			// SET_ENTITY_FLOATING
+			'entity Bob floating = false;',
 		],
 	},
 	set_bool_exp_ok_translations: {

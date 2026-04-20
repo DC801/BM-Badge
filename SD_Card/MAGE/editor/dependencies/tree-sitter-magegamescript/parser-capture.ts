@@ -273,7 +273,11 @@ const captureFns: Record<
 		}
 		if (type === 'glitched') {
 			const value = stringCaptureForField(debug, 'entity_identifier');
-			return BoolSetable.quick(debug, 'entity', value);
+			return BoolSetable.quick(debug, 'glitched', value);
+		}
+		if (type === 'floating') {
+			const value = stringCaptureForField(debug, 'entity_identifier');
+			return BoolSetable.quick(debug, 'floating', value);
 		}
 		if (type === 'light') {
 			const value = stringCaptureForField(debug, 'light');

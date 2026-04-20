@@ -86,6 +86,7 @@ import {
 	ARRAY_WRITE_INTO_INDEX_FROM_VARIABLE,
 	ARRAY_WRITE_INTO_VARIABLE_INDEX_FROM_VALUE,
 	ARRAY_RENAME,
+	SET_ENTITY_FLOATING,
 } from './parser-bytecode-info.ts';
 import {
 	AnyNode,
@@ -769,41 +770,38 @@ const actionData: Record<string, actionDataEntry> = {
 				throw new Error('RHS not a bool_expression');
 			}
 			let lhs: ActionSetBool | null = null;
-			if (v.lhs.type === 'entity') {
+			if (v.lhs.type === 'glitched') {
 				const entity = coerceToString(
 					debug,
 					v.lhs.value,
 					'SET_ENTITY_GLITCHED field entity',
 				);
 				lhs = SET_ENTITY_GLITCHED.quick(entity, true);
-			}
-			if (v.lhs.type === 'light') {
+			} else if (v.lhs.type === 'floating') {
+				const entity = coerceToString(
+					debug,
+					v.lhs.value,
+					'SET_ENTITY_FLOATING field entity',
+				);
+				lhs = SET_ENTITY_FLOATING.quick(entity, true);
+			} else if (v.lhs.type === 'light') {
 				const lights = coerceToString(debug, v.lhs.value, 'SET_LIGHTS_STATE field lights');
-
 				lhs = SET_LIGHTS_STATE.quick(lights, true);
-			}
-			if (v.lhs.type === 'player_control') {
+			} else if (v.lhs.type === 'player_control') {
 				lhs = SET_PLAYER_CONTROL.quick(true);
-			}
-			if (v.lhs.type === 'lights_control') {
+			} else if (v.lhs.type === 'lights_control') {
 				lhs = SET_LIGHTS_CONTROL.quick(true);
-			}
-			if (v.lhs.type === 'hex_editor') {
+			} else if (v.lhs.type === 'hex_editor') {
 				lhs = SET_HEX_EDITOR_STATE.quick(true);
-			}
-			if (v.lhs.type === 'hex_dialog_mode') {
+			} else if (v.lhs.type === 'hex_dialog_mode') {
 				lhs = SET_HEX_EDITOR_DIALOG_MODE.quick(true);
-			}
-			if (v.lhs.type === 'hex_control') {
+			} else if (v.lhs.type === 'hex_control') {
 				lhs = SET_HEX_EDITOR_CONTROL.quick(true);
-			}
-			if (v.lhs.type === 'hex_clipboard') {
+			} else if (v.lhs.type === 'hex_clipboard') {
 				lhs = SET_HEX_EDITOR_CONTROL_CLIPBOARD.quick(true);
-			}
-			if (v.lhs.type === 'serial_control') {
+			} else if (v.lhs.type === 'serial_control') {
 				lhs = SET_SERIAL_DIALOG_CONTROL.quick(true);
-			}
-			if (lhs === null) {
+			} else if (lhs === null) {
 				throw new Error('unknown LHS type');
 			}
 			return v.rhs.assignToSetBool(lhs);
