@@ -1,5 +1,5 @@
 { "compressionlevel":-1,
- "height":10,
+ "height":20,
  "infinite":false,
  "layers":[
         {
@@ -12,8 +12,18 @@
             0, 0, 1019, 444, 1019, 1019, 1019, 1019, 13, 1019, 0, 0,
             0, 0, 1019, 1019, 1019, 1019, 1019, 1019, 1019, 1019, 0, 0,
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 993, 994, 995, 996, 997, 998, 999, 1000, 0, 0,
+            0, 0, 1001, 1002, 1003, 1004, 1005, 1006, 1007, 1008, 0, 0,
+            0, 0, 1009, 1010, 1011, 1012, 1013, 1014, 1015, 1016, 0, 0,
+            0, 0, 1017, 1018, 1019, 1020, 1021, 1022, 1023, 1024, 0, 0,
+            0, 0, 1025, 1026, 1027, 1028, 1029, 1030, 1031, 1032, 0, 0,
+            0, 0, 1033, 1034, 1035, 1036, 1037, 1038, 1039, 1040, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-         "height":10,
+         "height":20,
          "id":6,
          "name":"Floor",
          "opacity":1,
@@ -33,8 +43,18 @@
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 430, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-         "height":10,
+         "height":20,
          "id":7,
          "name":"Floor Doodads",
          "opacity":1,
@@ -69,36 +89,8 @@
                  "rotation":0,
                  "visible":true,
                  "width":32,
-                 "x":170,
-                 "y":198
-                }, 
-                {
-                 "class":"",
-                 "gid":281,
-                 "height":32,
-                 "id":63,
-                 "name":"Lights",
-                 "properties":[
-                        {
-                         "name":"on_interact",
-                         "type":"string",
-                         "value":"null_script"
-                        }, 
-                        {
-                         "name":"on_look",
-                         "type":"string",
-                         "value":"null_script"
-                        }, 
-                        {
-                         "name":"on_tick",
-                         "type":"string",
-                         "value":"ch2_serial_light_manager"
-                        }],
-                 "rotation":0,
-                 "visible":true,
-                 "width":32,
-                 "x":-49,
-                 "y":-56
+                 "x":162,
+                 "y":429
                 }, 
                 {
                  "class":"",
@@ -106,11 +98,17 @@
                  "height":32,
                  "id":97,
                  "name":"NULL",
+                 "properties":[
+                        {
+                         "name":"is_floating",
+                         "type":"bool",
+                         "value":true
+                        }],
                  "rotation":0,
                  "visible":true,
                  "width":32,
-                 "x":218,
-                 "y":220
+                 "x":198,
+                 "y":428
                 }, 
                 {
                  "class":"",
@@ -118,23 +116,83 @@
                  "height":32,
                  "id":98,
                  "name":"cursor",
+                 "properties":[
+                        {
+                         "name":"is_floating",
+                         "type":"bool",
+                         "value":true
+                        }],
                  "rotation":0,
                  "visible":true,
                  "width":32,
-                 "x":218,
-                 "y":220
+                 "x":198,
+                 "y":428
                 }, 
                 {
                  "class":"",
                  "height":0,
                  "id":99,
-                 "name":"teleport",
+                 "name":"player_floor_point",
                  "point":true,
                  "rotation":0,
                  "visible":true,
                  "width":0,
-                 "x":116,
-                 "y":92
+                 "x":175,
+                 "y":216
+                }, 
+                {
+                 "class":"",
+                 "gid":1041,
+                 "height":32,
+                 "id":101,
+                 "name":"CRT",
+                 "properties":[
+                        {
+                         "name":"on_look",
+                         "type":"string",
+                         "value":"look_ch2_lambda_crt"
+                        }],
+                 "rotation":0,
+                 "visible":true,
+                 "width":28,
+                 "x":194,
+                 "y":347
+                }, 
+                {
+                 "class":"",
+                 "height":0,
+                 "id":110,
+                 "name":"cursor_floor_point",
+                 "point":true,
+                 "rotation":0,
+                 "visible":true,
+                 "width":0,
+                 "x":235,
+                 "y":221
+                }, 
+                {
+                 "class":"",
+                 "height":0,
+                 "id":111,
+                 "name":"player_room_point",
+                 "point":true,
+                 "rotation":0,
+                 "visible":true,
+                 "width":0,
+                 "x":179,
+                 "y":418
+                }, 
+                {
+                 "class":"",
+                 "height":0,
+                 "id":112,
+                 "name":"cursor_room_point",
+                 "point":true,
+                 "rotation":0,
+                 "visible":true,
+                 "width":0,
+                 "x":213,
+                 "y":418
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -152,8 +210,18 @@
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 415, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-         "height":10,
+         "height":20,
          "id":8,
          "name":"Floating Layer",
          "opacity":1,
@@ -171,20 +239,8 @@
                 {
                  "class":"",
                  "height":0,
-                 "id":34,
-                 "name":"hiding-spot",
-                 "point":true,
-                 "rotation":0,
-                 "visible":true,
-                 "width":0,
-                 "x":-56,
-                 "y":-43.3333333333333
-                }, 
-                {
-                 "class":"",
-                 "height":0,
                  "id":78,
-                 "name":"camera",
+                 "name":"camera2",
                  "point":true,
                  "rotation":0,
                  "visible":true,
@@ -303,6 +359,447 @@
                  "width":0,
                  "x":256,
                  "y":192
+                }, 
+                {
+                 "class":"",
+                 "height":0,
+                 "id":100,
+                 "name":"camera",
+                 "point":true,
+                 "rotation":0,
+                 "visible":true,
+                 "width":0,
+                 "x":192,
+                 "y":389
+                }, 
+                {
+                 "class":"",
+                 "height":0,
+                 "id":102,
+                 "name":"boxes",
+                 "polygon":[
+                        {
+                         "x":-2,
+                         "y":0
+                        }, 
+                        {
+                         "x":-2,
+                         "y":27
+                        }, 
+                        {
+                         "x":9,
+                         "y":35
+                        }, 
+                        {
+                         "x":24,
+                         "y":28
+                        }, 
+                        {
+                         "x":24,
+                         "y":-5
+                        }, 
+                        {
+                         "x":4,
+                         "y":-5
+                        }],
+                 "rotation":0,
+                 "visible":true,
+                 "width":0,
+                 "x":96,
+                 "y":416
+                }, 
+                {
+                 "class":"",
+                 "height":0,
+                 "id":103,
+                 "name":"drawers",
+                 "polygon":[
+                        {
+                         "x":-3,
+                         "y":25
+                        }, 
+                        {
+                         "x":-3,
+                         "y":44
+                        }, 
+                        {
+                         "x":19,
+                         "y":44
+                        }, 
+                        {
+                         "x":19,
+                         "y":25
+                        }],
+                 "rotation":0,
+                 "visible":true,
+                 "width":0,
+                 "x":96,
+                 "y":320
+                }, 
+                {
+                 "class":"",
+                 "height":0,
+                 "id":104,
+                 "name":"crt",
+                 "polygon":[
+                        {
+                         "x":0,
+                         "y":0
+                        }, 
+                        {
+                         "x":-9,
+                         "y":9
+                        }, 
+                        {
+                         "x":-9,
+                         "y":32
+                        }, 
+                        {
+                         "x":19,
+                         "y":32
+                        }, 
+                        {
+                         "x":19,
+                         "y":9
+                        }, 
+                        {
+                         "x":10,
+                         "y":0
+                        }],
+                 "rotation":0,
+                 "visible":true,
+                 "width":0,
+                 "x":203,
+                 "y":315
+                }, 
+                {
+                 "class":"",
+                 "height":0,
+                 "id":105,
+                 "name":"ration",
+                 "polygon":[
+                        {
+                         "x":-2,
+                         "y":-2
+                        }, 
+                        {
+                         "x":8,
+                         "y":-2
+                        }, 
+                        {
+                         "x":11,
+                         "y":1
+                        }, 
+                        {
+                         "x":11,
+                         "y":10
+                        }, 
+                        {
+                         "x":8,
+                         "y":13
+                        }, 
+                        {
+                         "x":-2,
+                         "y":13
+                        }, 
+                        {
+                         "x":-5,
+                         "y":10
+                        }, 
+                        {
+                         "x":-5,
+                         "y":1
+                        }],
+                 "rotation":0,
+                 "visible":true,
+                 "width":0,
+                 "x":244,
+                 "y":358
+                }, 
+                {
+                 "class":"",
+                 "height":0,
+                 "id":106,
+                 "name":"poster",
+                 "polygon":[
+                        {
+                         "x":-2,
+                         "y":-2
+                        }, 
+                        {
+                         "x":-2,
+                         "y":21
+                        }, 
+                        {
+                         "x":22,
+                         "y":21
+                        }, 
+                        {
+                         "x":22,
+                         "y":-2
+                        }],
+                 "rotation":0,
+                 "visible":true,
+                 "width":0,
+                 "x":265,
+                 "y":317
+                }, 
+                {
+                 "class":"",
+                 "height":0,
+                 "id":107,
+                 "name":"laundry",
+                 "polygon":[
+                        {
+                         "x":3,
+                         "y":-2
+                        }, 
+                        {
+                         "x":-4,
+                         "y":-2
+                        }, 
+                        {
+                         "x":-11,
+                         "y":6
+                        }, 
+                        {
+                         "x":-17,
+                         "y":6
+                        }, 
+                        {
+                         "x":-26,
+                         "y":20
+                        }, 
+                        {
+                         "x":-25,
+                         "y":23
+                        }, 
+                        {
+                         "x":-4,
+                         "y":24
+                        }, 
+                        {
+                         "x":10,
+                         "y":21
+                        }, 
+                        {
+                         "x":11,
+                         "y":7
+                        }],
+                 "rotation":0,
+                 "visible":true,
+                 "width":0,
+                 "x":280,
+                 "y":424
+                },
+            
+                {
+                 "class":"",
+                 "height":0,
+                 "id":108,
+                 "name":"books",
+                 "polygon":[
+                        {
+                         "x":2,
+                         "y":3
+                        }, 
+                        {
+                         "x":-31,
+                         "y":3
+                        }, 
+                        {
+                         "x":-31,
+                         "y":-18
+                        }, 
+                        {
+                         "x":-16,
+                         "y":-16
+                        }, 
+                        {
+                         "x":-2,
+                         "y":-12
+                        }, 
+                        {
+                         "x":2,
+                         "y":-9
+                        }],
+                 "rotation":0,
+                 "visible":true,
+                 "width":0,
+                 "x":155,
+                 "y":348
+                }, 
+                {
+                 "class":"",
+                 "height":0,
+                 "id":109,
+                 "name":"computer",
+                 "polygon":[
+                        {
+                         "x":1,
+                         "y":-3
+                        }, 
+                        {
+                         "x":-13,
+                         "y":1
+                        }, 
+                        {
+                         "x":-13,
+                         "y":16
+                        }, 
+                        {
+                         "x":-8,
+                         "y":20
+                        }, 
+                        {
+                         "x":7,
+                         "y":17
+                        }, 
+                        {
+                         "x":7,
+                         "y":3
+                        }],
+                 "rotation":0,
+                 "visible":true,
+                 "width":0,
+                 "x":187,
+                 "y":330
+                }, 
+                {
+                 "class":"",
+                 "gid":237,
+                 "height":32,
+                 "id":113,
+                 "name":"XC",
+                 "properties":[
+                        {
+                         "name":"is_debug",
+                         "type":"bool",
+                         "value":false
+                        }, 
+                        {
+                         "name":"on_interact",
+                         "type":"string",
+                         "value":""
+                        }, 
+                        {
+                         "name":"on_look",
+                         "type":"string",
+                         "value":""
+                        }],
+                 "rotation":0,
+                 "visible":true,
+                 "width":32,
+                 "x":96,
+                 "y":407
+                }, 
+                {
+                 "class":"",
+                 "height":0,
+                 "id":114,
+                 "name":"xc",
+                 "polygon":[
+                        {
+                         "x":0,
+                         "y":0
+                        }, 
+                        {
+                         "x":-7,
+                         "y":6
+                        }, 
+                        {
+                         "x":-15,
+                         "y":19
+                        }, 
+                        {
+                         "x":-15,
+                         "y":30
+                        }, 
+                        {
+                         "x":-3,
+                         "y":32
+                        }, 
+                        {
+                         "x":7,
+                         "y":32
+                        }, 
+                        {
+                         "x":20,
+                         "y":29
+                        }, 
+                        {
+                         "x":21,
+                         "y":19
+                        }, 
+                        {
+                         "x":15,
+                         "y":10
+                        }, 
+                        {
+                         "x":7,
+                         "y":1
+                        }],
+                 "rotation":0,
+                 "visible":true,
+                 "width":0,
+                 "x":109,
+                 "y":374
+                }, 
+                {
+                 "class":"",
+                 "height":0,
+                 "id":115,
+                 "name":"bed",
+                 "polygon":[
+                        {
+                         "x":0,
+                         "y":0
+                        }, 
+                        {
+                         "x":-5,
+                         "y":6
+                        }, 
+                        {
+                         "x":-6,
+                         "y":11
+                        }, 
+                        {
+                         "x":-6,
+                         "y":20
+                        }, 
+                        {
+                         "x":-3,
+                         "y":23
+                        }, 
+                        {
+                         "x":-3,
+                         "y":43
+                        }, 
+                        {
+                         "x":12,
+                         "y":43
+                        }, 
+                        {
+                         "x":26,
+                         "y":36
+                        }, 
+                        {
+                         "x":29,
+                         "y":26
+                        }, 
+                        {
+                         "x":29,
+                         "y":10
+                        }, 
+                        {
+                         "x":21,
+                         "y":-1
+                        }],
+                 "rotation":0,
+                 "visible":true,
+                 "width":0,
+                 "x":261,
+                 "y":348
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -311,7 +808,7 @@
          "y":0
         }],
  "nextlayerid":10,
- "nextobjectid":100,
+ "nextobjectid":116,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.9.2",

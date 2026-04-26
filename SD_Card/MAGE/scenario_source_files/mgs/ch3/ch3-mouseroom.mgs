@@ -29,104 +29,74 @@ restore_entity_position ($e, $x, $y, $dir) {
 $arrow = 0;
 $eye = 3;
 
-// On my main dev box, if this is between 50-80ms, everything behaves correctly.
-// Below 50ms the teleportations seem to fall victim to 1+ race conditions, and the entities swap completely incorrectly
-// Above 80ms there appears to be a blankgap during the teleportations.
-// Actual solution is what?
-$wait = 50ms;
+fn hover ($dialog_name) {
+	entity cursor current_animation = $eye;
+	if (button RJOY_RIGHT pressed) {
+		show dialog $dialog_name;
+	}
+}
 
 on_tick_ch3_mouseroom_walk {
 	if (button PAGE pressed) {
-		player_control = off;
 		show serial_dialog {"\nCursor mode!"};
+		cursor_mode = true;
 
-		// debug!("Make player look invisible")
-		player type = NULL;
-
-		// debug!("Move NULL to player")
-		entity NULL position = player position;
-
-		wait $wait;
-
-		// debug!("Move player to cursor")
-		player position = entity cursor position;
-
-		// debug!("Make NULL watch cursor")
+		player = entity NULL;
 		entity NULL on_tick = {
-			entity NULL direction = entity cursor;
+			entity cursor position = entity NULL position;
+		};
+		entity Bub on_tick = {
+			entity Bub direction = entity cursor;
 		};
 
-		// debug!("Make NULL look like mage")
-		entity NULL type = mage;
-
-		// debug!("Make cursor follow player")
 		entity cursor on_tick = {
 			entity cursor position = player position;
 			if (entity cursor intersects geometry NW) {
-				entity cursor current_animation = $eye;
-				if (button RJOY_RIGHT pressed) {
-					show dialog { name "" "These sky blue tiles can brighten up a bathroom or kitchen for a vintage, 50s look." };
-				}
+				hover(hover_ch3_nw);
 			} else if (entity cursor intersects geometry SW) {
-				entity cursor current_animation = $eye;
-				if (button RJOY_RIGHT pressed) {
-					show dialog { name "" alignment TL "Bare concrete may be suitable for the unfinished basement or laundry room if you want to save money." };
-				}
+				hover(hover_ch3_sw);
 			} else if (entity cursor intersects geometry NE) {
-				entity cursor current_animation = $eye;
-				if (button RJOY_RIGHT pressed) {
-					show dialog { name "" "A rarer offering: crimson shag carpet for a lush, luxorious look." };
-				}
+				hover(hover_ch3_ne);
 			} else if (entity cursor intersects geometry SE) {
-				entity cursor current_animation = $eye;
-				if (button RJOY_RIGHT pressed) {
-					show dialog { name "" alignment TL "Can't go wrong with faux oak vinyl flooring. It's like real hardwood but easier to maintain." };
-				}
+				hover(hover_ch3_se);
+			} else if (entity cursor intersects geometry crt) {
+				hover(hover_ch3_lambda_crt);
+			} else if (entity cursor intersects geometry books) {
+				hover(hover_ch3_lambda_books);
+			} else if (entity cursor intersects geometry ration) {
+				hover(hover_ch3_lambda_ration);
+			} else if (entity cursor intersects geometry poster) {
+				hover(hover_ch3_lambda_poster);
+			} else if (entity cursor intersects geometry drawers) {
+				hover(hover_ch3_lambda_drawer);
+			} else if (entity cursor intersects geometry computer) {
+				hover(hover_ch3_lambda_computer);
+			} else if (entity cursor intersects geometry boxes) {
+				hover(hover_ch3_lambda_box);
+			} else if (entity cursor intersects geometry laundry) {
+				hover(hover_ch3_lambda_laundry);
+			} else if (entity cursor intersects geometry bed) {
+				hover(hover_ch3_lambda_bed);
+			} else if (entity cursor intersects geometry xc) {
+				hover(hover_ch3_lambda_xc);
 			} else {
 				entity cursor current_animation = $arrow;
 			}
 		};
-	
-		player_control = on;
 		self on_tick = on_tick_ch3_mouseroom_mouse;
 	}
 }
 on_tick_ch3_mouseroom_mouse {
 	if (button PAGE pressed) {
-		player_control = off;
 		show serial_dialog {"\nPlayer mode!"};
+		cursor_mode = false;
 
-		// debug!("Make NULL do nothing anymore")
+		entity Bub on_tick = {};
 		entity NULL on_tick = {};
-
-		// debug!("Make cursor do nothing anymore")
 		entity cursor on_tick = {};
 
-		// debug!("Make NULL look invisible")
-		entity NULL type = NULL;
+		player = entity Bub;
 
-		// debug!("Make player jump to NULL position")
-		player position = entity NULL position;
-
-		wait $wait;
-
-		// debug!("Move NULL to cursor")
-		entity NULL position = entity cursor position;
-
-		// debug!("Make player look like mage")
-		player type = mage;
-
-		if (entity NULL direction == north) {
-			player direction = north;
-		} else if (entity NULL direction == east) {
-			player direction = east;
-		} else if (entity NULL direction == south) {
-			player direction = south;
-		} else if (entity NULL direction == west) {
-			player direction = west;
-		}
-
-		player_control = on;
 		self on_tick = on_tick_ch3_mouseroom_walk;
 	}
 }
@@ -135,6 +105,8 @@ on_tick_ch3_mouseroom_mouse {
 /* ---------- ON_LOAD ---------- */
 
 on_load_ch3_mouseroom {
+	entity NULL floating = true;
+	entity cursor floating = true;
 	player direction = south;
 	camera = geometry camera;
 	hex_control = on;
@@ -142,205 +114,89 @@ on_load_ch3_mouseroom {
 	show serial_dialog spacer;
 	show serial_dialog {
 		"Welcome to the <y>CURSOR TEST</>!"
-		" "
-		"Hit the <c>PAGE</> button to switch between controlling the mage and controlling the mouse using a convoluted multiple-entity swap system."
-		" "
-		"Or, type <c>SWAP</> to switch between the player and the cursor."
 	};
-	command swap = swap;
-	entity cursor floating = true;
-	if (debug_mode) {
-		show serial_dialog {
-			"Command <c>TELEPORT TEST</> to check changing entity X/Y"
-		};
-		command teleport + test = teleport_test;
-	}
-}
-
-swap {
-	if (!cursor_init) {
-		show serial_dialog spacer;
-		show serial_dialog {
-			"Disabling manually implemented entity swaps; switching to changing `is_player` flag"
-			" "
-			"(Type <c>SWAP</> to swap back and forth)"
-		};
-		map on_tick = {};
-		player on_tick = {};
-		entity NULL on_tick = {};
-		entity NULL on_tick = {
-			entity cursor position = entity NULL position;
-		};
-		cursor_init = true;
-	}
-	if (!is_cursor) {
-		is_cursor = true;
-		show serial_dialog { "CURSOR MODE" };
-		player on_tick = {
-			self direction = entity cursor;
-		};
-		player = entity NULL;
-		entity cursor on_tick = {
-			if (self intersects geometry NW) {
-				self current_animation = $eye;
-				if (button RJOY_RIGHT pressed) {
-					show dialog { name "" "These sky blue tiles can brighten up a bathroom or kitchen for a vintage, 50s look." };
-				}
-			} else if (self intersects geometry SW) {
-				self current_animation = $eye;
-				if (button RJOY_RIGHT pressed) {
-					show dialog { name "" alignment TL "Bare concrete may be suitable for the unfinished basement or laundry room if you want to save money." };
-				}
-			} else if (self intersects geometry NE) {
-				self current_animation = $eye;
-				if (button RJOY_RIGHT pressed) {
-					show dialog { name "" "A rarer offering: crimson shag carpet for a lush, luxorious look." };
-				}
-			} else if (self intersects geometry SE) {
-				self current_animation = $eye;
-				if (button RJOY_RIGHT pressed) {
-					show dialog { name "" alignment TL "Can't go wrong with faux oak vinyl flooring. It's like real hardwood but easier to maintain." };
-				}
-			} else {
-				self current_animation = $arrow;
-			}
-		};
-
-	} else {
-		is_cursor = false;
-		show serial_dialog { "MAGE MODE" };
-		player = entity Bub;
-		player on_tick = {};
-	}
-}
-
-report_positions {
-	cursor_x = entity cursor x;
-	cursor_y = entity cursor y;
-	null_x = entity NULL x;
-	null_y = entity NULL y;
-	player_x = player x;
-	player_y = player y;
-	show serial_dialog {
-		wrap 80
-		"Cursor: $cursor_x$,$cursor_y$ - Player: $player_x$,$player_y$ - NULL: $null_x$,$null_y$\n"
+	show serial_dialog cursor_test_explanation {
+		" "
+		"Hit the <c>PAGE</> button to switch between controlling the mage and controlling the mouse."
+		" "
+		"Type <c>ALT</> to see the alternate cursor test scenario (floor rennovation showcase vs Lambda's room)"
+	};
+	command alt = {
+		if (!floor_showcase) {
+			show serial_dialog spacer;
+			show serial_dialog { "<y>WELCOME TO THE FLOOR RENNOVATION SHOWCASE!</>" };
+			show serial_dialog cursor_test_explanation;
+			camera = geometry camera2;
+			entity Bub position = geometry player_floor_point;
+			entity NULL position = geometry cursor_floor_point;
+			entity cursor position = geometry cursor_floor_point;
+			floor_showcase = true;
+		} else {
+			show serial_dialog spacer;
+			show serial_dialog { "<y>Back at Lambda's room....</>" };
+			show serial_dialog cursor_test_explanation;
+			camera = geometry camera;
+			entity Bub position = geometry player_room_point;
+			entity NULL position = geometry cursor_room_point;
+			entity cursor position = geometry cursor_room_point;
+			floor_showcase = false;
+		}
 	};
 }
 
-$player_x_orig = 170;
-$player_y_orig = 198;
-$cursor_x_orig = 218;
-$cursor_y_orig = 220;
-$null_x_orig = 218;
-$null_y_orig = 220;
+// ----------------------------------------------------------
 
-teleport_test {
-	show serial_dialog spacer;
-	show serial_dialog {
-		"<y>CURSOR/PLAYER SWAP TELEPORTATION DEBUG TEST</>"
-		" "
-		"ORIGINAL POSITIONS:"
-	};
-	report_positions();
 
-	wait 100ms;
+dialog hover_ch3_lambda_xc {
+	name "" "(Wow, it looks just like the spider robot in the first room of the castle.)"
+}
 
-	show serial_dialog {
-		" "
-		">> SWITCHING TO CURSOR MODE"
-		"Cursor: 218,220 - Player: 218,220 - NULL: 170,198 (TARGET)"
-	};
-	player type = NULL;
-	entity NULL position = player position;
-	player position = entity cursor position;
-	entity NULL on_tick = {
-		entity NULL direction = entity cursor;
-	};
-	entity NULL type = mage;
-	entity cursor on_tick = {
-		entity cursor position = player position;
-	};
-	report_positions();
-	if (
-		player x == $cursor_x_orig
-		&& player y == $cursor_y_orig
-		&& entity NULL x == $player_x_orig
-		&& entity NULL y == $player_y_orig
-	) {
-		show serial_dialog { "<g>Works instantly</>" };
-	} else {
-		show serial_dialog { "<r>DOES NOT WORK instantly</>" };
-	}
+dialog hover_ch3_lambda_books {
+	name "" "(Why do these books all have weird black-and-white pictures of animals on their covers when they're about programmming?)"
+		"(Oh, this one has a cool dragon on the cover, but... no, I guess this one is about programming, too.)"
+}
 
-	wait 100ms;
+dialog hover_ch3_lambda_ration {
+	name "" "(It's a meal, ready to eat.)"
+}
 
-	show serial_dialog {
-		" "
-		">> SWITCHING TO MAGE MODE"
-		"Cursor: 218,220 - Player: 170,198 - NULL: 218,220 (TARGET)"
-	};
-	entity NULL on_tick = {};
-	entity cursor on_tick = {};
-	entity NULL type = NULL;
-	player position = entity NULL position;
-	entity NULL position = entity cursor position;
-	player type = mage;
-	report_positions();
-	if (
-		player x == $player_x_orig
-		&& player y == $player_y_orig
-		&& entity NULL x == $cursor_x_orig
-		&& entity NULL y == $cursor_y_orig
-	) {
-		show serial_dialog { "<g>Works instantly</>" };
-	} else {
-		show serial_dialog { "<r>DOES NOT WORK instantly</>" };
-	}
+dialog hover_ch3_lambda_poster {
+	name "" "(Policenauts? Must be an anime.)"
+}
 
-	wait 100ms;
+dialog hover_ch3_lambda_drawer {
+	name "" "(It's full of cables. But how many years of tangle is this?)"
+}
 
-	show serial_dialog {
-		" "
-		">> MATHLANG PRETEND POSITION ASSIGNMENT"
-		// "`player position = entity cursor position;`"
-	};
-	player position = entity cursor position;
-	report_positions();
-	if (player x == entity cursor x && player y == entity cursor y) {
-		show serial_dialog { "<g>Works instantly</>" };
-	} else {
-		show serial_dialog { "<r>DOES NOT WORK instantly</>" };
-	}
+dialog hover_ch3_lambda_computer {
+	name "" "(That looks a lot like the mainframe in the castle entrance.)"
+}
 
-	wait 100ms;
+dialog hover_ch3_lambda_box {
+	name "" alignment TL "(It's just a box....)"
+}
 
-	show serial_dialog {
-		" "
-		">> TELEPORTATION TEST"
-		// "`entity cursor position = geometry teleport;`"
-	};
-	entity cursor position = geometry teleport;
-	report_positions();
-	if (entity cursor x == 100 && entity cursor y == 100) {
-		show serial_dialog { "<g>Works instantly</>" };
-	} else {
-		show serial_dialog { "<r>DOES NOT WORK instantly</>" };
-	}
+dialog hover_ch3_lambda_laundry {
+	name "" alignment TL "(That must be his laundry. I wonder where his washing machine is.)"
+}
 
-	wait 100ms;
+dialog hover_ch3_lambda_crt {
+	name "" "(That's a weird screen. It flickers when I look at it from the corner of my eye.)"
+}
 
-	show serial_dialog {
-		" "
-		">> CHANGING VALUES MANUALLY TEST"
-		// "`player x = 100;`"
-		// "`player y = 100;`"
-	};
-	player x = 100;
-	player y = 100;
-	report_positions();
-	if (player x == 100 && player y == 100) {
-		show serial_dialog { "<g>Works instantly</>" };
-	} else {
-		show serial_dialog { "<r>DOES NOT WORK instantly</>" };
-	}
+dialog hover_ch3_lambda_bed {
+	name "" "(I guess he has to sleep in a sleeping bag.)"
+}
+
+dialog hover_ch3_nw {
+	name "" "These sky blue tiles can brighten up a bathroom or kitchen for a vintage, 50s look."
+}
+dialog hover_ch3_sw {
+	name "" alignment TL "Bare concrete may be suitable for the unfinished basement or laundry room if you want to save money."
+}
+dialog hover_ch3_ne {
+	name "" "A rarer offering: crimson shag carpet for a lush, luxorious look."
+}
+dialog hover_ch3_se {
+	name "" alignment TL "Can't go wrong with faux oak vinyl flooring. It's like real hardwood but easier to maintain."
 }
