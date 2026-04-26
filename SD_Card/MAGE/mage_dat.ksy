@@ -246,6 +246,8 @@ types:
         value: (flags & 0b10000000) != 0
       is_debug:
         value: (flags & 0b01000000) != 0
+      is_floating:
+        value: (flags & 0b00001000) != 0
       flip_x:
         value: (flags & 0b00000100) != 0
       flip_y:
@@ -264,6 +266,8 @@ types:
         value: (flags & 0b01000000) != 0
       relative_direction:
         value: (flags & 0b00110000) >> 4
+      is_floating:
+        value: (flags & 0b00001000) != 0
       direction:
         value: (flags & 0b00000011)
         enum: direction_type
