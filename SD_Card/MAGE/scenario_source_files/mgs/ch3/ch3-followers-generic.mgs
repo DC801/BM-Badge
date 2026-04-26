@@ -11,7 +11,6 @@ fn init_queue ($queue_name, $start, $end, $step_count) {
 			$queue_name.push($end + (i * diff / $step_count));
 		}
 	}
-	// $queue_name.push($end);
 }
 
 // adjust value using the entity's offset but an arbitrary position value
@@ -75,28 +74,28 @@ fn offset_e_y_for_write ($e) {
 
 
 // take queued position and apply to the given entity
-fn load_entity_pos ($queue_x, $queue_y, $e) {
-	v = $queue_x.pop_left();
+fn load_entity_pos ($e, $queue) {
+	v = `{$queue}_x`.pop_left();
 	entity $e x = offset_e_x_for_read_using_v($e, v);
-	v = $queue_y.pop_left();
+	v = `{$queue}_y`.pop_left();
 	entity $e y = offset_e_y_for_read_using_v($e, v);
 }
 // take entity position and save in the queue
-fn save_entity_pos ($queue_x, $queue_y, $e) {
-	$queue_x.push(offset_e_x_for_write($e));
-	$queue_y.push(offset_e_y_for_write($e));
+fn save_entity_pos ($e, $queue) {
+	`{$queue}_x`.push(offset_e_x_for_write($e));
+	`{$queue}_y`.push(offset_e_y_for_write($e));
 }
 
 // create an entity position queue (one for x, one for y) for a target follower and followee
-fn init_double_queue ($x, $y, $fwer, $fwee, $step_count) {
+fn init_double_queue ($fwer, $fwee, $step_count, $queue) {
 	init_queue(
-		$x,
+		`{$queue}_x`,
 		offset_e_x_for_write($fwer), 
 		offset_e_x_for_write($fwee),
 		$step_count
 	);
 	init_queue(
-		$y,
+		`{$queue}_y`,
 		offset_e_y_for_write($fwer), 
 		offset_e_y_for_write($fwee),
 		$step_count
@@ -123,7 +122,7 @@ fn follow_entity ($fwer, $fwee, $delay, $distance, $label) {
 	} else {
 		if (!`{$label}_should_follow`) {
 			`{$label}_should_follow` = true;
-			init_double_queue(`{$label}_x`, `{$label}_y`, $fwer, $fwee, $distance);
+			init_double_queue($fwer, $fwee, $distance, $label);
 			`{$label}_countdown` = $delay;
 		} else if (`{$label}_countdown` != 0) {
 			`{$label}_countdown` = `{$label}_countdown` - 1;
@@ -131,7 +130,7 @@ fn follow_entity ($fwer, $fwee, $delay, $distance, $label) {
 			`{$label}_is_following` = true;
 			entity $fwer current_animation = 1;
 		}
-		save_entity_pos(`{$label}_x`, `{$label}_y`, $fwee);
+		save_entity_pos($fwee, $label);
 	}
 
 	// move follower
@@ -139,7 +138,7 @@ fn follow_entity ($fwer, $fwee, $delay, $distance, $label) {
 		my_old_x = entity $fwer x;
 		my_old_y = entity $fwer y;
 		// set follower position
-		load_entity_pos(`{$label}_x`, `{$label}_y`, $fwer);
+		load_entity_pos($fwer, $label);
 		// get the absolute value of the delta
 		my_diff_x = get_diff(entity $fwer x, my_old_x);
 		my_diff_y = get_diff(entity $fwer y, my_old_y);

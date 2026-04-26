@@ -10,20 +10,12 @@ capture_entity_position ($e, $x, $y, $dir) {
 	$dir = capture_entity_direction($e);
 	$x = entity $e x;
 	$y = entity $e y;
-	// log_x = $x *1;
-	// log_y = $y *1;
-	// log_dir = $dir;
-	// debug!("Capturing $log_x$, $log_y$ ($log_dir$)")
 }
 
 restore_entity_position ($e, $x, $y, $dir) {
 	restore_entity_direction($e, $dir);
 	entity $e x = $x;
 	entity $e y = $y;
-	// log_x = $x *1;
-	// log_y = $y *1;
-	// log_dir = $dir;
-	// debug!("Restoring $log_x$, $log_y$ ($log_dir$)")
 }
 
 $arrow = 0;
