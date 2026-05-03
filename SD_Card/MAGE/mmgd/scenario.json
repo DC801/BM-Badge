@@ -1,0 +1,9 @@
+{
+	"scriptPaths": [],
+	"dialogPaths": [],
+	"dialogSkins": {
+		"default": "tilesets/tileset-dialog.json",
+		"menu": "tilesets/tileset-menu.json"
+	},
+	"serialDialogPaths": []
+}

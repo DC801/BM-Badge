@@ -1,0 +1,3 @@
+map1_load {
+	camera fade in -> black over 3s;
+}

@@ -1,0 +1,29 @@
+{
+	"player": {
+		"tileset": "portraits-people.json",
+		"emotes": {
+			"default": {
+				"tileid": 16,
+				"flip_x": true
+			}
+		}
+	},
+	"ph1": {
+		"tileset": "portraits-people.json",
+		"emotes": {
+			"default": {
+				"tileid": 41,
+				"flip_x": true
+			}
+		}
+	},
+	"ph2": {
+		"tileset": "portraits-people.json",
+		"emotes": {
+			"default": {
+				"tileid": 31,
+				"flip_x": true
+			}
+		}
+	}
+}

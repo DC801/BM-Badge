@@ -1,0 +1,4 @@
+{
+	"menu": {"path": "maps/main_menu.json", "on_load": "menu_load"},
+	"map1": {"path": "maps/map1.json", "on_load": "map1_load"}
+}

@@ -1,0 +1,384 @@
+{
+	"player": {
+		"tileset": "entity-player.json",
+		"animations": {
+			"idle": [
+				{
+					"tileid": 6,
+					"flip_x": false
+				},
+				{
+					"tileid": 7,
+					"flip_x": false
+				},
+				{
+					"tileid": 5,
+					"flip_x": false
+				},
+				{
+					"tileid": 4,
+					"flip_x": false
+				}
+			],
+			"walk": [
+				{
+					"tileid": 10,
+					"flip_x": false
+				},
+				{
+					"tileid": 11,
+					"flip_x": false
+				},
+				{
+					"tileid": 9,
+					"flip_x": false
+				},
+				{
+					"tileid": 8,
+					"flip_x": false
+				}
+			],
+			"action": [
+				{
+					"tileid": 30,
+					"flip_x": false
+				},
+				{
+					"tileid": 31,
+					"flip_x": false
+				},
+				{
+					"tileid": 29,
+					"flip_x": false
+				},
+				{
+					"tileid": 28,
+					"flip_x": false
+				}
+			],
+			"guitar_idle": [
+				{
+					"tileid": 58,
+					"flip_x": false
+				},
+				{
+					"tileid": 59,
+					"flip_x": false
+				},
+				{
+					"tileid": 57,
+					"flip_x": false
+				},
+				{
+					"tileid": 56,
+					"flip_x": false
+				}
+			],
+			"pose_pre_right": [
+				{
+					"tileid": 51,
+					"flip_x": false
+				},
+				{
+					"tileid": 51,
+					"flip_x": false
+				},
+				{
+					"tileid": 51,
+					"flip_x": false
+				},
+				{
+					"tileid": 51,
+					"flip_x": false
+				}
+			],
+			"pose_pre_left": [
+				{
+					"tileid": 55,
+					"flip_x": false
+				},
+				{
+					"tileid": 55,
+					"flip_x": false
+				},
+				{
+					"tileid": 55,
+					"flip_x": false
+				},
+				{
+					"tileid": 55,
+					"flip_x": false
+				}
+			],
+			"pose_top_right": [
+				{
+					"tileid": 54,
+					"flip_x": false
+				},
+				{
+					"tileid": 54,
+					"flip_x": false
+				},
+				{
+					"tileid": 54,
+					"flip_x": false
+				},
+				{
+					"tileid": 54,
+					"flip_x": false
+				}
+			],
+			"pose_right": [
+				{
+					"tileid": 52,
+					"flip_x": false
+				},
+				{
+					"tileid": 52,
+					"flip_x": false
+				},
+				{
+					"tileid": 52,
+					"flip_x": false
+				},
+				{
+					"tileid": 52,
+					"flip_x": false
+				}
+			],
+			"pose_bottom_right": [
+				{
+					"tileid": 53,
+					"flip_x": false
+				},
+				{
+					"tileid": 53,
+					"flip_x": false
+				},
+				{
+					"tileid": 53,
+					"flip_x": false
+				},
+				{
+					"tileid": 53,
+					"flip_x": false
+				}
+			],
+			"pose_top_left": [
+				{
+					"tileid": 50,
+					"flip_x": false
+				},
+				{
+					"tileid": 50,
+					"flip_x": false
+				},
+				{
+					"tileid": 50,
+					"flip_x": false
+				},
+				{
+					"tileid": 50,
+					"flip_x": false
+				}
+			],
+			"pose_left": [
+				{
+					"tileid": 48,
+					"flip_x": false
+				},
+				{
+					"tileid": 48,
+					"flip_x": false
+				},
+				{
+					"tileid": 48,
+					"flip_x": false
+				},
+				{
+					"tileid": 48,
+					"flip_x": false
+				}
+			],
+			"pose_bottom_left": [
+				{
+					"tileid": 49,
+					"flip_x": false
+				},
+				{
+					"tileid": 49,
+					"flip_x": false
+				},
+				{
+					"tileid": 49,
+					"flip_x": false
+				},
+				{
+					"tileid": 49,
+					"flip_x": false
+				}
+			],
+			"rocking": [
+				{
+					"tileid": 51,
+					"flip_x": false
+				},
+				{
+					"tileid": 51,
+					"flip_x": false
+				},
+				{
+					"tileid": 51,
+					"flip_x": false
+				},
+				{
+					"tileid": 51,
+					"flip_x": false
+				}
+			]
+		},
+		"type": "player",
+		"scenarioIndex": 0,
+		"serialized": {}
+	},
+	"ph1": {
+		"type": "ph1",
+		"tileset": "entity-ph1.json",
+		"animations": {
+			"idle": [
+				{
+					"tileid": 14,
+					"flip_x": false,
+					"flip_y": false
+				},
+				{
+					"tileid": 12,
+					"flip_x": true,
+					"flip_y": false
+				},
+				{
+					"tileid": 13,
+					"flip_x": false,
+					"flip_y": false
+				},
+				{
+					"tileid": 12,
+					"flip_x": false,
+					"flip_y": false
+				}
+			],
+			"walk": [
+				{
+					"tileid": 2,
+					"flip_x": false
+				},
+				{
+					"tileid": 0,
+					"flip_x": true
+				},
+				{
+					"tileid": 1,
+					"flip_x": false
+				},
+				{
+					"tileid": 0,
+					"flip_x": false
+				}
+			],
+			"action": [
+				{
+					"tileid": 17,
+					"flip_x": false
+				},
+				{
+					"tileid": 15,
+					"flip_x": true
+				},
+				{
+					"tileid": 16,
+					"flip_x": false
+				},
+				{
+					"tileid": 15,
+					"flip_x": false
+				}
+			]
+		},
+		"scenarioIndex": 49,
+		"serialized": {}
+	},
+	"ph2": {
+		"type": "ph2",
+		"tileset": "entity-ph2.json",
+		"animations": {
+			"idle": [
+				{
+					"tileid": 14,
+					"flip_x": false,
+					"flip_y": false
+				},
+				{
+					"tileid": 12,
+					"flip_x": true,
+					"flip_y": false
+				},
+				{
+					"tileid": 13,
+					"flip_x": false,
+					"flip_y": false
+				},
+				{
+					"tileid": 12,
+					"flip_x": false,
+					"flip_y": false
+				}
+			],
+			"walk": [
+				{
+					"tileid": 2,
+					"flip_x": false
+				},
+				{
+					"tileid": 0,
+					"flip_x": true
+				},
+				{
+					"tileid": 1,
+					"flip_x": false
+				},
+				{
+					"tileid": 0,
+					"flip_x": false
+				}
+			],
+			"action": [
+				{
+					"tileid": 20,
+					"flip_x": false
+				},
+				{
+					"tileid": 18,
+					"flip_x": true
+				},
+				{
+					"tileid": 19,
+					"flip_x": false
+				},
+				{
+					"tileid": 18,
+					"flip_x": false
+				}
+			]
+		},
+		"scenarioIndex": 50,
+		"serialized": {}
+	},
+	"cursor_effect": {
+		"tileset": "entity-cursor_effect.json",
+		"animations": {
+			"idle": [{"tileid": 5}, {"tileid": 5}, {"tileid": 5}, {"tileid": 5}],
+			"pop": [{"tileid": 4}, {"tileid": 4}, {"tileid": 4}, {"tileid": 4}]
+		},
+		"type": "cursor_effect"
+	}
+}

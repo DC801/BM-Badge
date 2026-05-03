@@ -1,0 +1,14 @@
+dialog root_menu {
+	name "" border_tileset menu
+	"Minimal Test Game"
+> "Play" = load_map1
+}
+load_map1 {
+	entity cursor_effect animation -> 1 once;
+	load map "map1";
+}
+
+menu_load {
+	show dialog root_menu;
+}
+
