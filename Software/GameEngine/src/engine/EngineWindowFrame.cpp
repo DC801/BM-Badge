@@ -266,8 +266,8 @@ void EngineWindowFrameResize(int change) {
 	if (SCREEN_MULTIPLIER < 1) {
 		SCREEN_MULTIPLIER = 1;
 	}
-	if (SCREEN_MULTIPLIER > 2) {
-		SCREEN_MULTIPLIER = 2;
+	if (SCREEN_MULTIPLIER > 5) {
+		SCREEN_MULTIPLIER = 5;
 	}
 	EngineWindowFrameDestroy();
 	EngineWindowFrameInit();

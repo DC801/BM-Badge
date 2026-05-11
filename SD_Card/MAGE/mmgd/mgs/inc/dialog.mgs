@@ -1,0 +1,4 @@
+add dialog settings {
+	label PLAYER { entity "%PLAYER%" alignment BR }
+	label SELF { entity "%SELF%" }
+}

@@ -1,3 +1,201 @@
+include "dialog.mgs";
+
 map1_load {
+	if(!map1_seen_cutscene) { goto map1_cutscene; }
+}
+
+map1_cutscene {
+	player_control = off; hex_control = off;
+
+	entity Erik on_tick = { self position -> geometry "ph1-enter" origin over 5s; };
+	entity Jeanna on_tick = { self position -> geometry "ph2-enter" origin over 5s; };
+	camera = entity Erik position;
 	camera fade in -> black over 3s;
+	wait 2s;  // add'l time for the walking above
+
+	entity Erik on_tick = null_script;
+	entity Jeanna on_tick = null_script;
+	entity Erik current_animation = 0;
+	entity Jeanna current_animation = 0;
+	entity Erik direction = entity Jeanna;
+	entity Jeanna direction = entity Erik;
+	show dialog {
+		Jeanna "Are you sure this is the right place?"
+		Erik "It better be. We've been at this for months!"
+		"If we can't find them, then..."
+		Jeanna "..."
+	};
+	entity Erik direction = east;
+	entity Jeanna direction = east;
+	entity Erik on_tick = {
+		self position -> geometry "ph1-interrupt" origin over 4s;
+	};
+	entity Jeanna position -> geometry "ph2-interrupt" origin over 4s;
+	entity Erik on_tick = null_script;
+	entity Erik current_animation = 0;
+	entity Jeanna current_animation = 0;
+	camera shake -> 250ms 10px over 1s;
+	show dialog {
+		Erik "What was that?!"
+	};
+	entity Erik on_tick = { self position -> geometry "ph1-stop" origin over 2s; };
+	entity Jeanna on_tick = { self position -> geometry "ph2-stop" origin over 2s; };
+	camera -> player position over 2s;
+	entity Erik on_tick = null_script;
+	entity Jeanna on_tick = null_script;
+	entity Erik current_animation = 0;
+	entity Jeanna current_animation = 0;
+	wait 1s;
+	show dialog {
+		PLAYER "Oh, bugger. That's the second time this week! I need to stop forgetting those darn semicolons."
+	};
+	wait 2s;
+	player direction = entity Erik;
+	wait 1s;
+	show dialog {
+		PLAYER "Oh. Hi!"
+	};
+	entity Erik direction = entity Jeanna;
+	entity Jeanna direction = entity Erik;
+	wait 1s;
+	show dialog {
+		Jeanna "Do you think they're...?"
+		Erik "They have to be! Look at how they've been sealed away!"
+		"No ordinary mage would need such extreme measures!"
+		PLAYER "Actually, I just--"
+	};
+	entity Erik direction = player;
+	show dialog {
+		Erik "*ahem*...\nO Great Sourcerer! Weaver of the Script! Mover of the Byte! We beseech thee!"
+		"A terrible ill has befallen our dear kingdom! A cabal of powerful wizards hath conspired to wrest it from our beloved Emperor Vax!"
+		PLAYER "Uhm..."
+		Erik "Their work was insidious, making the common life easier with their useful and powerful spells..."
+		"But now that we depend on them so, they hold their inscrutable spells as power over us!"
+		PLAYER "Hold on--"
+		Erik "They've built a terrible ivory tower shadowing our castle, and they threaten to withhold their magic until we pay a king's ransom!"
+		"But without them, our crops would falter! Our houses would crumble! Our lives would fall to ruin!"
+	};
+	entity Jeanna direction = player;
+	show dialog {
+		Jeanna "Let the poor mage speak, %Erik%!"
+		PLAYER "... Oh. Right."
+		"I'm not sure I am who you think I am! I just kinda... glitched into this cave, and--"
+		Jeanna "'glitched'?"
+		PLAYER "... Long story."
+		"Anyway, I'm not sure I can help you."
+	};
+	entity Erik position -> geometry "ph1-stop" origin over 500ms;
+	show dialog {
+		Erik "Please, Great Sourcerer! You're the only one who can save us!"
+		Jeanna "%Erik%, please! How can you be so sure they're The Sourcerer when they're telling us they're not!"
+		PLAYER "That's a good point! I don't know who this 'Sourcerer' even is!"
+		Erik "..."
+	};
+	wait 1s;
+	entity Erik direction = geometry "ph1-back";
+	wait 500ms;
+	show dialog {
+		Erik "... Right. Forget I said anything."
+	};
+	entity Erik position -> geometry "ph1-back" origin over 2s;
+	show dialog {
+		PLAYER "Hold on!"
+		"Say I was 'The Sourcerer'. What would I need to do?"
+	};
+	entity Erik direction = player;
+	show dialog {
+		Erik "Well, according to the prophesy..."
+	};
+	entity Jeanna direction = entity Erik;
+	wait 250ms;
+	show dialog {
+		Jeanna "Oh, forget the prophesy!"
+	};
+	entity Jeanna direction = player;
+	wait 250ms;
+	show dialog {
+		Jeanna "If you WERE The Sourcerer, you would teach us."
+		"The Wizard Cabal is holding knowledge over us as power. They aren't expecting us to be able to learn their powerful spells."
+		"But someone like The Sourcerer, who knows everything about spell-weaving, could show us how to weave our own."
+	};
+	wait 2s;
+	player direction = south;
+	wait 1s;
+	show dialog {
+		PLAYER "If 'spell-weaving' is the same thing as hex editing, maybe I can help you."
+	};
+	entity Erik position -> geometry "ph1-stop" origin over 500ms;
+	entity Erik direction = player;
+	show dialog {
+		Erik "Really?!"
+		PLAYER "Sure! It'd be my pleasure."
+		"... Once I get out of this thing. One sec!"
+	};
+	map1_seen_cutscene = true; player_control = on; hex_control = on;
+	map on_tick = map1_check_escape;
+}
+
+map1_check_escape {
+	if(!(player intersects geometry "player-start")) {
+		goto map1_cutscene2;
+	}
+}
+
+map1_all_move_west {
+	self x -= 1;
+}
+
+map1_cutscene2 {
+	player_control = off; hex_control = off;
+	entity Erik direction = player;
+	entity Jeanna direction = player;
+	wait 500ms;
+	show dialog {
+		Jeanna "Wow! How did you do that?!"
+		PLAYER "Oh, it was pretty easy, I just..."
+		"... Actually, how about I tell you after we get out of this muddy old cave! I never intended to warp here, after all!"
+	};
+	entity Erik direction = west;
+	entity Jeanna direction = west;
+	player direction = west;
+	entity Erik current_animation = 1;
+	entity Jeanna current_animation = 1;
+	player current_animation = 1;
+	entity Erik on_tick = map1_all_move_west;
+	entity Jeanna on_tick = map1_all_move_west;
+	player on_tick = map1_all_move_west;
+	wait 1500ms;
+	entity Erik on_tick = null_script;
+	entity Jeanna on_tick = null_script;
+	player on_tick = null_script;
+	entity Erik current_animation = 0;
+	entity Jeanna current_animation = 0;
+	player current_animation = 0;
+	entity Erik direction = player;
+	entity Jeanna direction = player;
+	wait 250ms;
+	show dialog {
+		Erik "... Wait, you weren't sealed away?"
+		PLAYER "No! I put that bubble around me just to be safe. You never know when a warp could go wrong!"
+		"Like just now, in fact."
+		Erik "..."
+		Jeanna "Let's not worry about it too much, %Erik%. Legend or not, we've found a powerful ally in our quest against the Cabal!"
+		Erik "I sure hope so."
+	};
+	entity Erik direction = west;
+	entity Jeanna direction = west;
+	player direction = west;
+	entity Erik current_animation = 1;
+	entity Jeanna current_animation = 1;
+	player current_animation = 1;
+	entity Erik on_tick = map1_all_move_west;
+	entity Jeanna on_tick = map1_all_move_west;
+	player on_tick = map1_all_move_west;
+	camera fade out -> black over 3s;
+	wait 2s;
+
+	// TODO: finish this with a map change
+	camera fade in -> black over 3s;
+	player_control = on; hex_control = on;
+	map on_tick = null_script;
 }
